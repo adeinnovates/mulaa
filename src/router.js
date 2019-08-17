@@ -1,6 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
+import Dashboard from './views/Dashboard.vue'
+import Register from './views/Register.vue'
+import Onboard from './views/OnBoard.vue'
+import Products from './views/Products.vue'
+import Product from './components/Product.vue'
 
 Vue.use(Router)
 
@@ -10,9 +15,52 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Home
+      name: 'dashboard',
+      component: Dashboard,
+      meta: { 
+        hideNavigation: false,
+        //requiresAuth: true
+      }
     },
+    {
+      path: '/products',
+      name: '',
+      component: Products,
+      meta: { 
+        hideNavigation: false,
+        //requiresAuth: true
+      }
+    },
+    {
+      path: '/user',
+      name: 'user',
+      component: Register,
+      meta: { 
+        hideNavigation: true,
+        //requiresAuth: false
+      }
+    },
+    {
+      path: '/onboard',
+      name: 'onboard',
+      component: Onboard,
+      meta: { 
+        hideNavigation: true,
+        //requiresAuth: true
+      }
+    },
+    /*{
+      path: '/products/:id',
+      name: 'product',
+      component: Product,
+      meta: { 
+        hideNavigation: false,
+        //requiresAuth: true
+      }
+    },*/
+    { path: '*', 
+    component: Dashboard
+   },
     {
       path: '/about',
       name: 'about',
