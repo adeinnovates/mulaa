@@ -80,7 +80,13 @@
 
         </v-row>
 
-        <v-switch v-model="discountEnable" label="Enable Discount?" class="mt-0"></v-switch>
+        <v-switch 
+        v-model="discountEnable" 
+        label="Enable Discount?" 
+        class="mt-0"
+        color="#23d2aa"
+        >
+        </v-switch>
             </v-card-text>
             </v-form>
         </v-col>
@@ -94,7 +100,7 @@
             theme="light"
             no-mask
             :capture=true
-            action="//dev.mulaa.co/imgapi/products.php" 
+            action="//dev.mulaa.co/imgapi/prod.php" 
             :on-error="onErr"
             :on-success="onSuc"
             bottom-text="Drop file here or tap to add one"
@@ -114,7 +120,7 @@
       <span>Save this product</span>
     </v-tooltip>
                <v-btn text color="red lighten-3" @click="dialog = false">
-              <v-icon right-3 color="red lighten-3" class="mr-2">mdi-cancel</v-icon>
+              <v-icon right-3 color="red lighten-3" class="mr-2">mdi-close-circle</v-icon>
              Cancel
               </v-btn>
             </v-card-actions>
@@ -228,5 +234,8 @@ export default {
         width:300px;
         height:310px;
         border: 1px solid #B2DFDB;
+    }
+    .img-inputer__preview-box.clear{
+        display: none !important;
     }
 </style>

@@ -7,6 +7,8 @@ add_filter( 'acf/rest_api/key', function( $key, $request, $type ) {
 }, 10, 3 );
 
 */
+//user meta
+
 
 // Stop WordPress from modifying .htaccess permalink rules
 add_filter('flush_rewrite_rules_hard','__return_false');

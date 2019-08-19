@@ -3,6 +3,9 @@ import Vuex from 'vuex'
 import axios from 'axios'
 import VuexPersist from 'vuex-persist';
 
+
+const API_URL = '//dev.mulaa.co/private/wp-json/mulaa-auth/v1/products'
+
 Vue.use(Vuex)
 
 const vuexLocalStorage = new VuexPersist({
@@ -25,7 +28,8 @@ export default new Vuex.Store({
     loading: false ,
     profileID: '',
     allProducts: [],
-    Discounted: []
+    Discounted: [],
+    Sales: []
 
   },
   getters: {
@@ -85,7 +89,7 @@ export default new Vuex.Store({
     renderUser1(state, value){
       state.user = value
     },
-    set_product (state, products) {
+    set_products (state, products) {
         //state.allBooms = booms
         //console.log(booms)
         const filtered = products.filter(function(item){

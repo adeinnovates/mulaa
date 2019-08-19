@@ -132,6 +132,7 @@ import MoreBtn from '@/components/MoreBtn'
 import AddProduct from '@/components/AddProduct'
 
 import { mapState, mapGetters } from 'vuex'
+
 export default {
     components: {
         EmptyState,
@@ -144,7 +145,6 @@ export default {
     active: 1,
             active: 0,
             dialog: false,
-            loading: false,
             rules: [v => v.length <= 50 || 'Max 50 characters'],
             uploadMsg: '',
             infoBar: false,
@@ -163,7 +163,7 @@ export default {
         }
     },
     created() {
-        //this.$store.dispatch('loadAllProducts', 'top')
+        this.$store.dispatch('loadAllProducts', 'top')
     },
     methods: {
     move(amount) {
@@ -176,7 +176,44 @@ export default {
     jump(index) {
       this.active = index
     }
-  }
+  },
+  computed: {
+        ...mapGetters([
+             'renderUser'
+           ]),
+      ...mapState([
+      'registerMsg',
+      'color',
+      'show',
+      'loading',
+      'user',
+      'allProducts',
+      'myproducts',
+      'Discounted'
+    ]),
+    snackbar: {
+      get() {
+        return this.$store.state.snackbar;
+      },
+      set(value) {
+        this.$store.commit('snackbar', value);
+      }
+    },
+    loading: {
+      get() {
+        return this.$store.state.loading;
+      },
+      set(value) {
+        this.$store.commit('loading', value);
+      }
+    },
+    counted : function () {
+        return Object.keys(this.mybooms).length;
+    },
+    countApproved: function () {
+        return Object.keys(this.approved).length;
+    }
+    }
 }
 </script>
 <style>

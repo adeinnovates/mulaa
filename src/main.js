@@ -6,10 +6,13 @@ import store from './store'
 import './registerServiceWorker'
 import vuetify from './plugins/vuetify';
 
+
 import ImgInputer from 'vue-img-inputer'
 import 'vue-img-inputer/dist/index.css'
 import VueGlide from 'vue-glide-js'
 import 'vue-glide-js/dist/vue-glide.css'
+import LogRocket from 'logrocket';
+//LogRocket.init('rbxlbi/mulaa');
 
 Vue.use(VueGlide)
 Vue.component('ImgInputer', ImgInputer)

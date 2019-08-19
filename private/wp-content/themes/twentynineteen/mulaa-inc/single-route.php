@@ -3,7 +3,7 @@
 //register custom query vars
 function sm_register_query_vars( $vars ) {
     $vars[] = 'author';
-    $vars[] = 'brandApproved';
+    $vars[] = 'price';
     $vars[] = 'brand';
     return $vars;
 } 
@@ -15,7 +15,7 @@ add_action('rest_api_init', 'runRoute');
 function runRoute(){
     register_rest_route('mulaa-auth/v1', 'products',array(
         'methods' => WP_REST_SERVER::READABLE,
-        'callback' => 'boomsResult',
+        'callback' => 'productResult',
         /*'permission_callback' => function ($request) {
                         if (current_user_can('edit_posts'))
                         return true;
@@ -23,23 +23,23 @@ function runRoute(){
     ));
 }
 
-function boomsResult($data){
+function productResult($data){
     $parameters = $data->get_params();
-    $booms = new WP_Query(array(
-        'post_type' => 'boom',
+    $products = new WP_Query(array(
+        'post_type' => 'product',
         's' => $parameters['term'], //sanitize_text_field($parameters['term'])
         'author_name' => $parameters['author'],
         
     ));
 
-    $boomResults = array();
+    $productResults = array();
    
 
-    while($booms->have_posts()){
-        $booms->the_post();
-        array_push($boomResults, array(
+    while($products->have_posts()){
+        $products->the_post();
+        array_push($productResults, array(
             'title' => get_the_title(),
-            'theAuthor' => get_the_author_nickname(),
+            'theAuthor' => get_the_author_meta('nickname'),//get_the_author_nickname(),
             'productID' => get_the_ID(),
             'description' => get_post_field('description'),
             'price' => get_post_field('price'),
@@ -51,6 +51,6 @@ function boomsResult($data){
         ));
     }
 
-    return $boomResults;
+    return $productResults;
     //return $products->posts;
 }
