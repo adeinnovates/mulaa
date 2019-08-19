@@ -222,9 +222,9 @@ export default {
                 username:'',
                 email:'',
                 password:'',
-                "roles": [
+                /*"roles": [
                   "author"
-                ]
+                ]*/
             },
             theme: 'dark-theme',
             valid: false,

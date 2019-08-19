@@ -5,6 +5,9 @@ import VuexPersist from 'vuex-persist';
 
 
 const API_URL = '//dev.mulaa.co/private/wp-json/mulaa-auth/v1/products'
+const BASEURL = '//dev.mulaa.co/private/wp-json/'
+const API_URL_USER = '//dev.mulaa.co/private/wp-json/wp-json/wp/v2/users'
+const Token_ENDPOINT = 'jwt-auth/v1/token'
 
 Vue.use(Vuex)
 
@@ -138,7 +141,10 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         console.log(user)
         commit('auth_request')
-        axios({ url: `${API_URL_USER}/register`, data: user, method: 'POST' })
+        axios({ url: `${API_URL_USER}/register`, data: user, method: 'POST',
+        headers: {
+          'content-type': 'application/json'
+       } })
           .then(resp => {
             //{code: 200, message: "User 'gdi009' Registration was Successful"}
             //const token = resp.data.token
@@ -155,6 +161,7 @@ export default new Vuex.Store({
           })
           .catch(err => {
             commit('auth_error', err)
+            console.log(`error here: ` + err)
             localStorage.removeItem('token')
             reject(err)
           })

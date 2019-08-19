@@ -1,14 +1,12 @@
 <?php
 
-//mulaa specific modules
+//Kboom specific modules
 /*
 add_filter( 'acf/rest_api/key', function( $key, $request, $type ) {
     return 'acf_fields';
 }, 10, 3 );
 
 */
-//user meta
-
 
 // Stop WordPress from modifying .htaccess permalink rules
 add_filter('flush_rewrite_rules_hard','__return_false');
@@ -44,7 +42,7 @@ function handle_preflight() {
 */
 
 //
-require get_theme_file_path('/mulaa-inc/single-route.php');
+require get_theme_file_path('/kboom-inc/single-route.php');
 //
 //
 // Enable the option show in rest
@@ -54,13 +52,13 @@ add_filter( 'acf/rest_api/field_settings/show_in_rest', '__return_true' );
 add_filter( 'acf/rest_api/field_settings/edit_in_rest', '__return_true' );
 //
 function push_author_meta(){
-	register_rest_field('product', 'authorName', array(
+	register_rest_field('boom', 'authorName', array(
 		'get_callback' => function(){
 			return get_the_author_nickname();
 		}
 	));
 
-	register_rest_field('product', 'imageUrl', array(
+	register_rest_field('boom', 'imageUrl', array(
 		'get_callback' => function($object){
 			$postID = $object['id'];
 			return get_field( "image", $postID );
