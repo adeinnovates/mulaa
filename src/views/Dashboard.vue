@@ -1,9 +1,23 @@
 <template>
-    <div class="dashboard">
+    <div class="dashboard fill-height teal lighten-5">
          <v-container fluid fill-height teal lighten-5>
              <v-layout row wrap equal>
                 <v-flex xs12 sm8 md8 pa-5>
-                    <v-layout row wrap pt-5 mt-5>
+                     <div class="text-center pt-5 mt-5 mb-4">
+<v-sheet color="caption orange lighten-3 pa-2" style="color:#000028" elevation="10">
+your link: {{userURL}}
+<v-btn small text
+>
+    <!--<span class="caption teal--text">
+    copy
+    </span>-->
+    </v-btn>
+</v-sheet>
+<p v-if="copySucceeded === true">Copied!</p>
+    <p v-if="copySucceeded === false">Press CTRL+C to copy.</p>
+</div>
+                    <v-layout row wrap>
+                       
                            <v-flex xs6 sm6 md4 lg4>
                                 <v-card
                                 color="#000028"
@@ -18,7 +32,7 @@
                                     Total Products
                                     </div>
                                 <p class="font-weight-bold headline white--text">
-                                    0
+                                    {{counted}}
                                 </p>
                                 </v-card-text>
                                 </v-card>
@@ -64,7 +78,7 @@
                     </v-layout>
 
 
-                   <EmptyState v-if="items.length < 1"></EmptyState>
+                   <EmptyState v-if="myproducts.length < 1"></EmptyState>
                    <div v-else>
                        <!-- <div class="text-center mt-5 pt-4">
                             <v-sheet color="transparent">Add a new product</v-sheet>
@@ -76,8 +90,12 @@
                         <AddProduct></AddProduct>
                         <p class="overline mb-0">products</p>
                        <v-layout row wrap pt-2 mt-1>
-                           
-                           <v-flex xs6 sm6 md4 lg4 v-for="product in items.slice(0, 3)" :key="product.productID">
+                            <!--<v-progress-linear
+                            :active=loading
+                            indeterminate
+                            color="green"
+                            ></v-progress-linear> -->
+                           <v-flex xs6 sm6 md4 lg4 v-for="product in myproducts.slice(0, 3)" :key="product.id">
             <v-card flat hover class="text-xs-center ma-2">
               <v-responsive class="pt-0">
                 <v-img
@@ -87,21 +105,20 @@
               </v-responsive>
               <v-card-text>
                 <div class="subheading text-truncate">
-                  {{product.title}}
+                  {{product.title.rendered}}
                 </div>
-                <div class="grey--text text-truncate"> {{product.description}}</div>
+                <div class="grey--text text-truncate"> {{product.acf.description}}</div>
               </v-card-text>
               <v-card-actions>
-                <v-btn text color="#23d2aa" :to="{name:'product',params: {
-                    id: product.productID
+               <!-- <v-btn text color="#23d2aa" :to="{name:'product',params: {
+                    id: product.id
                   }}">
                   <v-icon small left>mdi-square-edit-outline</v-icon>
                   
-                </v-btn>
+                </v-btn>-->
+                <Editor :theproducts="product"></Editor>
                 <v-spacer></v-spacer>
-                <div class="grey--text" :to="{name:'product',params: {
-                    id: product.productID
-                  }}"> ₦{{product.price}}</div>
+                <div class="grey--text"> ₦{{product.acf.price}}</div>
               </v-card-actions>
               </v-card>
         </v-flex>
@@ -130,20 +147,24 @@
 import EmptyState from '@/components/EmptyProducts'
 import MoreBtn from '@/components/MoreBtn'
 import AddProduct from '@/components/AddProduct'
+import Editor from '@/components/Editor'
 
 import { mapState, mapGetters } from 'vuex'
 
 export default {
+    props: ['theproducts'],
     components: {
         EmptyState,
         MoreBtn,
-        AddProduct
+        AddProduct,
+        Editor
   },
     data(){
         return{
+            copySucceeded: null,
+            userURL: 'https://mulaa.co/u/'+this.$store.state.user,
             slides: 5,
     active: 1,
-            active: 0,
             dialog: false,
             rules: [v => v.length <= 50 || 'Max 50 characters'],
             uploadMsg: '',
@@ -163,9 +184,12 @@ export default {
         }
     },
     created() {
-        this.$store.dispatch('loadAllProducts', 'top')
+        this.fetchData()
     },
     methods: {
+        handleCopyStatus(status) {
+      this.copySucceeded = status
+    },
     move(amount) {
       let newActive
       const newIndex = this.active + amount
@@ -175,22 +199,30 @@ export default {
     },
     jump(index) {
       this.active = index
+    },
+    fetchData(){
+        this.$store.dispatch('loadAllProducts', 'top')
+       // this.$store.dispatch('getUser', this.user)
     }
+    
   },
+  mounted(){
+       
+    },
   computed: {
         ...mapGetters([
              'renderUser'
            ]),
-      ...mapState([
-      'registerMsg',
-      'color',
-      'show',
-      'loading',
-      'user',
-      'allProducts',
-      'myproducts',
-      'Discounted'
-    ]),
+      ...mapState({
+      registerMsg:'registerMsg',
+      color:'color',
+      show:'show',
+      loading:'loading',
+      user: 'user',
+      allProducts: 'allProducts',
+      myproducts:'myproducts',
+      Discounted:'Discounted',
+      }),
     snackbar: {
       get() {
         return this.$store.state.snackbar;
@@ -208,7 +240,7 @@ export default {
       }
     },
     counted : function () {
-        return Object.keys(this.mybooms).length;
+        return Object.keys(this.myproducts).length;
     },
     countApproved: function () {
         return Object.keys(this.approved).length;

@@ -1,0 +1,112 @@
+{% extends ":"~template~":base.html.twig" %}
+
+{% block content %}
+
+<div  data-section-wrapper="1">
+   <div data-section="1">
+<div data-collapse="medium" data-animation="default" data-duration="400" af-el="nav-bar" class="navbar w-nav" data-slot-container="1">
+    <div class="container w-container">
+    <div data-slot="text">
+    <a href="#" class="brand-top w-nav-brand"><img src="{{ getAssetUrl('themes/'~template~'/images/mvpskool_logo_x1.png') }}" width="160" alt="mvpskool"></a>
+    </div>
+    </div>
+  </div>
+    
+    
+    
+  <div class="prefooter slim">
+    
+       <div class="w-container" data-slot-container="1">
+        <div data-slot="text"><h1 class="headline centered">The MVPskool Leaning Path</h1></div>
+       <div data-slot="text"><div class="txtblk centeralign">Our Toolkits and trainings are designed to challenge and equip entrepreneurs to run structured experiments with tech within the business verticals they are truly passionate about.
+      </div>
+        </div>
+      
+      <div class="line green"></div>
+      <div class="w-row">
+        <div class="w-col w-col-6">
+         
+           <div data-slot="text">
+            <div class="blk">
+          <img src="{{ getAssetUrl('themes/'~template~'/images/p.png') }}" alt="">
+          </div>
+            </div>
+            
+        </div>
+        <div class="w-col w-col-6">
+          <div class="blk">
+            <ul>
+              <li>
+                <div class="txtblk">
+                <div data-slot="text">
+                Strategic planing &amp; Testing - User driven solutions with profit centered design
+                    </div>
+                </div>
+              </li>
+               <li>
+                <div class="txtblk">
+                <div data-slot="text">
+                Strategic planing &amp; Testing - User driven solutions with profit centered design
+                    </div>
+                </div>
+              </li>
+                <li>
+                <div class="txtblk">
+                <div data-slot="text">
+                Strategic planing &amp; Testing - User driven solutions with profit centered design
+                    </div>
+                </div>
+              </li>
+            
+            </ul>
+          </div>
+          <div class="line"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="w-container" data-slot-container="1">
+      <div id="toolkit" af-el="toolkit-blk" class="blk slim">
+       <div data-slot="text"><h1 class="headline centered">Get all the training, toolkits and community to help you startup</h1>
+          </div>
+       <div data-slot="text"> <div class="txtblk centeralign">We have curated a master list of Africa-focused venture capital and angle investors<br></div>
+          </div>
+      </div>
+    </div>
+    
+  </div>
+    
+    
+
+    </div><!-- / data section -->
+</div><!-- / data sectio wrapper -->
+
+
+<!-- footer block -->
+  <div af-el="footerblk" class="footerblk">
+    <div class="w-container">
+      <div class="w-row">
+        <div class="w-col w-col-3">
+          <div class="blk"><img src="images/logo_white.png" srcset="images/logo_white-p-500.png 500w, images/logo_white.png 771w" sizes="(max-width: 479px) 71vw, (max-width: 767px) 82vw, (max-width: 991px) 15vw, 17vw" alt="">
+            <div class="txtsmall">meet@mvpskool.com</div>
+          </div>
+        </div>
+        <div class="w-col w-col-6"></div>
+        <div class="w-col w-col-3">
+          <div class="blk"><a href="https://twitter.com/mvpskool" target="_blank" class="linkblk w-inline-block"><img src="images/twitter.svg" width="25" alt=""></a><a href="https://instagram.com/mvpskool" target="_blank" class="linkblk w-inline-block"><img src="images/instagram-logo.svg" width="25" alt=""></a>
+           
+            <div class="txtsmall">© Copyright <span id="date"></span> MVPskool - All Rights Reserved</div>
+            <script>
+
+              var d = new Date();
+            var n = d.getFullYear();
+            document.getElementById("date").innerHTML = n;
+            
+                        </script>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> 
+
+{% endblock %}

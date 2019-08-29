@@ -2,12 +2,13 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import VuexPersist from 'vuex-persist';
+//import { exists } from 'fs';
 
-
-const API_URL = '//dev.mulaa.co/private/wp-json/mulaa-auth/v1/products'
-const BASEURL = '//dev.mulaa.co/private/wp-json/'
-const API_URL_USER = '//dev.mulaa.co/private/wp-json/wp-json/wp/v2/users'
-const Token_ENDPOINT = 'jwt-auth/v1/token'
+const BASEURL = 'http://dev.mulaa.africa/admin/wp-json'
+const API_URL = 'http://dev.mulaa.africa/admin/wp-json/wp/v2/product'
+const API_URL_USER = 'http://dev.mulaa.africa/admin/wp-json/wp/v2/users'
+const Token_ENDPOINT = '/jwt-auth/v1/token'
+const Products_ENDPOINT = '/mulaa-auth/v1/products'
 
 Vue.use(Vuex)
 
@@ -31,8 +32,13 @@ export default new Vuex.Store({
     loading: false ,
     profileID: '',
     allProducts: [],
+    userProducts: [],
+    userDiscounted:[],
     Discounted: [],
-    Sales: []
+    Sales: [],
+    userId: '',
+    userEmail: '',
+    userUrl: 'https://mulaa.co/s/'
 
   },
   getters: {
@@ -60,10 +66,12 @@ export default new Vuex.Store({
       //console.log(state.registerMsg)
       
     },
-    auth_success_login(state, {token, user}) {
+    auth_success_login(state, {token, user, userEmail, userID}) {
       state.status = 'success'
             state.token = token
             state.user = user
+            state.userEmail = userEmail
+            state.userId = userID
            // console.log(state.user)
     },
     auth_error(state) {
@@ -96,16 +104,37 @@ export default new Vuex.Store({
         //state.allBooms = booms
         //console.log(booms)
         const filtered = products.filter(function(item){
-          return item.theAuthor == state.productOwner; 
+          console.log(item.authorName)
+          return item.authorName == state.user; 
         });
         const Discounted = filtered.filter(function(item){
-          return item.showDiscount == 1; 
+          return item.showDiscount == true; 
         });
 
         state.Discounted = Discounted
         state.allProducts = products
         state.myproducts = filtered
         console.log(state.myproducts)
+    
+        state.loading = false
+    },
+    user_products (state, products) {
+       
+        /*const filtered = products.filter(function(item){
+          //console.log(item.authorName)
+          return item.authorName == state.user; 
+        });*/
+        const Discounted = products.filter(function(item){
+          return item.showDiscount == true; 
+        });
+        state.userDiscounted = Discounted
+        state.userProducts = products
+/*
+        state.Discounted = Discounted
+        state.allProducts = products
+        state.myproducts = filtered
+        console.log(state.myproducts)
+    */
         state.loading = false
     },
     profileid(state, value){
@@ -175,7 +204,7 @@ export default new Vuex.Store({
         .then(resp => { 
           const all_products = resp.data
           commit('set_products', all_products)
-         // console.log(resp.data)
+          console.log(resp.data)
           //resolve(all_booms)
         })
         .catch(err => {
@@ -185,6 +214,29 @@ export default new Vuex.Store({
         })
       }else {console.log('logout and login, user object not found')}
     },
+    loadUserProducts ({commit, state}, userdata){
+    state.loading = true
+      //console.log(data)
+      if (userdata != ''){ //http://dev.mulaa.africa/admin/wp-json/wp/v2/product
+        axios({ url: `${API_URL}`+'?search='+userdata, method: 'GET' })
+        .then(resp => { 
+          if(resp.data.length > 0){
+            const user_products = resp.data
+            commit('set_products', user_products)
+            console.log(resp.data)
+          }else {
+            console.log('user not found')
+          }
+          
+          //resolve(all_booms)
+        })
+        .catch(err => {
+          commit('load_error', err)
+          console.log(err)
+          //reject(err)
+        })
+      }else {console.log('An error occured loading product data, try again later')}
+    },
     logout({ commit }) {
       return new Promise((resolve, reject) => {
         commit('logout')
@@ -193,20 +245,42 @@ export default new Vuex.Store({
         resolve()
       })
     },
-    login({ commit }, user) {
+    getUser({ commit }, user){
+      return new Promise((resolve, reject) => {
+        axios({ url: `${BASEURL}`+ 'users/?search='+ userId, headers: {
+          'Authorization': 'Bearer '+ localStorage.getItem('token'),
+          'Content-Type':  'application/json',
+
+        }, 
+        method: 'GET' 
+      })
+      .then(
+        resp => {
+            console.log('user response' + resp)
+            //commit('auth_success_login', {token, user, userEmail})
+        }
+      )
+      })
+    },
+    login({ commit, dispatch }, user) {
       return new Promise((resolve, reject) => {
         commit('auth_request')
         axios({ url: `${BASEURL}${Token_ENDPOINT}`, data: user, method: 'POST' })
           .then(resp => { //{token: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJod…n19fQ.2LubxcLKvJSYJVinXDMN0oo0r9eQ0ng6_3KF_L7QgIE", user_email: "user0004@gdi.com", user_nicename: "00004", user_display_name: "00004"}
             const token = resp.data.token
             const user = resp.data.user_nicename
+            const userEmail = resp.data.user_email
+            const userID = resp.data.user_display_id
             //const userEmail = resp.data.user_email
             localStorage.setItem('token', token)
+console.log(resp)
+        //dispatch("getUser", {token, user, userEmail})
             // Add the following line:
-            console.log(token)
+            //console.log(token)
             axios.defaults.headers.common['Authorization'] = token
-            commit('auth_success_login', {token, user})
+            commit('auth_success_login', {token, user, userEmail, userID})
             resolve(resp)
+            //dispatch("getUser", {token, user, userEmail})
           })
           .catch(err => {
             commit('auth_error')
@@ -215,6 +289,7 @@ export default new Vuex.Store({
           })
       })
     }
+    
   },
-  //plugins: [vuexLocalStorage.plugin]
+  plugins: [vuexLocalStorage.plugin]
 })

@@ -26,19 +26,47 @@
              <v-snackbar v-model=infoBar :timeout="10000" top right :color="color" :value=infoMsg>
   <span style="color:#1A227E">{{infoMsg}}</span>
 </v-snackbar>
+
+ <v-card-title>
+     <span class="display-1 font-weight-light headlineText">
+         Create a product
+         </span>
+         </v-card-title>
+         <p class="teal--text mb-5 px-7 caption">
+                    Tap the image uploader to select a photo from your phone, enter the product name below
+                </p>
 <v-container class="grey lighten-5">
 
     <v-row>
+        <v-col>
+             <v-card-text>
+             <p class="mb-3 mt-2 overline">upload product image</p>
+  <img-inputer accept="image/*" 
+            v-model="imageFile"
+            icon="img"
+            upload-key="product" 
+            auto-upload 
+            theme="light"
+            no-mask
+            :capture=false
+            action="//dev.mulaa.co/imgapi/prod.php" 
+            :on-error="onErr"
+            :on-success="onSuc"
+            placeholder = "Drop image here or tap to add one"
+            bottom-text="Drop image here or tap to add one"
+            @reset = "reset"
+            />
+             </v-card-text>
+        </v-col>
+        
         <v-col>
           
 <v-form
       ref="uploadForm"
     >
-            <v-card-title><span class="display-1 font-weight-light headlineText">Create a product</span></v-card-title>
+           
             <v-card-text>
-                <p class="teal--text mb-5">
-                    Tap the icon above to upload a photo from your phone, enter the product name below
-                </p>
+                
            <v-text-field
            class="teal--text form-field mt-3"
             v-model="title"
@@ -49,8 +77,8 @@
           ></v-text-field>
           <v-textarea
           class="teal--text form-field mt-0"
-          outlined
           v-model="description"
+          outlined
           label="Description"
           value="Aditional product details and benefits"
           color="teal lighten-3"
@@ -90,26 +118,10 @@
             </v-card-text>
             </v-form>
         </v-col>
-         <v-col>
-             <p class="mb-3 mt-5 overline">upload product image</p>
-  <img-inputer accept="image/*" 
-            v-model="imageFile"
-            icon="img"
-            upload-key="product" 
-            auto-upload 
-            theme="light"
-            no-mask
-            :capture=true
-            action="//dev.mulaa.co/imgapi/prod.php" 
-            :on-error="onErr"
-            :on-success="onSuc"
-            bottom-text="Drop file here or tap to add one"
-            @reset = "reset"
-            />
-        </v-col>
+         
     </v-row>
 </v-container>
-<v-card-actions>
+<v-card-actions style=background-color:#000028>
     <v-tooltip top>
         <template v-slot:activator="{ on }">
             <v-btn text color="green" @click="postProduct" :disabled=disabled :loading="loading" v-on="on">
@@ -119,9 +131,13 @@
                </template>
       <span>Save this product</span>
     </v-tooltip>
-               <v-btn text color="red lighten-3" @click="dialog = false">
-              <v-icon right-3 color="red lighten-3" class="mr-2">mdi-close-circle</v-icon>
+               <v-btn text color="teal lighten-3" @click="dialog = false" v-if="infoBar = false">
+              <v-icon right-3 color="teal lighten-3" class="mr-2">mdi-close-circle</v-icon>
              Cancel
+              </v-btn>
+              <v-btn text color="teal lighten-3" @click="dialog = false" v-else>
+              <v-icon right-3 color="teal lighten-3" class="mr-2">mdi-close-circle</v-icon>
+             Close
               </v-btn>
             </v-card-actions>
  </v-card>
@@ -149,10 +165,25 @@ export default {
             uploadMsg: '',
             infoBar: false,
         infoMsg: '', 
-        color: ''
+        color: '',
+        date: this.dateFunction(),
+        owner: this.$store.state.userId
         }
     },
     methods: {
+      dateFunction() {
+   
+            var currentDate = new Date();
+            console.log(currentDate);
+            var currentDateWithFormat = new Date().toJSON().slice(0,10).replace(/-/g,'/');
+            console.log(currentDateWithFormat);
+            return currentDateWithFormat
+     
+        },
+        fetchData(){
+        this.$store.dispatch('loadAllProducts', 'top')
+       // this.$store.dispatch('getUser', this.user)
+    },
       resetForm () {
         this.$refs.uploadForm.reset()
       },
@@ -181,12 +212,17 @@ export default {
     postProduct:  function() {
                 this.loading = true;
                 this.$http.post('/product', {
-                title: this.user +'-'+ this.title,
-                content: this.user,
+                title: this.title + '-' + this.user,
+                content: this.description,
                 fields : {
+                description: this.description,
+                price: this.price,
+                discount_price: this.discount,
+                show_discount: this.discountEnable,
+                delivery_locations: this.deliveryLocations,
                 image: this.imgUrl,
-                brand_name:this.title,
-                post_url: ''
+                owner : this.owner,
+                date_posted: this.date
                 },
                  status: "publish"
             }).then((response) => {
@@ -198,6 +234,7 @@ export default {
                 this.color = 'green lighten-1'
                 this.infoBar = true
               this.infoMsg = 'Product Successfully saved'
+              this.fetchData()
             this.resetForm()
             })
             .catch((e) => {
@@ -222,7 +259,16 @@ export default {
        }
        return false
         //return this.imageFile.length < 1; // or === 0   
-    }
+    },
+    /*dateFunction() {
+   
+            var currentDate = new Date();
+            console.log(currentDate);
+            var currentDateWithFormat = new Date().toJSON().slice(0,10).replace(/-/g,'/');
+            console.log(currentDateWithFormat);
+            return currentDateWithFormat
+     
+    }*/
     } 
 }
 </script>
@@ -231,8 +277,8 @@ export default {
         color: #000028;
     }
      .img-inputer.img-inputer--light, .img-inputer.img-inputer--{
-        width:300px;
-        height:310px;
+        width:260px !important;
+        height:280px;
         border: 1px solid #B2DFDB;
     }
     .img-inputer__preview-box.clear{

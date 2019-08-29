@@ -6,6 +6,9 @@ import Register from './views/Register.vue'
 import Onboard from './views/OnBoard.vue'
 import Products from './views/Products.vue'
 import Product from './components/Product.vue'
+import Sales from './views/Sales.vue'
+import User from './views/User.vue'
+import { userInfo } from 'os';
 
 Vue.use(Router)
 
@@ -32,6 +35,15 @@ export default new Router({
       }
     },
     {
+      path: '/sales',
+      name: '',
+      component: Sales,
+      meta: { 
+        hideNavigation: false,
+        //requiresAuth: true
+      }
+    },
+    {
       path: '/user',
       name: 'user',
       component: Register,
@@ -44,6 +56,15 @@ export default new Router({
       path: '/onboard',
       name: 'onboard',
       component: Onboard,
+      meta: { 
+        hideNavigation: true,
+        //requiresAuth: true
+      }
+    },
+    {
+      path: '/u/:name',
+      name: 'merchant',
+      component: User,
       meta: { 
         hideNavigation: true,
         //requiresAuth: true

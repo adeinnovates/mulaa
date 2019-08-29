@@ -66,7 +66,8 @@
               <v-list-item-title class="title teal--text text--lighten-3">
                 {{user}}
                 </v-list-item-title>
-              <v-list-item-subtitle class="teal--text text--lighten-3">
+              <v-list-item-subtitle class="caption white--text text--lighten-3">
+                {{userEmail}}
                 <v-icon class="teal--text text--lighten-3">
                    mdi-user
                   </v-icon>
@@ -119,6 +120,7 @@ export default {
             links: [
                 {icon: 'mdi-view-dashboard-variant', text: 'Dashboard', route:'/'},
                 {icon: 'mdi-cart', text: 'Products', route:'/products'},
+                {icon: 'mdi-store', text: 'Sales', route:'/sales'},
                 {icon: 'mdi-settings', text: 'Settings', route:'/settings'}
             ],
             notice: false
@@ -131,7 +133,8 @@ export default {
       'show',
       'loading',
       'user',
-      'allProducts'
+      'allProducts',
+      'userEmail'
     ]),
         isLoggedIn: function() {
           return this.$store.getters.isLoggedIn;
