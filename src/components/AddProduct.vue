@@ -19,9 +19,8 @@
             </v-responsive>
         </template>
 
- <v-card
-            
-            class="mx-auto"
+ <v-card 
+     class="mx-auto"
             >
              <v-snackbar v-model=infoBar :timeout="10000" top right :color="color" :value=infoMsg>
   <span style="color:#1A227E">{{infoMsg}}</span>
@@ -64,7 +63,6 @@
 <v-form
       ref="uploadForm"
     >
-           
             <v-card-text>
                 
            <v-text-field
@@ -212,9 +210,10 @@ export default {
     postProduct:  function() {
                 this.loading = true;
                 this.$http.post('/product', {
-                title: this.title + '-' + this.user,
+                title: this.title, // + '-' + this.user,
                 content: this.description,
                 fields : {
+                  title: this.title,
                 description: this.description,
                 price: this.price,
                 discount_price: this.discount,

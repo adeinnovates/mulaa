@@ -65,6 +65,17 @@ export default new Router({
       path: '/u/:name',
       name: 'merchant',
       component: User,
+      props: true,
+      meta: { 
+        hideNavigation: true,
+        //requiresAuth: true
+      }
+    },
+    {
+      path: '/u/:name/:id',
+      name: 'product',
+      component: Product,
+      props: true,
       meta: { 
         hideNavigation: true,
         //requiresAuth: true

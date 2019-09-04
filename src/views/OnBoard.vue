@@ -3,7 +3,7 @@
         <v-alert type="info" dark class="mx-5 teal lighten-4 teal--text">
       Complete your busienss details below to activate your store and begin selling
     </v-alert>
- <v-layout row wrap align-center="align-center" justify-center="justify-center">
+ <v-layout row wrap align-center="align-center" justify-center="justify-center" class="pa-4">
     <v-form 
       ref="oform"
       v-model="valid"

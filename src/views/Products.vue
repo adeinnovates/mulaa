@@ -60,7 +60,7 @@
 </template>
 <script>
 import EmptyState from '@/components/EmptyProducts'
-import MoreBtn from '@/components/MoreBtn'
+//import MoreBtn from '@/components/MoreBtn'
 import AddProduct from '@/components/AddProduct'
 import Editor from '@/components/Editor'
 
@@ -69,8 +69,8 @@ import { mapState, mapGetters } from 'vuex'
 export default {
     props: ['theproducts'],
     components: {
-        EmptyState,
-        MoreBtn,
+        //EmptyState,
+        //MoreBtn,
         AddProduct,
         Editor
   },
@@ -89,7 +89,7 @@ export default {
     },
     created() {
         this.fetchData()
-        console.log(this.$route)
+       // console.log(this.$route)
     },
     methods: {
     fetchData(){

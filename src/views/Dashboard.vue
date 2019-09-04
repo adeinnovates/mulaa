@@ -4,7 +4,7 @@
              <v-layout row wrap equal>
                 <v-flex xs12 sm8 md8 pa-5>
                      <div class="text-center pt-5 mt-5 mb-4">
-<v-sheet color="caption orange lighten-3 pa-2" style="color:#000028" elevation="10">
+<v-sheet color="caption orange lighten-3 pa-2" style="color:#000028" elevation="2">
 your link: {{userURL}}
 <v-btn small text
 >

@@ -29,15 +29,22 @@ export default new Vuex.Store({
     snackbar: false,
     myproducts: [],
     product: '',
+    theProduct:[],
     loading: false ,
     profileID: '',
     allProducts: [],
     userProducts: [],
     userDiscounted:[],
+    userDetails:[],
     Discounted: [],
     Sales: [],
     userId: '',
     userEmail: '',
+    userKey:'',
+    userDesc:'',
+    userBusiness:'',
+    userPhone:'',
+    userImage:'',
     userUrl: 'https://mulaa.co/s/'
 
   },
@@ -118,6 +125,15 @@ export default new Vuex.Store({
     
         state.loading = false
     },
+    the_product (state, product) {
+       /*const Discounted = product.filter(function(item){
+         return item.showDiscount == true; 
+       });*/
+       //state.userDiscounted = Discounted
+       state.theProduct = product.acf
+       state.loading = false
+       console.log(state.theProduct)
+   },
     user_products (state, products) {
        
         /*const filtered = products.filter(function(item){
@@ -136,6 +152,25 @@ export default new Vuex.Store({
         console.log(state.myproducts)
     */
         state.loading = false
+    },
+    user_detail(state, value){
+      state.userDetails = value
+      /*
+      userEmail: '',
+    userKey:'',
+    userDesc:'',
+    userBusiness:'',
+    userPhone:'',
+    userEmail:'',
+    */
+   state.userEmail = value.email
+   state.userKey = value.payment_key
+   state.userDesc = value.business_description
+   state.userBusiness = value.business_name
+   state.userPhone = value.phone_number
+   state.userImage = value.brand_image
+  
+      console.log('user detail: '+ state.userDetails)
     },
     profileid(state, value){
       state.profileID = value
@@ -222,10 +257,12 @@ export default new Vuex.Store({
         .then(resp => { 
           if(resp.data.length > 0){
             const user_products = resp.data
-            commit('set_products', user_products)
+            const authorID = resp.data.author
+            //$store.dispatch('getUser', authorID)
+            commit('user_products', user_products)
             console.log(resp.data)
           }else {
-            console.log('user not found')
+            console.log('Store Empty')
           }
           
           //resolve(all_booms)
@@ -237,6 +274,54 @@ export default new Vuex.Store({
         })
       }else {console.log('An error occured loading product data, try again later')}
     },
+    loadProduct ({commit, state}, userdata){
+    state.loading = true
+      //console.log(data)
+      if (userdata != ''){ //http://dev.mulaa.africa/admin/wp-json/wp/v2/product
+        axios({ url: `${API_URL}`+'/'+userdata, method: 'GET' })
+        .then(resp => { 
+          if(resp.data.acf.hidden == false){
+            const the_product = resp.data
+            //const authorID = resp.data.author
+            //$store.dispatch('getUser', authorID)
+            commit('the_product', the_product) //resp.data.acf.hidden
+            //console.log("hidden: "+ JSON.stringify(resp.data))
+         }else {
+            console.log('Product not found')
+            state.loading = false
+          }
+          
+          //resolve(all_booms)
+        })
+        .catch(err => {
+          commit('load_error', err)
+          console.log(err)
+          //reject(err)
+        })
+      }else {console.log('An error occured loading product data, try again later')}
+    },
+    loadUserDetails({ commit }, user){
+      if (user != ''){
+      return new Promise((resolve, reject) => {
+        axios({ url: `${API_URL_USER}`+ '/?search='+ user, headers: {
+          'Content-Type':  'application/json',
+        }, 
+        method: 'GET' 
+      })
+      .then(
+        resp => {
+            console.log(resp.data[0].acf)
+            commit('user_detail', resp.data[0].acf)
+            //commit('auth_success_login', {token, user, userEmail})
+
+            resolve(resp)
+        }
+      )
+      })
+    }else{
+      console.log('User not found here')
+    }
+    },
     logout({ commit }) {
       return new Promise((resolve, reject) => {
         commit('logout')
@@ -246,8 +331,9 @@ export default new Vuex.Store({
       })
     },
     getUser({ commit }, user){
+      if (user != ''){
       return new Promise((resolve, reject) => {
-        axios({ url: `${BASEURL}`+ 'users/?search='+ userId, headers: {
+        axios({ url: `${BASEURL}`+ '/users/?search='+ user, headers: {
           'Authorization': 'Bearer '+ localStorage.getItem('token'),
           'Content-Type':  'application/json',
 
@@ -261,6 +347,9 @@ export default new Vuex.Store({
         }
       )
       })
+    }else{
+      console.log('User not found here')
+    }
     },
     login({ commit, dispatch }, user) {
       return new Promise((resolve, reject) => {

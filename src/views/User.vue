@@ -1,15 +1,37 @@
 <template>
-    <div class="userpage products fill-height teal lighten-5">
+    <div class="userpage products fill-height grey lighten-5 pa-5 page">
         <v-container>
-        <h2>{{$route.params.name}}</h2>
+                <div class="text-center">
+                <v-avatar class="my-5" size="60">
+                <img v-if="this.userImage != ''" src="https://vuetifyjs.com/apple-touch-icon-180x180.png" alt="avatar">
+                <img else :src="require('../assets/profile.png')" alt="avatar">
+                </v-avatar>
+                <p class="title grey--text darken-2 font-weight-black">
+                        {{name}}
+                    </p>
+                     <v-divider width=50% class="align-center d-block" style="margin: 0 auto"></v-divider>
+                     <p class="mt-2 mb-0 caption grey--text darken-1 font-weight-light">{{userDesc}}</p>
+                </div>
+                <v-row justify="center" class="mb-4">
+                    <v-btn small 
+                    rounded 
+                    class="mt-3 grad-bg2"
+                   :to="bizPhone"
+                    >
+                        <v-icon left>mdi-whatsapp</v-icon>
+                       <span class="caption dark-body-text"> chat</span> 
+                        </v-btn>
+                </v-row>
         <v-layout row wrap pt-2 mt-1>
                             <v-progress-linear
                             :active=loading
                             indeterminate
                             color="green"
                             ></v-progress-linear> 
-                           <v-flex xs6 sm6 md4 lg4 v-for="product in filteredProducts" :key="product.id">
-            <v-card flat hover class="text-xs-center ma-2">
+                            
+                           <v-flex xs6 sm6 md4 lg4 v-for="product in filterHiddenProduct" :key="product.id">
+           <transition name="slide-fade" mode="out-in">
+            <v-card flat hover class="text-xs-center ma-2" transition="slide-x-transition">
               <v-responsive class="pt-0">
                 <v-img
           :src="product.image"
@@ -23,25 +45,56 @@
                 <div class="grey--text text-truncate"> {{product.acf.description}}</div>
               </v-card-text>-->
               <v-card-actions>
+                  
                <v-btn text color="#23d2aa" 
                class="caption"
+               :to="{
+                   name: 'product',
+                   params: {
+                       id: product.id,
+                       theproducts:product
+                   }
+               }"
                 >
                   <v-icon small left>mdi-cart</v-icon>
                   Buy
                 </v-btn>
+                
+                <!--<Buy :theproducts="product">
+
+                </Buy>-->
                
                 <v-spacer></v-spacer>
-                <div class="grey--text"> ₦{{product.acf.price}}</div>
+                <div class="grey--text caption"> ₦{{product.acf.price}}</div>
               </v-card-actions>
               </v-card>
+              </transition>
         </v-flex>
                        </v-layout>
         </v-container>
+       <v-row justify="center"> 
+           <p class="caption text--grey my-5" style="margin: 0 auto">
+powered by <img :src="require('../assets/mulaalogo.png')" alt="" style="max-width:70px;margin-left:5px">
+           </p>
+        
+       </v-row>
     </div>
 </template>
 <script>
 import { mapState, mapGetters } from 'vuex'
+import Buy from '@/components/BuyProduct'
 export default {
+    components: {
+       // Buy
+  },
+  props: ['name','theproducts']
+   /* props: {
+       name: {
+            type: String,
+            default: 'No User Found'
+        },
+
+    }*/,
      data(){
         return{
             search:'',
@@ -52,23 +105,29 @@ export default {
             infoBar: false,
             infoMsg: '', 
             products: '',
+            bizPhone: 'https://whatsapp.com/'
         }
     },
     computed: {
         ...mapGetters([
              'renderUser'
            ]),
-      ...mapState([
-      'registerMsg',
-      'color',
-      'show',
-      'loading',
-      'user',
-      'allProducts',
-      'myproducts',
-      'Discounted',
-      'userUrl'
-    ]),
+      ...mapState({
+      registerMsg:'registerMsg',
+      color:'color',
+      show:'show',
+      loading:'loading',
+      user:'user',
+      userDesc:'userDesc',
+      userKey:'userKey',
+      userBusiness:'userBusiness',
+      userPhone:'userPhone',
+      myproducts:'myproducts',
+      userProducts:'userProducts',
+      Discounted:'Discounted',
+      userUrl:'userUrl',
+      userImage:'userImage'
+      }),
     snackbar: {
       get() {
         return this.$store.state.snackbar;
@@ -86,22 +145,40 @@ export default {
       }
     },
     filteredProducts: function(){
-      return this.myproducts.filter((myproduct) => {
-        return myproduct.title.rendered.match(this.search) || myproduct.acf.price.match(this.search)
+      return this.userProducts.filter((userproduct) => {
+        return userproduct.title.rendered.match(this.search) || userproduct.acf.price.match(this.search)
       })
+    },
+    filterHiddenProduct: function(){
+      return this.filteredProducts.filter(function(product) {
+					return product.acf.hidden === false;
+				});
     }
     },
      created() {
         this.fetchData()
-        console.log(this.$route)
+       // console.log('name: '+ this.name)
     },
     methods: {
     fetchData(){
-        this.$store.dispatch('loadUserProducts', this.userdata)
-       // this.$store.dispatch('getUser', this.user)
+        this.$store.dispatch('loadUserProducts', this.name)
+        this.$store.dispatch('loadUserDetails', this.name)
     }
     
   }
     
 }
 </script>
+<style>
+    .slide-fade-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active for <2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
+}
+</style>
