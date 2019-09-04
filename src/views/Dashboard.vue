@@ -3,8 +3,8 @@
          <v-container fluid fill-height teal lighten-5>
              <v-layout row wrap equal>
                 <v-flex xs12 sm8 md8 pa-5>
-                     <div class="text-center pt-5 mt-5 mb-4">
-<v-sheet color="caption orange lighten-3 pa-2" style="color:#000028" elevation="2">
+                     <div class="text-center pt-5 mt-5 mb-2">
+<v-sheet color="caption orange lighten-5 pa-2 rounded" style="color:#000028" elevation="1">
 your link: {{userURL}}
 <v-btn small text
 >

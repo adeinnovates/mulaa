@@ -23,18 +23,76 @@
                     :src="image"
                     lazy-src="https://picsum.photos/id/11/10/6"
                     aspect-ratio="1"
-                    class="grey lighten-2 mb-1"
+                    class="grey lighten-2 mb-3"
                     max-width="500"
                     max-height="300"
                     ></v-img>
 </v-row>
-<Callback :paymentStatus="paymentStatus"></Callback>
-  <v-card-actions class="px-5">
+
+               <!-- <v-card-title>-->
+                    <span class="headline grey--text text--darken-2 mb-1 px-4 font-weight-light pl-8">
+                    {{this.title}}
+                    </span>
+              <!--  </v-card-title>-->
+            
+
+            <v-card-text class="py-0"> 
+            <div class="px-4">
+            <v-row>
+            <v-col
+            class=col-12
+            >
+            <p class="caption grey--text text--darken-2 font-weight-light mb-0">
+            <span class="font-weight-bold">
+            Product Details
+            </span> <br>
+            {{description}}
+            </p>
+            </v-col>
+            </v-row>  
+
+            <!--
+            <v-divider class="mt-1 mb-0"></v-divider>
+            <v-row
+            class="my-1"
+            align="center"
+            >
+            <strong class="mx-3 font-weight-light teal--text">
+            Complete your order
+            </strong>
+
+            <v-divider vertical></v-divider>
+
+            <div class="flex-grow-1"></div>
+
+            <v-progress-circular
+            :value="progress"
+            class="mr-2"
+            ></v-progress-circular>
+            </v-row>
+
+            <v-divider class="mb-1"></v-divider>
+            -->
+            </div>
+            </v-card-text>
+
+  <v-card-actions class="px-5 text--darken-1 teal--text">
+       <v-badge color="green" v-if="this.discounted">
+      <template v-slot:badge>
+        <span 
+        class="caption" 
+        >discount</span> <!-- <v-icon dark>mdi-check</v-icon> -->
+      </template>
+      <span class="headline font-weight-light mb-0 teal--text pl-3">₦{{newAmount}}</span>
+    </v-badge>
+    <p v-else class="headline font-weight-light mb-0 teal--text pl-3">
+       ₦{{newAmount}}
+        </p>
              <v-btn
              text
              @click="payWithPaystack"
              color="#23d2aa" 
-             class="text--darken-1 teal--text"
+             class=""
              :disabled=disabled :loading="loading"
              >
               <v-icon small left>mdi-cash</v-icon>
@@ -54,76 +112,15 @@
                   Back
                 </v-btn>
             </v-card-actions>
-            <v-card-title>
-                <span class="title grey--text text--darken-2 font-weight-light mb-1 px-4">
-                {{this.title}}
-                </span></v-card-title>
-            <v-card-text>
-            
-          
-<div class="px-4">
-        <v-row>
-        <v-col
-        class=col-7
-        >
-        <p class="caption grey--text text--darken-2 font-weight-light mb-0">
-        <span class="font-weight-bold">
-        Description
-        </span> <br>
-        {{description}}
-        </p>
-        </v-col>
-        <v-col
-        class=col-5
-        >
-        <v-badge color="green" v-if="this.discounted">
-      <template v-slot:badge>
-        <span 
-        class="caption" 
-        >discount</span> <!-- <v-icon dark>mdi-check</v-icon> -->
-      </template>
-      <span class="headline font-weight-light mb-0 teal--text">₦{{newAmount}}</span>
-    </v-badge>
-    <p v-else class="headline font-weight-light mb-0 teal--text">
-       ₦{{newAmount}}
-        </p>
 
-       <!-- <p class="headline font-weight-light mb-0">
-        ₦{{price}}
-        </p>-->
-
-        </v-col>
-        </v-row>  
-       
-        <!--
-<v-divider class="mt-1 mb-0"></v-divider>
-    <v-row
-      class="my-1"
-      align="center"
-    >
-      <strong class="mx-3 font-weight-light teal--text">
-        Complete your order
-      </strong>
-
-      <v-divider vertical></v-divider>
-
-      <div class="flex-grow-1"></div>
-
-      <v-progress-circular
-        :value="progress"
-        class="mr-2"
-      ></v-progress-circular>
-    </v-row>
-
-    <v-divider class="mb-1"></v-divider>
--->
-       
+ <v-card-text class="">
+     <div class="px-4">
                 <v-row>
                 <v-col>
                 <v-text-field
                 class="teal--text form-field ma-0 pa-0"
                 v-model="buyerName"
-
+                label="Full Name"
                 placeholder="Full Name"
                 color="teal lighten-3"
                 ></v-text-field>
@@ -131,6 +128,7 @@
                 <v-col>
                 <v-text-field
                 class="teal--text form-field ma-0 pa-0"
+                label="Phone"
                 v-model="buyerPhone"
 type="number"
                 placeholder="Mobile"
@@ -144,6 +142,7 @@ type="number"
                 class="teal--text form-field ma-0 pa-0"
                 v-model="buyerEmail"
                 :rules="emailRules"
+                label="Email"
                 placeholder="Your Email"
                 color="teal lighten-3"
                 ></v-text-field>
@@ -164,18 +163,28 @@ type="number"
     </paystack>-->
 
     </div>
-         
+          <p class="caption grey--text text--darken-2 font-weight-light mb-0">
+            <span class="font-weight-bold">
+            Delivery Details
+            </span> 
+            </p>
+
             </v-card-text>
            
             </v-form>
-           
+           <Callback :paymentStatus="paymentStatus" :dialog2="dialog"></Callback>
             </v-card>
-            
+            <v-row justify="center"> 
+           <p class="caption text--grey my-5" style="margin: 0 auto">
+powered by <img :src="require('../assets/mulaalogo.png')" alt="" style="max-width:70px;margin-left:5px">
+           </p>
+        
+       </v-row>
     </div>
 </template>
 <script>
 import { mapState, mapGetters } from 'vuex'
-import { isNull } from 'util';
+import axios from 'axios'
 //import paystack from 'vue-paystack';
 import Callback from '@/components/Callback'
 
@@ -228,6 +237,14 @@ dialog: false,
       userKey:'userKey',
       theProduct:'theProduct'
       }),
+      loading: {
+      get() {
+        return this.$store.state.loading;
+      },
+      set(value) {
+        this.$store.commit('loading', value);
+      }
+    },
     reference(){
         let text = "";
         let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -267,15 +284,52 @@ dialog: false,
         console.log('user: '+ this.name)
     },
     methods: {
-        showPopup(response){
-            this.paymentStatus = response
-            var oLuanchBtn = document.getElementById('popupBtn');
-            oLuanchBtn.style.visibility = 'hidden';
-            oLuanchBtn.click();
-            
-            console.log('payment: '+this.paymentStatus)
-    //this.$refs.popupBtn.click()
-   // console.log('ref: '+this.$refs.popupBtn)
+        salesRecord(response){
+            //console.log("sales: "+response)
+
+axios.post(`//dev.mulaa.africa/admin/wp-json/jwt-auth/v1/token`, {
+    username: 'system',
+    password: 'letmein2020()'
+  }
+).then(resp => {
+           //console.log(resp.data.token)
+           const options = {
+  headers: {'Authorization': 'Bearer '+resp.data.token}
+}
+const salesData = {
+                title: this.title,
+                content: this.theProduct.title,
+                fields : {
+                 ref_id: response.reference,
+            amount: this.newAmount,
+            payment_mode: "online",
+            fullname: this.buyerName,
+            status: response.status,
+            message: response.message,
+            date: this.date,
+            product_id: this.$route.params.id,
+            product: this.title,
+            customer_email: this.buyerEmail,
+            customer_phone: this.buyerPhone,
+            location: "",
+            transaction: response.transaction,
+            merchant: this.$route.params.name
+                },
+                 status: "publish"
+            }
+
+           axios.post(`http://dev.mulaa.africa/admin/wp-json/wp/v2/sale`, 
+           salesData, options
+).then(resp => {
+            console.log(resp.data)
+            this.loading = false
+            })
+            //resolve(resp)
+          })
+          .catch(err => {
+              console.log(err)
+              
+          })
         },
         updateData(){
             if(this.theproducts === undefined){
@@ -351,10 +405,12 @@ dialog: false,
        // console.log(response)
        
        this.paymentStatus = response
+       this.salesRecord(response)
             var oLuanchBtn = document.getElementById('popupBtn');
             oLuanchBtn.style.visibility = 'hidden';
             oLuanchBtn.click();
-            this.resetForm()
+            //this.resetForm()
+            
             console.log('payment: '+this.paymentStatus.reference)
       },
       close: function(){
@@ -380,7 +436,7 @@ dialog: false,
       }
   },
   mounted() {
-
+this.loading = false
     let paystackScript = document.createElement('script')
     paystackScript.setAttribute('src', 'https://js.paystack.co/v1/inline.js')
     document.head.appendChild(paystackScript)

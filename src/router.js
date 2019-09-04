@@ -8,6 +8,7 @@ import Products from './views/Products.vue'
 import Product from './components/Product.vue'
 import Sales from './views/Sales.vue'
 import User from './views/User.vue'
+import Settings from './views/Settings.vue'
 import { userInfo } from 'os';
 
 Vue.use(Router)
@@ -49,6 +50,15 @@ export default new Router({
       component: Register,
       meta: { 
         hideNavigation: true,
+        //requiresAuth: false
+      }
+    },
+    {
+      path: '/settings',
+      name: 'settings',
+      component: Settings,
+      meta: { 
+        hideNavigation: false,
         //requiresAuth: false
       }
     },

@@ -16,19 +16,43 @@
                     <v-btn small 
                     rounded 
                     class="mt-3 grad-bg2"
-                   :to="bizPhone"
+                   :href="bizPhone"
                     >
                         <v-icon left>mdi-whatsapp</v-icon>
                        <span class="caption dark-body-text"> chat</span> 
+                        </v-btn> 
+                </v-row>
+                <!--<v-row justify="center" class="mb-4">
+                    <v-btn
+                    small
+                    block
+                    text
+                    href=""
+                    height="32"
+                    class="grey--text darken-2 caption grad-bg2 mb-1"
+                    >
+                         <span class="caption dark-body-text">
+                             website
+                         </span>
                         </v-btn>
                 </v-row>
-        <v-layout row wrap pt-2 mt-1>
-                            <v-progress-linear
+                -->
+
+                 <v-progress-linear
                             :active=loading
                             indeterminate
                             color="green"
                             ></v-progress-linear> 
-                            
+                            <div v-if="emptyStore" class="mb-10">
+                                 <v-img :src="require('../assets/unsuccessful.svg')"></v-img>
+                  <span class="title text-center font-weight-light mb-2 pa-5 red">
+                  This store in currently empty
+                  </span>
+                            </div>
+                <div v-else> 
+        <v-layout row wrap pt-2 mt-1>
+                           
+                         
                            <v-flex xs6 sm6 md4 lg4 v-for="product in filterHiddenProduct" :key="product.id">
            <transition name="slide-fade" mode="out-in">
             <v-card flat hover class="text-xs-center ma-2" transition="slide-x-transition">
@@ -70,7 +94,9 @@
               </v-card>
               </transition>
         </v-flex>
+       
                        </v-layout>
+                        </div>
         </v-container>
        <v-row justify="center"> 
            <p class="caption text--grey my-5" style="margin: 0 auto">
@@ -105,7 +131,7 @@ export default {
             infoBar: false,
             infoMsg: '', 
             products: '',
-            bizPhone: 'https://whatsapp.com/'
+            bizPhone: ''
         }
     },
     computed: {
@@ -113,6 +139,7 @@ export default {
              'renderUser'
            ]),
       ...mapState({
+          emptyStore: 'emptyStore',
       registerMsg:'registerMsg',
       color:'color',
       show:'show',
@@ -154,6 +181,9 @@ export default {
 					return product.acf.hidden === false;
 				});
     }
+    },
+    mounted() {
+        this.bizPhone = 'https://api.whatsapp.com/send?phone='+this.userPhone
     },
      created() {
         this.fetchData()

@@ -1,5 +1,5 @@
 <template>
-    <v-dialog transition="slide-x-transition" dark hide-overlay v-model="dialog" max-width="454" class="extra-round extra white--text">
+    <v-dialog transition="slide-x-transition" dark persistent v-model="dialog" max-width="454" class="extra-round extra white--text">
         <template v-slot:activator="{ on }">
             <v-btn text color="#23d2aa"  
                class="caption"
@@ -34,6 +34,11 @@
                 <span class="title text-center font-weight-light mb-2 pa-5 green">
                     transaction successful with response {{paymentStatus.message}}
                 </span>
+                 <v-progress-linear
+                            :active=loading
+                            indeterminate
+                            color="green"
+                            ></v-progress-linear> 
             </div>
             <div v-else>
                  <v-img :src="require('../assets/unsuccessful.svg')"></v-img>
@@ -59,13 +64,27 @@
 import { mapState, mapGetters } from 'vuex'
 
 export default {
-    props: ['paymentStatus'],
+    props: ['paymentStatus','dialog2'],
     data(){
         return {
  dialog: false,
  successimg: `../assets/successful.svg`//`@/assets/images/successful.svg`,
         }
+    },
+     computed: {
+      ...mapState({
+      registerMsg:'registerMsg',
+      loading:'loading',
+      }),
+      loading: {
+      get() {
+        return this.$store.state.loading;
+      },
+      set(value) {
+        this.$store.commit('loading', value);
+      }
     }
+     }
 }
 </script>
 <style scoped>

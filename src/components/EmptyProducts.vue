@@ -1,5 +1,5 @@
 <template>
-    <div class="pa-5 mt-5">
+    <div class="pa-5 mt-0 pt-0">
         <v-container>
             <v-row>
                 <v-col cols="12">
@@ -9,16 +9,17 @@
                         >
                             <v-card
                             max-width="344"
-                            class="mx-auto mb-2"
+                            class="mx-auto mb-2 pt-0 transparent"
+                            elevation="0"
                             >
-                                <v-card-text>
+                                <v-card-text class="pt-0">
                                 <div class="text-center">
-                                    😊
+                                    <v-img :src="require('../assets/successful.svg')" max-width="200"></v-img>
                                 </div>
                                 </v-card-text>
                             </v-card>
-                            <p class="text-center display-1 font-weight-light teal--text">
-                                Welcome, lets create your first product!
+                            <p class="text-center headline font-weight-light teal--text">
+                                Welcome, let's create your first product!
                                 
                                 <!-- <v-divider class="mt-3"></v-divider>-->
                                <!-- <v-progress-linear

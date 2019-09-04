@@ -12,7 +12,9 @@
   >
     <v-app-bar-nav-icon @click="menu = !menu" class="teal--text text--lighten-3"></v-app-bar-nav-icon>
 
-    <v-toolbar-title><span class="mr-2 teal--text text--lighten-3">Mulaa</span></v-toolbar-title>
+    <v-toolbar-title><span class="mr-2 teal--text text--lighten-3 pt-5">
+      <v-img :src="require('../assets/mulaalogo-white.png')" max-width="80" class=mt-6></v-img>
+      </span></v-toolbar-title>
 
     <v-spacer></v-spacer>
 <!--
@@ -41,7 +43,7 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="title teal--text text--lighten-3">
-            Mulaa
+             Mulaa
           </v-list-item-title>
           <v-list-item-subtitle class="caption teal--text text--lighten-3">
             The last link between you and sales

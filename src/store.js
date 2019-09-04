@@ -15,6 +15,25 @@ Vue.use(Vuex)
 const vuexLocalStorage = new VuexPersist({
   key: 'vuex',
   storage: window.localStorage, 
+  reducer: state => ({
+    token: state.token,
+    user: state.user,
+    productOwner: state.productOwner,
+    registerMsg: state.registerMsg,
+    color: state.color,
+    show: state.show,
+    myproducts: state.myproducts,
+    product: state.product,
+    theProduct: state.theProduct,
+    profileID: state.profileID,
+    allProducts: state.allProducts,
+    userProducts: state.userProducts,
+    userDiscounted: state.userDiscounted,
+    userDetails: state.userDetails,
+    Discounted: state.Discounted,
+    Sales: state.Sales
+    // getRidOfThisModule: state.getRidOfThisModule (No one likes it.)
+  })
 });
 
 export default new Vuex.Store({
@@ -38,6 +57,7 @@ export default new Vuex.Store({
     userDetails:[],
     Discounted: [],
     Sales: [],
+    emptyStore: false,
     userId: '',
     userEmail: '',
     userKey:'',
@@ -107,6 +127,10 @@ export default new Vuex.Store({
     renderUser1(state, value){
       state.user = value
     },
+    showEmpty(state){
+      state.emptyStore = true;
+      state.loading = false
+    },
     set_products (state, products) {
         //state.allBooms = booms
         //console.log(booms)
@@ -155,14 +179,7 @@ export default new Vuex.Store({
     },
     user_detail(state, value){
       state.userDetails = value
-      /*
-      userEmail: '',
-    userKey:'',
-    userDesc:'',
-    userBusiness:'',
-    userPhone:'',
-    userEmail:'',
-    */
+      
    state.userEmail = value.email
    state.userKey = value.payment_key
    state.userDesc = value.business_description
@@ -170,7 +187,7 @@ export default new Vuex.Store({
    state.userPhone = value.phone_number
    state.userImage = value.brand_image
   
-      console.log('user detail: '+ state.userDetails)
+      //console.log('user detail: '+ state.userDetails)
     },
     profileid(state, value){
       state.profileID = value
@@ -260,9 +277,10 @@ export default new Vuex.Store({
             const authorID = resp.data.author
             //$store.dispatch('getUser', authorID)
             commit('user_products', user_products)
-            console.log(resp.data)
+            //console.log(resp.data)
           }else {
             console.log('Store Empty')
+            commit('showEmpty')
           }
           
           //resolve(all_booms)
@@ -310,11 +328,16 @@ export default new Vuex.Store({
       })
       .then(
         resp => {
-            console.log(resp.data[0].acf)
+          if(resp.data[0]){
+            //console.log(resp.data[0].acf)
             commit('user_detail', resp.data[0].acf)
             //commit('auth_success_login', {token, user, userEmail})
 
             resolve(resp)
+          }else{
+            console.log('user acct not activated')
+          }
+            
         }
       )
       })

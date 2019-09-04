@@ -20,25 +20,25 @@
         </template>
 
  <v-card 
-     class="mx-auto"
+     class="mx-auto teal lighten-5"
             >
              <v-snackbar v-model=infoBar :timeout="10000" top right :color="color" :value=infoMsg>
   <span style="color:#1A227E">{{infoMsg}}</span>
 </v-snackbar>
 
  <v-card-title>
-     <span class="display-1 font-weight-light headlineText">
+     <span class="headline font-weight-light headlineText">
          Create a product
          </span>
          </v-card-title>
          <p class="teal--text mb-5 px-7 caption">
                     Tap the image uploader to select a photo from your phone, enter the product name below
                 </p>
-<v-container class="grey lighten-5">
+<v-container class="white lighten-5">
 
     <v-row>
         <v-col>
-             <v-card-text>
+             <v-card-text class="pt-0">
              <p class="mb-3 mt-2 overline">upload product image</p>
   <img-inputer accept="image/*" 
             v-model="imageFile"
@@ -58,12 +58,12 @@
              </v-card-text>
         </v-col>
         
-        <v-col>
+        <v-col class="pt-0">
           
 <v-form
       ref="uploadForm"
     >
-            <v-card-text>
+            <v-card-text class="pt-0">
                 
            <v-text-field
            class="teal--text form-field mt-3"
@@ -108,7 +108,7 @@
 
         <v-switch 
         v-model="discountEnable" 
-        label="Enable Discount?" 
+        label="Show Discount?" 
         class="mt-0"
         color="#23d2aa"
         >
@@ -122,8 +122,8 @@
 <v-card-actions style=background-color:#000028>
     <v-tooltip top>
         <template v-slot:activator="{ on }">
-            <v-btn text color="green" @click="postProduct" :disabled=disabled :loading="loading" v-on="on">
-              <v-icon right-3 color="green" class="mr-2">mdi-check</v-icon>
+            <v-btn text color="white" @click="postProduct" :disabled=disabled :loading="loading" v-on="on">
+              <v-icon right-3 color="teal lighten-3" class="mr-2">mdi-check</v-icon>
              Save
               </v-btn>
                </template>
@@ -276,9 +276,9 @@ export default {
         color: #000028;
     }
      .img-inputer.img-inputer--light, .img-inputer.img-inputer--{
-        width:260px !important;
+        width:290px !important;
         height:280px;
-        border: 1px solid #B2DFDB;
+        border: 1px solid #ffffff !important;
     }
     .img-inputer__preview-box.clear{
         display: none !important;
