@@ -5,10 +5,12 @@
     <v-layout row wrap align-center="align-center" justify-center="justify-center" pa-5>
       <v-flex xs12 sm4 id="sign-in-text-wrapper" text-xs-center px-5>
         <div class="headline font-weight-light text-center my-5" v-if="!show2">
-             Basic Information
+          Sign Up 
+             
             </div>
-            <div class="headline font-weight-light text-center my-5" v-else>
+            <div class="headline font-weight-light text-center my-2" v-else>
              Welcome
+             
             </div>
             <div>
                  <p v-if=" !show2 " class="body-2 teal--text text--lighten-3 text-capitalize text-center">Already have an account? <span @click="show2 = true" style="cursor: pointer;text-decoration:underline">Login</span></p>
@@ -26,7 +28,7 @@
     :loading="loading"
   >
     <v-card-title class="caption text-capitalize text-center d-block py-5" v-if="!show2">
-        The last link between you and sales. <br> Take the first step below
+        The last link between you and sales.
     </v-card-title>
     <v-card-title class="body-2 text-capitalize text-center d-block py-5" v-else>Sign in</v-card-title>
     <v-card-text>
@@ -106,25 +108,30 @@
       </v-layout>
       </v-card-text>
     <v-card-actions class="pa-2 align-center">
-      <v-btn rounded 
-      large 
-      class="px-5 mb-5 text indigo--text" 
-      color="#BEE890" 
+      <v-btn 
+      large ripple
+       class="px-5 mb-5 text teal--text" 
+      color="#23d2aa" 
       @click="register(userCred)"
       :loading="loading" v-show="!show2">
       <span class="caption px-5">Sign Up</span>
       </v-btn>
 
        <v-btn 
-            rounded large ripple
-            class="px-5 mb-5 text indigo--text" 
-            color="#BEE890" 
+             large ripple
+             class="px-5 mb-5 text teal--text" 
+      color="#23d2aa" 
             id="sign-in"
             @click="login(user)"
           :loading="loading" v-show="show2"><span class="caption px-5">Login</span></v-btn>
     </v-card-actions>
   </v-card>
-
+<v-row justify="center"> 
+           <p class="caption text--grey my-5" style="margin: 0 auto">
+<img :src="require('../assets/mulaalogo-white.png')" alt="" style="max-width:100px;">
+           </p>
+        
+       </v-row>
 </v-flex>
 
     </v-layout>

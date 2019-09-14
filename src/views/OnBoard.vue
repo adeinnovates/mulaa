@@ -1,9 +1,9 @@
 <template>
-    <div class="mt-5 pa-3">
-        <v-alert type="info" dark class="mx-5 teal lighten-4 teal--text">
+    <div class="mt-5 pa-3 page">
+       <!-- <v-alert type="info" dark class="mx-5 teal lighten-4 teal--text">
       Complete your busienss details below to activate your store and begin selling
-    </v-alert>
- <v-layout row wrap align-center="align-center" justify-center="justify-center" class="pa-4">
+    </v-alert>-->
+ <v-layout row wrap align-center="align-center" justify-center="justify-center" class="pa-4 mt-5">
     <v-form 
       ref="oform"
       v-model="valid"

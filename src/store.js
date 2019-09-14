@@ -27,6 +27,7 @@ const vuexLocalStorage = new VuexPersist({
     theProduct: state.theProduct,
     profileID: state.profileID,
     allProducts: state.allProducts,
+    userId: state.userId,
     userProducts: state.userProducts,
     userDiscounted: state.userDiscounted,
     userDetails: state.userDetails,

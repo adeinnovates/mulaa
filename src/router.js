@@ -67,7 +67,7 @@ export default new Router({
       name: 'onboard',
       component: Onboard,
       meta: { 
-        hideNavigation: true,
+        hideNavigation: false,
         //requiresAuth: true
       }
     },
