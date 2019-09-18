@@ -9,7 +9,9 @@
       v-model="valid"
       color=transparent
       >
-
+<v-img :src="require('../assets/winner.svg')"
+width="350"
+></v-img>
 <v-stepper v-model="e1" style="max-width:454px" class="mx-3">
     <v-stepper-header>
       <v-stepper-step :complete="e1 > 1" step="1" color="#000028">Business Info</v-stepper-step>
@@ -24,7 +26,7 @@
 
     </v-stepper-header>
 <v-stepper-items>
- <v-stepper-content step="1">
+ <v-stepper-content step="1" class="pa-0">
         <v-card
         max-width="454"
         class="mx-auto"
@@ -40,6 +42,7 @@
         <v-divider class="mx-4"></v-divider>
 
         <v-card-text>
+          {{userDetail}}
         <v-container>
 
         <v-row class="mb-0 pb-0">
@@ -364,20 +367,22 @@ import { mapState, mapGetters } from 'vuex'
 import axios from 'axios'
 export default {
     created(){
+      this.fetchUserData()
       if(this.$store.getters.isLoggedIn=== true){
        // this.$router.push('/') //this.$store.getters.isLoggedIn
       }
     },
     computed: {
-      ...mapState([
-      'registerMsg',
-      'color',
-      'show',
-      'loading',
-      'user',
-      'userId',
-      'userEmail'
-    ]),
+      ...mapState({
+      registerMsg:'registerMsg',
+      color:'color',
+      show:'show',
+      loading:'loading',
+      user:'user',
+      userId:'userId',
+      userEmail:'userEmail',
+      userDetails:'userDetails'
+      }),
     snackbar: {
       get() {
         return this.$store.state.snackbar;
@@ -429,6 +434,7 @@ export default {
                 profileImg: null
             },
           getid: this.userId,
+          userDetail: this.userDetails
 
       }
     },
@@ -447,7 +453,8 @@ export default {
 const headers2 = {
   'Content-Type': 'multipart/form-data'
 }
-    axios.post(`//dev.mulaa.co/imgapi/upload.php`, formData, {
+    //axios.post(`//dev.mulaa.co/imgapi/upload.php`, formData, {
+       axios.post(`https://shop.mulaa.co/imgapi/upload.php`, formData, {
     headers: headers2,
     onUploadProgress: progressEvent => {
        this.progressValue = Math.round(progressEvent.loaded / progressEvent.total *100)
@@ -496,7 +503,7 @@ const headers2 = {
                 //this.clear()
                 //this.loadProducts()
                 console.log(response)
-                this.$router.push("/")
+                this.$router.push({name: 'dashboard', params: { sheet: false }})
                 //console.log(response.data.id)
                 //this.profileId = response.data.id
             })
@@ -506,7 +513,11 @@ const headers2 = {
                 this.infoBar = true
               this.infoMsg = 'profile update failed, try again later'
             })
-  }
+  },
+  fetchUserData(){
+        this.$store.dispatch('loadUserDetails', this.user)
+        //console.log(userDetails)
+    }
   },
 }
 </script>

@@ -2,7 +2,7 @@
     <v-dialog v-model="dialog" max-width="454" class="extra-round extra">
         <template v-slot:activator="{ on }">
    <v-btn text color="#23d2aa" value="addimage" v-on="on">
-     <v-icon small left>mdi-square-edit-outline</v-icon>
+     <span class="caption">edit</span> <v-icon small left>mdi-square-edit-outline</v-icon>
     </v-btn>
         </template>
 

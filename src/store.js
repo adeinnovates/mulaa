@@ -5,8 +5,11 @@ import VuexPersist from 'vuex-persist';
 //import { exists } from 'fs';
 
 const BASEURL = 'http://dev.mulaa.africa/admin/wp-json'
+//const BASEURL = 'https://shop.mulaa.co/api/wp-json'
 const API_URL = 'http://dev.mulaa.africa/admin/wp-json/wp/v2/product'
+//const API_URL = 'https://shop.mulaa.co/api/wp-json/wp/v2/product'
 const API_URL_USER = 'http://dev.mulaa.africa/admin/wp-json/wp/v2/users'
+//const API_URL_USER = 'https://shop.mulaa.co/api/wp-json/wp/v2/users'
 const Token_ENDPOINT = '/jwt-auth/v1/token'
 const Products_ENDPOINT = '/mulaa-auth/v1/products'
 
@@ -32,7 +35,8 @@ const vuexLocalStorage = new VuexPersist({
     userDiscounted: state.userDiscounted,
     userDetails: state.userDetails,
     Discounted: state.Discounted,
-    Sales: state.Sales
+    Sales: state.Sales,
+    userAcctStatus: state.userAcctStatus
     // getRidOfThisModule: state.getRidOfThisModule (No one likes it.)
   })
 });
@@ -58,6 +62,7 @@ export default new Vuex.Store({
     userDetails:[],
     Discounted: [],
     Sales: [],
+    userSales: [],
     emptyStore: false,
     userId: '',
     userEmail: '',
@@ -66,7 +71,8 @@ export default new Vuex.Store({
     userBusiness:'',
     userPhone:'',
     userImage:'',
-    userUrl: 'https://mulaa.co/s/'
+    userUrl: 'https://shop.mulaa.co/u/',
+    userAcctStatus:'',
 
   },
   getters: {
@@ -91,8 +97,7 @@ export default new Vuex.Store({
       state.show = snackbar
       state.snackbar = true
       state.loading = false
-      //console.log(state.registerMsg)
-      
+      //console.log(state.registerMsg) 
     },
     auth_success_login(state, {token, user, userEmail, userID}) {
       state.status = 'success'
@@ -100,7 +105,8 @@ export default new Vuex.Store({
             state.user = user
             state.userEmail = userEmail
             state.userId = userID
-           // console.log(state.user)
+            axios.defaults.headers.common['Authorization'] = token
+            //console.log(state.user)
     },
     auth_error(state) {
       state.status = 'error'
@@ -136,7 +142,7 @@ export default new Vuex.Store({
         //state.allBooms = booms
         //console.log(booms)
         const filtered = products.filter(function(item){
-          console.log(item.authorName)
+          //console.log(item.authorName)
           return item.authorName == state.user; 
         });
         const Discounted = filtered.filter(function(item){
@@ -146,7 +152,7 @@ export default new Vuex.Store({
         state.Discounted = Discounted
         state.allProducts = products
         state.myproducts = filtered
-        console.log(state.myproducts)
+        //console.log(state.myproducts)
     
         state.loading = false
     },
@@ -157,7 +163,7 @@ export default new Vuex.Store({
        //state.userDiscounted = Discounted
        state.theProduct = product.acf
        state.loading = false
-       console.log(state.theProduct)
+       //console.log(state.theProduct)
    },
     user_products (state, products) {
        
@@ -178,9 +184,32 @@ export default new Vuex.Store({
     */
         state.loading = false
     },
+    user_sales (state, allSales) {
+       
+      /*const filtered = products.filter(function(item){
+        //console.log(item.authorName)
+        return item.authorName == state.user; 
+      });*/
+      const userSale = allSales.filter(function(item){
+        return item.merchant == state.user; 
+      });
+      //console.log('user sales: ' + JSON.stringify(userSale[0]))
+      state.userSales = userSale
+      //state.userProducts = products
+/*
+      state.Discounted = Discounted
+      state.allProducts = products
+      state.myproducts = filtered
+      console.log(state.myproducts)
+  */
+      state.loading = false
+  },
+  user_detail_blank(state, value){
+    state.userAcctStatus = value
+  },
     user_detail(state, value){
       state.userDetails = value
-      
+    state.userAcctStatus = ''
    state.userEmail = value.email
    state.userKey = value.payment_key
    state.userDesc = value.business_description
@@ -221,7 +250,7 @@ export default new Vuex.Store({
     },
     register({ commit }, user) {
       return new Promise((resolve, reject) => {
-        console.log(user)
+        //console.log(user)
         commit('auth_request')
         axios({ url: `${API_URL_USER}/register`, data: user, method: 'POST',
         headers: {
@@ -237,7 +266,7 @@ export default new Vuex.Store({
             // Add the following line:
             //axios.defaults.headers.common['Authorization'] = token
             commit('auth_success', {snackbar, message})
-            console.log(message)
+            //console.log(message)
             
             resolve(resp)
           })
@@ -257,7 +286,7 @@ export default new Vuex.Store({
         .then(resp => { 
           const all_products = resp.data
           commit('set_products', all_products)
-          console.log(resp.data)
+          //console.log(resp.data)
           //resolve(all_booms)
         })
         .catch(err => {
@@ -284,7 +313,7 @@ export default new Vuex.Store({
             commit('showEmpty')
           }
           
-          //resolve(all_booms)
+          resolve(resp)
         })
         .catch(err => {
           commit('load_error', err)
@@ -293,6 +322,32 @@ export default new Vuex.Store({
         })
       }else {console.log('An error occured loading product data, try again later')}
     },
+    loadUserSales ({commit, state}, userdata){
+      state.loading = true
+        //console.log(data)
+        if (userdata != ''){ //http://dev.mulaa.africa/admin/wp-json/wp/v2/product?search=userdata
+          axios({ url: `${BASEURL}`+'/wp/v2/sale', method: 'GET' })
+          .then(resp => { 
+            if(resp.data.length > 0){
+              const allSales = resp.data
+              //const userID = resp.data.acf.merchant
+              //$store.dispatch('getUser', authorID)
+             commit('user_sales', allSales) //{allSales, userID}
+              //console.log(allSales)
+            }else {
+              console.log('No Sales Record')
+              commit('showEmpty')
+            }
+            
+            resolve(resp)
+          })
+          .catch(err => {
+            commit('load_error', err)
+            console.log(err)
+            //reject(err)
+          })
+        }else {console.log('An error occured loading product data, try again later')}
+      },
     loadProduct ({commit, state}, userdata){
     state.loading = true
       //console.log(data)
@@ -310,7 +365,7 @@ export default new Vuex.Store({
             state.loading = false
           }
           
-          //resolve(all_booms)
+          resolve(resp)
         })
         .catch(err => {
           commit('load_error', err)
@@ -336,6 +391,7 @@ export default new Vuex.Store({
 
             resolve(resp)
           }else{
+            commit('user_detail_blank', 'user acct not activated')
             console.log('user acct not activated')
           }
             
@@ -366,7 +422,7 @@ export default new Vuex.Store({
       })
       .then(
         resp => {
-            console.log('user response' + resp)
+            //console.log('user response' + resp)
             //commit('auth_success_login', {token, user, userEmail})
         }
       )
@@ -386,14 +442,14 @@ export default new Vuex.Store({
             const userID = resp.data.user_display_id
             //const userEmail = resp.data.user_email
             localStorage.setItem('token', token)
-console.log(resp)
+//console.log(resp)
         //dispatch("getUser", {token, user, userEmail})
             // Add the following line:
             //console.log(token)
             axios.defaults.headers.common['Authorization'] = token
             commit('auth_success_login', {token, user, userEmail, userID})
             resolve(resp)
-            //dispatch("getUser", {token, user, userEmail})
+            dispatch('loadAllProducts', 'top')
           })
           .catch(err => {
             commit('auth_error')

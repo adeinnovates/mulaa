@@ -26,13 +26,48 @@
                     class="grey lighten-2 mb-3"
                     max-width="500"
                     max-height="300"
-                    ></v-img>
+                    >
+                    
+<v-row class="fill-height d-flex wrap justify-space-between" style="flex-direction: column;height:100%">
+<v-card-title class="ml-5">
+
+             <social-sharing :url=pageurl
+                :title=title
+                :description=description
+                :quote=description
+                hashtags="mulaa,buy,shop,share,deal"
+                inline-template>
+                 <div class="caption grey--text text--darken-2 grey lighten-5 px-3" elevation=5 style="border-radius:10px">
+              
+                    <network network="facebook" class="px-3">
+                    <i class="fa fa-facebook"></i> 
+                    </network>
+                    <network network="sms" class="px-3">
+                    <i class="fa fa-commenting-o"></i>
+                    </network>
+                    <network network="twitter" class="px-3">
+                    <i class="fa fa-twitter"></i>
+                    </network>
+                    <network network="whatsapp" class="px-3">
+                    <i class="fa fa-whatsapp"></i>
+                    </network>
+                  
+                     </div>
+                </social-sharing>
+</v-card-title>
+<v-card-text class="white--text ml-5">
+<div class="headline font-weight-light pt-12 otto">{{this.title}}</div>
+</v-card-text>
+</v-row>
+
+                    </v-img>
 </v-row>
 
                <!-- <v-card-title>-->
-                    <span class="headline grey--text text--darken-2 mb-1 px-4 font-weight-light pl-8">
+                    <!--<span class="headline grey--text text--darken-2 mb-1 px-4 font-weight-light pl-8">
                     {{this.title}}
-                    </span>
+                    </span>-->
+               
               <!--  </v-card-title>-->
             
 
@@ -42,12 +77,14 @@
             <v-col
             class=col-12
             >
-            <p class="caption grey--text text--darken-2 font-weight-light mb-0">
+            <p class="caption grey--text text--darken-2 mb-0">
             <span class="font-weight-bold">
             Product Details
-            </span> <br>
+<br />
+            </span>
             {{description}}
             </p>
+           
             </v-col>
             </v-row>  
 
@@ -80,10 +117,10 @@
        <v-badge color="green" v-if="this.discounted">
       <template v-slot:badge>
         <span 
-        class="caption" 
+        class="caption px-2" 
         >discount</span> <!-- <v-icon dark>mdi-check</v-icon> -->
       </template>
-      <span class="headline font-weight-light mb-0 teal--text pl-3">₦{{newAmount}}</span>
+      <span class="headline font-weight-light mb-0 teal--text">₦{{newAmount}}</span>
     </v-badge>
     <p v-else class="headline font-weight-light mb-0 teal--text pl-3">
        ₦{{newAmount}}
@@ -111,6 +148,7 @@
                   <v-icon small left>mdi-undo</v-icon>
                   Back
                 </v-btn>
+
             </v-card-actions>
 
  <v-card-text class="">
@@ -162,12 +200,24 @@ type="number"
        Make Payment
     </paystack>-->
 
+<v-row>
+                <v-col>
+                <v-text-field
+                class="teal--text form-field ma-0 pa-0"
+                v-model="buyerAddress"
+                label="Delivery Address"
+                placeholder="Your Location"
+                color="teal lighten-3"
+                ></v-text-field>
+                </v-col>
+                </v-row>
+
     </div>
-          <p class="caption grey--text text--darken-2 font-weight-light mb-0">
+         <!-- <p class="caption grey--text text--darken-2 font-weight-light mb-0">
             <span class="font-weight-bold">
             Delivery Details
             </span> 
-            </p>
+            </p>-->
 
             </v-card-text>
            
@@ -180,6 +230,36 @@ powered by <img :src="require('../assets/mulaalogo.png')" alt="" style="max-widt
            </p>
         
        </v-row>
+
+       <v-bottom-sheet v-model="sheet">
+      <v-sheet class="text-center" height="200px">
+        <v-progress-linear
+          :value="50"
+          class="my-0"
+          height="3"
+        ></v-progress-linear>
+
+        <v-btn
+          class="mt-4"
+          text
+          color="red"
+          @click="sheet = !sheet"
+        >close</v-btn>
+<v-list-item three-line>
+      <v-list-item-content>
+        <v-list-item-title>Quick Buy</v-list-item-title>
+        <v-list-item-subtitle>
+          Get this in addition to your purchase
+        </v-list-item-subtitle>
+        <v-list-item-subtitle>
+          consectetur adipiscing elit.
+        </v-list-item-subtitle>
+      </v-list-item-content>
+          </v-list-item>
+        <div class="py-3">This is a bottom sheet using the controlled by v-model instead of activator</div>
+      </v-sheet>
+    </v-bottom-sheet>
+    
     </div>
 </template>
 <script>
@@ -199,6 +279,7 @@ export default {
             hide:false,
 progress: 10,
 dialog: false,
+pageurl: 'https://shop.mulaa.co/'+this.$route.path,
            infoBar: false,
             /*title: this.theProduct.title,
             hidethis: this.theProduct.hidden, 
@@ -209,6 +290,7 @@ dialog: false,
             image: this.theProduct.image,
             price: this.theProduct.price,
             discounted: this.theProduct.show_discount,*/
+            sheet: false,
             title:'',
             delivery:'',
             description:'',
@@ -219,6 +301,7 @@ dialog: false,
             buyerName: '',
             buyerEmail: '',
             buyerPhone: '',
+            buyerAddress:'',
             newAmount: null,
         infoMsg: '', 
         color: '',
@@ -287,7 +370,8 @@ dialog: false,
         salesRecord(response){
             //console.log("sales: "+response)
 
-axios.post(`//dev.mulaa.africa/admin/wp-json/jwt-auth/v1/token`, {
+//axios.post(`//dev.mulaa.africa/admin/wp-json/jwt-auth/v1/token`, {
+  axios.post(`https://shop.mulaa.co/api/wp-json/jwt-auth/v1/token`, {
     username: 'system',
     password: 'letmein2020()'
   }
@@ -318,7 +402,8 @@ const salesData = {
                  status: "publish"
             }
 
-           axios.post(`http://dev.mulaa.africa/admin/wp-json/wp/v2/sale`, 
+           //axios.post(`http://dev.mulaa.africa/admin/wp-json/wp/v2/sale`, 
+           axios.post(`https://shop.mulaa.co/api/wp-json/wp/v2/sale`,
            salesData, options
 ).then(resp => {
             console.log(resp.data)
@@ -452,4 +537,7 @@ this.loading = false
     .hide{
         display:none!important;
     }
+    .otto {
+ text-shadow: 0px 1px 1px rgba(0,0,0, 0.4); 
+}
 </style>

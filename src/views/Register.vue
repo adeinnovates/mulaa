@@ -5,7 +5,7 @@
     <v-layout row wrap align-center="align-center" justify-center="justify-center" pa-5>
       <v-flex xs12 sm4 id="sign-in-text-wrapper" text-xs-center px-5>
         <div class="headline font-weight-light text-center my-5" v-if="!show2">
-          Sign Up 
+          Sign Up
              
             </div>
             <div class="headline font-weight-light text-center my-2" v-else>
@@ -180,7 +180,7 @@ export default {
         this.loading = true;
             this.$store
               .dispatch("login", user)
-              .then(() => this.$router.push("/")) //this.$router.push("/")
+              .then(() => this.$router.push({name: 'dashboard'})) //this.$router.push("/")
               .catch(err => {
                 this.loading = false
                 console.log(err)
@@ -207,7 +207,7 @@ export default {
               .then(
                 () => {
                   this.loading = false
-                  this.$router.push("/onboard")
+                  this.$router.push({name: 'dashboard', params: { sheet: true }})
                   }
                 ) //this.$router.push("/")
               .catch(err => {

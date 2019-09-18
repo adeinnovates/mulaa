@@ -48,7 +48,7 @@
             theme="light"
             no-mask
             :capture=false
-            action="//dev.mulaa.co/imgapi/prod.php" 
+            action="https://shop.mulaa.co/imgapi/prod.php" 
             :on-error="onErr"
             :on-success="onSuc"
             placeholder = "Drop image here or tap to add one"

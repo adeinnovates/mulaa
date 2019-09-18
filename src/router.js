@@ -9,13 +9,20 @@ import Product from './components/Product.vue'
 import Sales from './views/Sales.vue'
 import User from './views/User.vue'
 import Settings from './views/Settings.vue'
+import store from './store'
 import { userInfo } from 'os';
 
 Vue.use(Router)
 
+/*
 export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
+  */
+
+  let router = new Router({
+    mode: 'history',
+    base: process.env.BASE_URL,
   routes: [
     {
       path: '/',
@@ -23,7 +30,7 @@ export default new Router({
       component: Dashboard,
       meta: { 
         hideNavigation: false,
-        //requiresAuth: true
+        requiresAuth: true
       }
     },
     {
@@ -32,7 +39,7 @@ export default new Router({
       component: Products,
       meta: { 
         hideNavigation: false,
-        //requiresAuth: true
+        requiresAuth: true
       }
     },
     {
@@ -41,7 +48,7 @@ export default new Router({
       component: Sales,
       meta: { 
         hideNavigation: false,
-        //requiresAuth: true
+        requiresAuth: true
       }
     },
     {
@@ -50,7 +57,7 @@ export default new Router({
       component: Register,
       meta: { 
         hideNavigation: true,
-        //requiresAuth: false
+        requiresAuth: false
       }
     },
     {
@@ -59,7 +66,7 @@ export default new Router({
       component: Settings,
       meta: { 
         hideNavigation: false,
-        //requiresAuth: false
+        requiresAuth: true
       }
     },
     {
@@ -68,7 +75,7 @@ export default new Router({
       component: Onboard,
       meta: { 
         hideNavigation: false,
-        //requiresAuth: true
+        requiresAuth: true
       }
     },
     {
@@ -78,7 +85,7 @@ export default new Router({
       props: true,
       meta: { 
         hideNavigation: true,
-        //requiresAuth: true
+        requiresAuth: false
       }
     },
     {
@@ -88,7 +95,16 @@ export default new Router({
       props: true,
       meta: { 
         hideNavigation: true,
-        //requiresAuth: true
+        requiresAuth: false
+      }
+    },
+    {
+      path: '/u/',
+      name: 'user',
+      component: Register,
+      meta: { 
+        hideNavigation: true,
+        requiresAuth: false
       }
     },
     /*{
@@ -113,3 +129,19 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth) {
+    if (store.getters.isLoggedIn != true) {
+      console.log('/userr')
+      return next('/user')
+      //return
+    }
+    return next()
+  } else {
+    return next()
+  }
+})
+
+
+export default router

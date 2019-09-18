@@ -4,8 +4,8 @@
              <v-layout row wrap equal>
                 <v-flex xs12 sm8 md8 pa-5>
                      <div class="text-center pt-5 mt-5 mb-2">
-<v-sheet color="caption orange lighten-5 pa-2 rounded" style="color:#000028" elevation="1">
-your link: {{userURL}}
+<v-sheet color="caption orange lighten-3 pa-2 rounded" style="color:#000028" elevation="1">
+your link: {{userURL}} {{userPhone}}
 <v-btn small text
 >
     <!--<span class="caption teal--text">
@@ -51,7 +51,7 @@ your link: {{userURL}}
                                     Total Sales
                                 </div>
                                 <p class="font-weight-bold headline white--text">
-                                    0
+                                    {{salesCount}}
                                 </p>
                                 </v-card-text>
                                 </v-card>
@@ -77,7 +77,6 @@ your link: {{userURL}}
                            </v-flex>
                     </v-layout>
 
-
                    <EmptyState v-if="myproducts.length < 1"></EmptyState>
                    <div v-else>
                        <!-- <div class="text-center mt-5 pt-4">
@@ -95,7 +94,7 @@ your link: {{userURL}}
                             indeterminate
                             color="green"
                             ></v-progress-linear> -->
-                           <v-flex xs6 sm6 md4 lg4 v-for="product in myproducts.slice(0, 3)" :key="product.id">
+                           <v-flex xs6 sm6 md4 lg4 v-for="product in myproducts.slice(0, 4)" :key="product.id">
             <v-card flat hover class="text-xs-center ma-2">
               <v-responsive class="pt-0">
                 <v-img
@@ -140,6 +139,38 @@ your link: {{userURL}}
                 </v-flex>
              </v-layout>
          </v-container>
+
+      <v-bottom-sheet v-model="sheet" class="teal--text text--lighten-3">
+      <v-sheet class="text-center" height="250px" style="background-color:#000028 !important;">
+      <v-progress-linear
+      :value="50"
+      class="my-0"
+      height="3"
+      ></v-progress-linear>
+
+      <v-btn
+      class="mt-2"
+      text
+      color="red"
+      @click="sheet = !sheet"
+      >X</v-btn>
+ <div class="pa-3">
+   <p class="text-center teal--text text--lighten-3">
+        Welcome {{this.user}},
+        <br>
+        Complete your profile to begin selling with mulaa  
+        <v-btn
+      class=""
+      color="teal"
+      to="/onboard"
+      >Click Here</v-btn>
+<v-img :src="require('../assets/winner.svg')"></v-img>
+      </p>
+   </div>
+      
+      </v-sheet>
+      </v-bottom-sheet>
+
     </div>
 </template>
 
@@ -157,12 +188,13 @@ export default {
         EmptyState,
         MoreBtn,
         AddProduct,
-        Editor
+        Editor,
   },
     data(){
         return{
+          sheet: this.$route.params.sheet || false,
             copySucceeded: null,
-            userURL: 'https://mulaa.co/u/'+this.$store.state.user,
+            userURL: 'https://shop.mulaa.co/u/'+this.$store.state.user,
             slides: 5,
     active: 1,
             dialog: false,
@@ -170,22 +202,16 @@ export default {
             uploadMsg: '',
             infoBar: false,
             infoMsg: '', 
-            products: '',
-            items: [
-          {name:'11A Grade Super Double Drawn Mink Raw Donor Deep (Human Hair)', price:'55,000',description:'lorem lipsum Quae quidem, illum harum architecto, voluptatem assumenda itaque porro eveniet quo minus ab id repellendus',photoUrl:'/img/users/user1.jpg'},
-          {name:'Stylish Tiwa By JAK', price:'14,000',description:'Quae quidem, illum harum architecto, voluptatem assumenda itaque porro eveniet quo minus ab id repellendus',photoUrl:'/img/users/user2.jpg'},
-          {name:'Betsey Johnson Set', price:'20,500',description:'lorem lipsum oluptatem assumenda itaque porro eveniet quo minus ab id repellendus',photoUrl:'/img/users/user3.jpg'},
-          {name:'THANDOS ANKARA BALLET FLATS THE CLASS ACT REMIX ', price:'12,000',description:'oluptatem assumenda itaque porro eveniet quo minus ab id repellendus',photoUrl:'/img/users/user1.jpg'},
-          {name:'2 Stylish Tiwa By JAK', price:'14,000',description:'Quae quidem, illum harum architecto, voluptatem assumenda itaque porro eveniet quo minus ab id repellendus',photoUrl:'/img/users/user2.jpg'},
-          {name:'2 Betsey Johnson Set', price:'20,500',description:'lorem lipsum oluptatem assumenda itaque porro eveniet quo minus ab id repellendus',photoUrl:'/img/users/user3.jpg'},
-          {name:'3 Stylish Tiwa By JAK', price:'14,000',description:'Quae quidem, illum harum architecto, voluptatem assumenda itaque porro eveniet quo minus ab id repellendus',photoUrl:'/img/users/user1.jpg'},
-          {name:'3 Betsey Johnson Set', price:'20,500',description:'lorem lipsum oluptatem assumenda itaque porro eveniet quo minus ab id repellendus',photoUrl:'/img/users/user2.jpg'}
-        ]
+            products: ''
         }
     },
     created() {
-        this.fetchData()
+        return this.fetchData()
     },
+     watch: {
+    // call again the method if the route changes
+    //'$route': 'fetchData'
+  },
     methods: {
         handleCopyStatus(status) {
       this.copySucceeded = status
@@ -202,7 +228,13 @@ export default {
     },
     fetchData(){
         this.$store.dispatch('loadAllProducts', 'top')
+         this.$store.dispatch('loadUserSales', this.user)
+         
        // this.$store.dispatch('getUser', this.user)
+       //this.reload()
+    },
+    reload(){
+      this.$router.go()
     }
     
   },
@@ -222,7 +254,17 @@ export default {
       allProducts: 'allProducts',
       myproducts:'myproducts',
       Discounted:'Discounted',
+      userPhone: 'userPhone',
+       userDetails: ' userDetails'
       }),
+    userSales: {
+      get() {
+        return this.$store.state.userSales;
+      },
+      set(value) {
+        this.$store.commit('user_sales', value);
+      }
+    },
     snackbar: {
       get() {
         return this.$store.state.snackbar;
@@ -244,6 +286,9 @@ export default {
     },
     countApproved: function () {
         return Object.keys(this.approved).length;
+    },
+    salesCount: function(){
+      return Object.keys(this.userSales).length;
     }
     }
 }

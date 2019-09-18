@@ -95,8 +95,11 @@ export default {
     fetchData(){
         this.$store.dispatch('loadAllProducts', 'top')
        // this.$store.dispatch('getUser', this.user)
+       //this.reload()
+    },
+    reload(){
+      this.$router.go()
     }
-    
   },
   mounted(){
        

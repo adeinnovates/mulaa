@@ -14,9 +14,13 @@ import 'vue-glide-js/dist/vue-glide.css'
 import LogRocket from 'logrocket';
 //LogRocket.init('rbxlbi/mulaa');
 
+
+var SocialSharing = require('vue-social-sharing')
+
 Vue.use(VueClipboard);
 Vue.use(VueGlide)
 Vue.component('ImgInputer', ImgInputer)
+Vue.use(SocialSharing)
 
 Vue.config.productionTip = false
 
@@ -25,8 +29,8 @@ const token = localStorage.getItem('token')
 
 //Vue.use(VueFirestore)
 const base = axios.create({
-  //baseURL: 'http://dev.mulaa.co/private/wp-json/wp/v2', //http://res189.servconfig.com/~hosted5/kboom/private/
-  baseURL: 'http://dev.mulaa.africa/admin/wp-json/wp/v2',
+  //baseURL: 'http://dev.mulaa.africa/private/wp-json/wp/v2', //http://res189.servconfig.com/~hosted5/kboom/private/
+  baseURL: 'https://shop.mulaa.co/api/wp-json/wp/v2',
   headers: {
     'Authorization': 'Bearer '+`${token}`,
     'Content-Type':  'application/json', //'application/json'
