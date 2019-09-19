@@ -87,29 +87,6 @@
            
             </v-col>
             </v-row>  
-
-            <!--
-            <v-divider class="mt-1 mb-0"></v-divider>
-            <v-row
-            class="my-1"
-            align="center"
-            >
-            <strong class="mx-3 font-weight-light teal--text">
-            Complete your order
-            </strong>
-
-            <v-divider vertical></v-divider>
-
-            <div class="flex-grow-1"></div>
-
-            <v-progress-circular
-            :value="progress"
-            class="mr-2"
-            ></v-progress-circular>
-            </v-row>
-
-            <v-divider class="mb-1"></v-divider>
-            -->
             </div>
             </v-card-text>
 
@@ -117,7 +94,8 @@
        <v-badge color="green" v-if="this.discounted">
       <template v-slot:badge>
         <span 
-        class="caption px-2" 
+        class="px-2" 
+        style="font-size:10px"
         >discount</span> <!-- <v-icon dark>mdi-check</v-icon> -->
       </template>
       <span class="headline font-weight-light mb-0 teal--text">₦{{newAmount}}</span>
@@ -129,13 +107,13 @@
              text
              @click="payWithPaystack"
              color="#23d2aa" 
-             class=""
+             class="ml-10"
              :disabled=disabled :loading="loading"
              >
               <v-icon small left>mdi-cash</v-icon>
                 pay now
              </v-btn>
-             
+             <!--
                <v-btn text color="grey" 
                class="caption grey--text"
                :to="{
@@ -147,7 +125,8 @@
                 >
                   <v-icon small left>mdi-undo</v-icon>
                   Back
-                </v-btn>
+                </v-btn> 
+                -->
 
             </v-card-actions>
 
@@ -364,7 +343,6 @@ pageurl: 'https://shop.mulaa.co/'+this.$route.path,
     },
      created() {
         this.fetchData()
-        console.log('user: '+ this.name)
     },
     methods: {
         salesRecord(response){
@@ -431,15 +409,15 @@ const salesData = {
             this.newAmount = this.amount
             }else{
                 console.log('valid click')
-                this.title = this.theproducts.title.rendered
-            this.hidethis = this.theproducts.acf.hidden
-            this.datePosted = this.theproducts.acf.date_posted
-            this.delivery = this.theproducts.acf.description
+                this.title = this.theproducts.title
+            this.hidethis = this.theproducts.hidden
+            this.datePosted = this.theproducts.date_posted
+            this.delivery = this.theproducts.description
             this.description = this.theProduct.description
-            this.discountPrice = this.theproducts.acf.discount_price
-            this.image = this.theproducts.acf.image
-            this.price = this.theproducts.acf.price
-            this.discounted = this.theproducts.acf.show_discount
+            this.discountPrice = this.theproducts.discount_price
+            this.image = this.theproducts.image
+            this.price = this.theproducts.price
+            this.discounted = this.theproducts.show_discount
             this.newAmount = this.amount
             console.log(this.newAmount)
             }

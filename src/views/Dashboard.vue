@@ -1,10 +1,13 @@
 <template>
-    <div class="dashboard fill-height teal lighten-5">
+    <div class="dashboard fill-height teal lighten-5 pa-1">
          <v-container fluid fill-height teal lighten-5>
              <v-layout row wrap equal>
                 <v-flex xs12 sm8 md8 pa-5>
-                     <div class="text-center pt-5 mt-5 mb-2">
-<v-sheet color="caption orange lighten-3 pa-2 rounded" style="color:#000028" elevation="1">
+                     <div class="text-center pt-5 mt-3 mb-1">
+                        <v-sheet v-if="userAcctStatus != ''" color="caption red lighten-4 pa-2 rounded my-3" style="color:#000028" elevation="0">
+{{userAcctStatus}}
+</v-sheet>
+<v-sheet v-else color="caption orange lighten-4 pa-2 rounded" style="color:#000028" elevation="0">
 your link: {{userURL}} {{userPhone}}
 <v-btn small text
 >
@@ -22,7 +25,7 @@ your link: {{userURL}} {{userPhone}}
                                 <v-card
                                 color="#000028"
                                 dark
-                                class=ma-4
+                                class=ma-2
                                 >
                                 <v-card-text class="">
                                 <div class="headline mb-2 teal--text text--lighten-3 font-weight-light">
@@ -41,7 +44,7 @@ your link: {{userURL}} {{userPhone}}
                                 <v-card
                                 color="#000028"
                                 dark
-                                class=ma-4
+                                class=ma-2
                                 >
                                 <v-card-text class="white--text">
                                 <div class="headline mb-2 teal--text text--lighten-3 font-weight-light">
@@ -60,7 +63,7 @@ your link: {{userURL}} {{userPhone}}
                                 <v-card
                                 color="grey"
                                 dark
-                                class=ma-4
+                                class=ma-2
                                 >
                                 <v-card-text class="white--text">
                                 <div class="headline mb-2 teal--text text--lighten-3 font-weight-light">
@@ -76,8 +79,7 @@ your link: {{userURL}} {{userPhone}}
                                 </v-card>
                            </v-flex>
                     </v-layout>
-
-                   <EmptyState v-if="myproducts.length < 1"></EmptyState>
+                   <EmptyState v-if="counted < 1"></EmptyState>
                    <div v-else>
                        <!-- <div class="text-center mt-5 pt-4">
                             <v-sheet color="transparent">Add a new product</v-sheet>
@@ -94,19 +96,19 @@ your link: {{userURL}} {{userPhone}}
                             indeterminate
                             color="green"
                             ></v-progress-linear> -->
-                           <v-flex xs6 sm6 md4 lg4 v-for="product in myproducts.slice(0, 4)" :key="product.id">
+                           <v-flex xs6 sm6 md4 lg4 v-for="product in currentUserProd.slice(0, 4)" :key="product.productID">
             <v-card flat hover class="text-xs-center ma-2">
               <v-responsive class="pt-0">
                 <v-img
           :src="product.image"
-          aspect-ratio="2.75"
+          aspect-ratio="1.75"
          ></v-img>
               </v-responsive>
-              <v-card-text>
+              <v-card-text class="pb-0">
                 <div class="subheading text-truncate">
-                  {{product.title.rendered}}
+                  {{product.title}}
                 </div>
-                <div class="grey--text text-truncate"> {{product.acf.description}}</div>
+                <div class="grey--text text-truncate"> {{product.description}}</div>
               </v-card-text>
               <v-card-actions>
                <!-- <v-btn text color="#23d2aa" :to="{name:'product',params: {
@@ -117,7 +119,7 @@ your link: {{userURL}} {{userPhone}}
                 </v-btn>-->
                 <Editor :theproducts="product"></Editor>
                 <v-spacer></v-spacer>
-                <div class="grey--text"> ₦{{product.acf.price}}</div>
+                <div class="grey--text"> ₦{{product.price}}</div>
               </v-card-actions>
               </v-card>
         </v-flex>
@@ -148,19 +150,21 @@ your link: {{userURL}} {{userPhone}}
       height="3"
       ></v-progress-linear>
 
-      <v-btn
+      <!--<v-btn
       class="mt-2"
       text
       color="red"
       @click="sheet = !sheet"
-      >X</v-btn>
+      >X</v-btn>-->
  <div class="pa-3">
    <p class="text-center teal--text text--lighten-3">
         Welcome {{this.user}},
         <br>
         Complete your profile to begin selling with mulaa  
         <v-btn
-      class=""
+        ripple
+        small
+      class="my-2"
       color="teal"
       to="/onboard"
       >Click Here</v-btn>
@@ -206,13 +210,20 @@ export default {
         }
     },
     created() {
+      //this.fetchUserData()
+      console.log('created')
         return this.fetchData()
+        
     },
      watch: {
     // call again the method if the route changes
     //'$route': 'fetchData'
   },
     methods: {
+      fetchUserData(){
+        this.$store.dispatch('loadUserDetails', this.user)
+        console.log('fetch userDetails')
+    },
         handleCopyStatus(status) {
       this.copySucceeded = status
     },
@@ -229,6 +240,7 @@ export default {
     fetchData(){
         this.$store.dispatch('loadAllProducts', 'top')
          this.$store.dispatch('loadUserSales', this.user)
+          this.$store.dispatch('loadUserProducts', this.user)
          
        // this.$store.dispatch('getUser', this.user)
        //this.reload()
@@ -255,7 +267,9 @@ export default {
       myproducts:'myproducts',
       Discounted:'Discounted',
       userPhone: 'userPhone',
-       userDetails: ' userDetails'
+       userDetails: 'userDetails',
+       userAcctStatus: 'userAcctStatus',
+       userProducts:'userProducts'
       }),
     userSales: {
       get() {
@@ -281,8 +295,24 @@ export default {
         this.$store.commit('loading', value);
       }
     },
+    currentUserProd: {
+      get() {
+        return this.$store.state.userProducts;
+      },
+      set(value) {
+        this.$store.commit('loadUserProducts', value);
+      }
+    },
+     currentUserDetail: {
+      get() {
+        return this.$store.state.userDetails;
+      },
+      set(value) {
+        this.$store.commit('loadUserDetails', value);
+      }
+    },
     counted : function () {
-        return Object.keys(this.myproducts).length;
+        return Object.keys(this.currentUserProd).length;
     },
     countApproved: function () {
         return Object.keys(this.approved).length;

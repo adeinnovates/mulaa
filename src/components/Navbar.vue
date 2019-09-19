@@ -54,10 +54,11 @@
       <v-divider light inset></v-divider>
         <v-list>
           <v-list-item>
-            <v-list-item-avatar color="teal">
+           <!-- <v-list-item-avatar color="teal">
               <v-img :src=userimg v-if="userimg != ''"></v-img>
               <span v-else class="white--text headline">US</span>
-            </v-list-item-avatar>
+            </v-list-item-avatar>-->
+            <avatar :username=this.user></avatar>
           </v-list-item>
 
  <v-list-item
@@ -112,7 +113,11 @@
 </template>
 <script>
 import { mapState, mapGetters } from 'vuex'
+import Avatar from 'vue-avatar'
 export default {
+  components: {
+    Avatar
+  },
     data(){
         return{
           userimg: '',//'http://dev.mulaa.co/imgapi/uploads/avatar/' + this.user +'.jpg',

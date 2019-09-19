@@ -184,7 +184,7 @@ width="350"
         </v-card>
  </v-stepper-content>
 
-<v-stepper-content step="2">
+<v-stepper-content step="2" class="pa-0">
         <v-card
         max-width="454"
         class="mx-auto"
@@ -210,6 +210,7 @@ width="350"
         > 
         <v-text-field
         filled
+        hint="copy public key from your Paystack dashboard"
                     full-width
                     single-line
                     background-color="#f4f8f7"
@@ -274,7 +275,7 @@ width="350"
         </v-card>
  </v-stepper-content>
 
- <v-stepper-content step="3">
+ <v-stepper-content step="3" class="pa-0">
         <v-card
         max-width="454"
         class="mx-auto"

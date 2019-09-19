@@ -42,7 +42,7 @@
               filled
               full-width
               single-line
-             v-model="userCred.username"
+             v-model="usernameraw"
               label="Name"
               background-color="#f4f8f7"
               class="teal--text form-field"
@@ -193,7 +193,7 @@ export default {
               .dispatch("register", userdets).then(() => {
                 //this.$refs.form.reset()
                 console.log('done')
-                this.newlogin (userdets)
+                return this.newlogin (userdets)
                 })
               .catch(err => {
                 this.loading = false
@@ -207,7 +207,7 @@ export default {
               .then(
                 () => {
                   this.loading = false
-                  this.$router.push({name: 'dashboard', params: { sheet: true }})
+                  return this.$router.push({name: 'dashboard', params: { sheet: true }})
                   }
                 ) //this.$router.push("/")
               .catch(err => {
@@ -220,13 +220,14 @@ export default {
     },
     data() {
       return {
+        usernameraw:'',
         user:{
           username: '',
           password: ''
         },
         userCred:
             {
-                username:'',
+                username: '',
                 email:'',
                 password:'',
                 /*"roles": [

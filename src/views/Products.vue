@@ -135,15 +135,23 @@ export default {
         this.$store.commit('loading', value);
       }
     },
+    currentUserProd: {
+      get() {
+        return this.$store.state.userProducts;
+      },
+      set(value) {
+        this.$store.commit('loadUserProducts', value);
+      }
+    },
     counted : function () {
-        return Object.keys(this.myproducts).length;
+        return Object.keys(this.currentUserProd).length;
     },
     countApproved: function () {
         return Object.keys(this.approved).length;
     },
     filteredProducts: function(){
-      return this.myproducts.filter((myproduct) => {
-        return myproduct.title.rendered.match(this.search) || myproduct.acf.price.match(this.search)
+      return this.currentUserProd.filter((myproduct) => {
+        return myproduct.title.match(this.search) || myproduct.price.match(this.search)
       })
     }
     }

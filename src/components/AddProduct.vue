@@ -3,7 +3,7 @@
         <template v-slot:activator="{ on }">
             <v-responsive style="margin-top:-30px;">
 
-                <div class="text-center my-5 pt-4">
+                <div class="text-center my-5 pt-4 mb-3">
                                 <v-sheet color="transparent" class="caption">Add a new product</v-sheet>
                                 <v-spacer></v-spacer>
                                 <v-btn class="mx-2 mt-2" 
@@ -89,6 +89,7 @@
             v-model="price"
             label="price"
             placeholder="base price"
+            type="number"
             outlined
             color="teal lighten-3"
           ></v-text-field>
@@ -98,6 +99,7 @@
            class="teal--text form-field ma-0"
             v-model="discount"
             label="discount"
+            type="number"
             placeholder="discount price"
             outlined
             color="teal lighten-3"
@@ -179,7 +181,8 @@ export default {
      
         },
         fetchData(){
-        this.$store.dispatch('loadAllProducts', 'top')
+          this.$store.dispatch('loadUserProducts', this.user)
+          this.$store.dispatch('loadAllProducts', 'top')
        // this.$store.dispatch('getUser', this.user)
     },
       resetForm () {
@@ -229,12 +232,14 @@ export default {
                 //this.clear()
                 //this.loadProducts()
                 console.log(response)
-                this.$store.dispatch('loadAllProducts', 'top')
+                //this.$store.dispatch('loadAllProducts', 'top')
+                this.$store.dispatch('loadUserProducts', this.user)
                 this.color = 'green lighten-1'
                 this.infoBar = true
               this.infoMsg = 'Product Successfully saved'
               this.fetchData()
             this.resetForm()
+            return
             })
             .catch((e) => {
                 this.loading = false;
@@ -242,16 +247,17 @@ export default {
                 this.color = 'red darken-1'
                 this.infoBar = true
               this.infoMsg = 'Error saving your product'
+              return
                 //this.infoBar = true
               //this.infoMsg = 'profile update failed, try again later'
             })
   }
   },
   computed: {
-      ...mapState([
-      'registerMsg',
-      'user'
-    ]),
+      ...mapState({
+      registerMsg:'registerMsg',
+      user:'user'
+      }),
      disabled() {
        if (this.imageFile.length < 1 || this.title == ' '){
          return true
@@ -276,8 +282,8 @@ export default {
         color: #000028;
     }
      .img-inputer.img-inputer--light, .img-inputer.img-inputer--{
-        width:290px !important;
-        height:280px;
+        width:270px !important;
+        height:250px;
         border: 1px solid #ffffff !important;
     }
     .img-inputer__preview-box.clear{

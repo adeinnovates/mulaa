@@ -2,9 +2,14 @@
     <div class="userpage products fill-height grey lighten-5 pa-5 page">
         <v-container>
                 <div class="text-center">
-                <v-avatar class="my-5" size="60">
-                <img v-if="this.userImage != ''" src="https://vuetifyjs.com/apple-touch-icon-180x180.png" alt="avatar">
-                <img else :src="require('../assets/profile.png')" alt="avatar">
+                  
+              <v-avatar class="my-2" size="80">
+                <avatar :username=this.user 
+                  :rounded=true
+                  :src=this.userImage
+                  :size=80
+                  background-color="#23d2aa"
+                  ></avatar>
                 </v-avatar>
                 <p class="title grey--text darken-2 font-weight-black">
                         {{name}}
@@ -53,7 +58,7 @@
         <v-layout row wrap pt-2 mt-1>
                            
                          
-                           <v-flex xs6 sm6 md4 lg4 v-for="product in filterHiddenProduct" :key="product.id">
+                           <v-flex xs6 sm6 md4 lg4 v-for="product in filterHiddenProduct" :key="product.productID">
            <transition name="slide-fade" mode="out-in">
             <v-card flat hover class="text-xs-center ma-2" transition="slide-x-transition">
               <v-responsive class="pt-0">
@@ -75,7 +80,7 @@
                :to="{
                    name: 'product',
                    params: {
-                       id: product.id,
+                       id: product.productID,
                        theproducts:product
                    }
                }"
@@ -89,7 +94,7 @@
                 </Buy>-->
                
                 <v-spacer></v-spacer>
-                <div class="grey--text caption"> ₦{{product.acf.price}}</div>
+                <div class="grey--text caption"> ₦{{product.price}}</div>
               </v-card-actions>
               </v-card>
               </transition>
@@ -109,8 +114,29 @@ powered by <img :src="require('../assets/mulaalogo.png')" alt="" style="max-widt
 <script>
 import { mapState, mapGetters } from 'vuex'
 import Buy from '@/components/BuyProduct'
+import Avatar from 'vue-avatar'
 export default {
+  metaInfo() {
+    let pageTitle = this.userBusiness
+    return {
+      title: pageTitle ? pageTitle : this.getMerchant,
+      titleTemplate: '%s - mulaa.co',
+      htmlAttrs: {
+        lang: 'en',
+        amp: true
+      },
+      
+      meta: [
+     {property: 'og:title', content: this.getMerchant},
+     {property: 'og:type', content: this.getMerchantInfo.business_name},
+     {property: 'og:url', content: this.pagePath},
+     {property: 'og:image', content: this.getMerchantInfo.brand_image},
+     {property: 'og:description', content: this.getMerchantInfo.business_description},
+      ]
+    }
+    },
     components: {
+       Avatar
        // Buy
   },
   props: ['name','theproducts']
@@ -131,7 +157,9 @@ export default {
             infoBar: false,
             infoMsg: '', 
             products: '',
-            bizPhone: ''
+            bizPhone: '',
+            merchantName : '',
+            pagePath: 'https://shop.mulaa.co'+ this.$route.path
         }
     },
     computed: {
@@ -153,7 +181,8 @@ export default {
       userProducts:'userProducts',
       Discounted:'Discounted',
       userUrl:'userUrl',
-      userImage:'userImage'
+      userImage:'userImage',
+      userDetails: 'userDetails'
       }),
     snackbar: {
       get() {
@@ -173,17 +202,17 @@ export default {
     },
     filteredProducts: function(){
       return this.userProducts.filter((userproduct) => {
-        return userproduct.title.rendered.match(this.search) || userproduct.acf.price.match(this.search)
+        return userproduct.title.match(this.search) || userproduct.price.match(this.search)
       })
     },
     filterHiddenProduct: function(){
       return this.filteredProducts.filter(function(product) {
-					return product.acf.hidden === false;
+					return product.hidden < 1;
 				});
     }
     },
     mounted() {
-        this.bizPhone = 'https://api.whatsapp.com/send?phone='+this.userPhone
+        this.getUserPhone()
     },
      created() {
         this.fetchData()
@@ -191,8 +220,18 @@ export default {
     },
     methods: {
     fetchData(){
+      console.log('this user '+this.name)
         this.$store.dispatch('loadUserProducts', this.name)
         this.$store.dispatch('loadUserDetails', this.name)
+    },
+    getMerchant(){
+      return this.userBusiness
+    },
+    getMerchantInfo(){
+      return this.userDetails
+    },
+    getUserPhone(){
+this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userPhone
     }
     
   }

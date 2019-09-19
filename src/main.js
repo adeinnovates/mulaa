@@ -5,6 +5,7 @@ import axios from 'axios'
 import store from './store'
 import './registerServiceWorker'
 import vuetify from './plugins/vuetify';
+import VueMeta from 'vue-meta'
 
 import VueClipboard from 'vue-clipboard2'
 import ImgInputer from 'vue-img-inputer'
@@ -16,6 +17,11 @@ import LogRocket from 'logrocket';
 
 
 var SocialSharing = require('vue-social-sharing')
+
+Vue.use(VueMeta, {
+  // optional pluginOptions
+  refreshOnceOnNavigation: true
+})
 
 Vue.use(VueClipboard);
 Vue.use(VueGlide)
