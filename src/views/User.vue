@@ -207,7 +207,7 @@ export default {
     },
     filterHiddenProduct: function(){
       return this.filteredProducts.filter(function(product) {
-					return product.hidden < 1;
+					return product.hidden < 1 || product.hidden == false;
 				});
     }
     },

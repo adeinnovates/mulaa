@@ -42,8 +42,10 @@
               filled
               full-width
               single-line
-             v-model="usernameraw"
+             v-model="userCred.username"
               label="Name"
+              :rules="nameRules"
+              hint="a-z no spaces allowed"
               background-color="#f4f8f7"
               class="teal--text form-field"
               prepend-inner-icon="mdi-account-outline" mb-0
@@ -215,6 +217,10 @@ export default {
                 console.log(err)
                 }
                 );
+          },
+          sellerId (value) {
+            const letters = /^[a-z]+$/;
+            return letters.test(value)
           }
         
     },
@@ -243,7 +249,12 @@ export default {
         emailRules: [
         v => !!v || 'E-mail is required',
         v => /.+@.+/.test(v) || 'E-mail must be valid'
-      ]
+      ],
+       nameRules: [
+        (v)=> /^[a-z0-9]+$/.test(v) || 'lowercase only, no space allowed',
+      (v) => !!v || 'Name is required',
+      (v) => v && v.length <= 10 || 'Name must be less than 10 characters'
+    ]
       }
     }
 }

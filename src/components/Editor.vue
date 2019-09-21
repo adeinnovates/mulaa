@@ -23,7 +23,7 @@
             <v-card-title><span class="caption teal--text">Update: {{this.title}}</span></v-card-title>
             <v-card-text>
                 <p>
-                Edit details about your product
+                Edit details about your product // {{this.hidethis}}
                 </p>
           
           <v-text-field
@@ -111,17 +111,17 @@ export default {
      props: ['theproducts'],
  data(){
         return{
-            description: this.theproducts.acf.description,
-            title: this.theproducts.title.rendered,
+            description: this.theproducts.description,
+            title: this.theproducts.title,
             dialog: false,
             loading: false,
             infoBar: false,
-            thepost: this.theproducts.id,
-            price: this.theproducts.acf.price,
-            discount: this.theproducts.acf.discount_price,
-            discountEnable:this.theproducts.acf.show_discount,
+            thepost: this.theproducts.productID,
+            price: this.theproducts.price,
+            discount: this.theproducts.discount_price,
+            discountEnable:this.theproducts.show_discount,
             deliveryLocations: '',
-            hidethis: this.theproducts.acf.hidden,
+            hidethis: this.theproducts.hidden,
         infoMsg: '', 
         color: '',
         urlRules: [

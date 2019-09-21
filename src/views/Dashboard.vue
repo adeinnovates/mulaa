@@ -4,17 +4,11 @@
              <v-layout row wrap equal>
                 <v-flex xs12 sm8 md8 pa-5>
                      <div class="text-center pt-5 mt-3 mb-1">
-                        <v-sheet v-if="userAcctStatus != ''" color="caption red lighten-4 pa-2 rounded my-3" style="color:#000028" elevation="0">
+                        <v-sheet v-if="userAcctStatus != ' '" color="caption red lighten-4 pa-2 rounded my-3" style="color:#000028" elevation="0">
 {{userAcctStatus}}
 </v-sheet>
 <v-sheet v-else color="caption orange lighten-4 pa-2 rounded" style="color:#000028" elevation="0">
-your link: {{userURL}} {{userPhone}}
-<v-btn small text
->
-    <!--<span class="caption teal--text">
-    copy
-    </span>-->
-    </v-btn>
+your link: {{userURL}}
 </v-sheet>
 <p v-if="copySucceeded === true">Copied!</p>
     <p v-if="copySucceeded === false">Press CTRL+C to copy.</p>
@@ -96,8 +90,19 @@ your link: {{userURL}} {{userPhone}}
                             indeterminate
                             color="green"
                             ></v-progress-linear> -->
-                           <v-flex xs6 sm6 md4 lg4 v-for="product in currentUserProd.slice(0, 4)" :key="product.productID">
+                           <v-flex xs6 sm6 md4 lg4 v-for="product in userProducts.slice(0, 4)" :key="product.productID">
             <v-card flat hover class="text-xs-center ma-2">
+              <div v-if="product.hidden == 1" class="hiddenProd">
+            <v-chip
+            class="ma-2 point"
+            color="red"
+            label
+            x-small
+            text-color="white"
+            >
+            <v-icon x-small left>mdi-close</v-icon>
+            hidden
+            </v-chip>
               <v-responsive class="pt-0">
                 <v-img
           :src="product.image"
@@ -121,6 +126,34 @@ your link: {{userURL}} {{userPhone}}
                 <v-spacer></v-spacer>
                 <div class="grey--text"> ₦{{product.price}}</div>
               </v-card-actions>
+              </div>
+              
+               <div v-else class="">
+              <v-responsive class="pt-0">
+                <v-img
+          :src="product.image"
+          aspect-ratio="1.75"
+         ></v-img>
+              </v-responsive>
+              <v-card-text class="pb-0">
+                <div class="subheading text-truncate">
+                  {{product.title}}
+                </div>
+                <div class="grey--text text-truncate"> {{product.description}}</div>
+              </v-card-text>
+              <v-card-actions>
+               <!-- <v-btn text color="#23d2aa" :to="{name:'product',params: {
+                    id: product.id
+                  }}">
+                  <v-icon small left>mdi-square-edit-outline</v-icon>
+                  
+                </v-btn>-->
+                <Editor :theproducts="product"></Editor>
+                <v-spacer></v-spacer>
+                <div class="grey--text"> ₦{{product.price}}</div>
+              </v-card-actions>
+              </div>
+
               </v-card>
         </v-flex>
                        </v-layout>
@@ -238,15 +271,13 @@ export default {
       this.active = index
     },
     fetchData(){
-        this.$store.dispatch('loadAllProducts', 'top')
+        //this.$store.dispatch('loadAllProducts', 'top')
          this.$store.dispatch('loadUserSales', this.user)
+         this.$store.dispatch('loadUserDetails', this.user)
           this.$store.dispatch('loadUserProducts', this.user)
          
        // this.$store.dispatch('getUser', this.user)
        //this.reload()
-    },
-    reload(){
-      this.$router.go()
     }
     
   },
@@ -296,7 +327,7 @@ export default {
       }
     },
     currentUserProd: {
-      get() {
+      get(value) {
         return this.$store.state.userProducts;
       },
       set(value) {
@@ -312,18 +343,41 @@ export default {
       }
     },
     counted : function () {
-        return Object.keys(this.currentUserProd).length;
+        return Object.keys(this.userProducts).length;
     },
     countApproved: function () {
         return Object.keys(this.approved).length;
     },
     salesCount: function(){
       return Object.keys(this.userSales).length;
+    },
+    hiddenProd: function(){
+     
     }
     }
 }
 </script>
 <style>
+.hiddenProd{
+    border-bottom: 2px solid red;
+    filter: alpha(opacity=80);
+  /* Modern Browsers */
+  opacity: 0.8;
+}
+.hiddenProd .point{
+  position: absolute;
+  z-index:9999;
+}
+.hiddenProd::before {   /* Added */
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color:transparent;
+  transition: 0.5s;
+}
     .headlineText{
         color: #000028;
     }

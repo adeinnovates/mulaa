@@ -16,7 +16,7 @@ const Products_ENDPOINT = '/mulaa-auth/v1/products'
 Vue.use(Vuex)
 
 const vuexLocalStorage = new VuexPersist({
-  key: 'vuex',
+  key: 'vuex',//vuex
   storage: window.localStorage, 
   reducer: state => ({
     token: state.token,
@@ -142,17 +142,17 @@ export default new Vuex.Store({
         //state.allBooms = booms
         //console.log(booms)
         const filtered = products.filter(function(item){
-          console.log(item.authorName)
+         // console.log(item.authorName)
           return item.authorName == state.user; 
         });
         const Discounted = filtered.filter(function(item){
           return item.showDiscount == true; 
         });
-console.log('this user '+state.user)
+//console.log('this user '+state.user)
         state.Discounted = Discounted
         state.allProducts = products
         state.myproducts = filtered
-        console.log(state.myproducts)
+        //console.log(state.myproducts)
     
         state.loading = false
     },
@@ -174,7 +174,7 @@ console.log('this user '+state.user)
         state.myproducts = products
         state.userProducts = products
         
-        console.log(products)
+        //console.log(products)
 /*
         state.Discounted = Discounted
         state.allProducts = products
@@ -297,7 +297,7 @@ console.log('this user '+state.user)
     },
     loadUserProducts ({commit, state}, userdata){
     state.loading = true
-      //console.log(data)
+      //console.log(data) https://shop.mulaa.co/api/wp-json/mulaa-auth/v1/products
       if (userdata != ''){ //http://dev.mulaa.africa/admin/wp-json/wp/v2/product?per_page=100
         axios({ url: `${BASEURL}${Products_ENDPOINT}`+'?author='+userdata, method: 'GET' })
         .then(resp => { 
@@ -306,7 +306,7 @@ console.log('this user '+state.user)
             const authorID = resp.data.theAuthor
             //$store.dispatch('getUser', authorID)
             commit('user_products', user_products)
-            console.log(resp.data)
+            //console.log(resp.data)
           }else {
             console.log('Store Empty')
             commit('showEmpty')
@@ -385,7 +385,7 @@ console.log('this user '+state.user)
       .then(
         resp => {
           if(resp.data[0]){
-            console.log(resp.data[0].acf)
+            //console.log(resp.data[0].acf)
             commit('user_detail', resp.data[0].acf)
             //commit('auth_success_login', {token, user, userEmail})
 
@@ -406,6 +406,7 @@ console.log('this user '+state.user)
       return new Promise((resolve, reject) => {
         commit('logout')
         localStorage.removeItem('token')
+        localStorage.removeItem('mulaa')
         delete axios.defaults.headers.common['Authorization']
         resolve()
       })

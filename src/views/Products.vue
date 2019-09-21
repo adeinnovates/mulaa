@@ -23,7 +23,7 @@
                             indeterminate
                             color="green"
                             ></v-progress-linear> 
-                           <v-flex xs6 sm6 md4 lg4 v-for="product in filteredProducts" :key="product.id">
+                           <v-flex xs6 sm6 md4 lg4 v-for="product in filteredProducts" :key="product.productID">
             <v-card flat hover class="text-xs-center ma-2">
               <v-responsive class="pt-0">
                 <v-img
@@ -33,9 +33,9 @@
               </v-responsive>
               <v-card-text>
                 <div class="subheading text-truncate">
-                  {{product.title.rendered}}
+                  {{product.title}}
                 </div>
-                <div class="grey--text text-truncate"> {{product.acf.description}}</div>
+                <div class="grey--text text-truncate"> {{product.description}}</div>
               </v-card-text>
               <v-card-actions>
                <!-- <v-btn text color="#23d2aa" :to="{name:'product',params: {
@@ -46,7 +46,7 @@
                 </v-btn>-->
                 <Editor :theproducts="product"></Editor>
                 <v-spacer></v-spacer>
-                <div class="grey--text"> ₦{{product.acf.price}}</div>
+                <div class="grey--text"> ₦{{product.price}}</div>
               </v-card-actions>
               </v-card>
         </v-flex>
