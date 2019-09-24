@@ -6,8 +6,70 @@
 <div class="headline font-weight-light my-5">
  <span class="teal--text">Sales Records</span>
 </div>
+
+ <v-layout row wrap px-1 py-0 mt-n3>
+                       
+                           <v-flex xs6 sm6 md4 lg4>
+                                <v-card
+                                color="#000028"
+                                dark
+                                class=ma-2
+                                >
+                                <v-card-text class="">
+                                <div class="headline mb-2 teal--text text--lighten-3 font-weight-light">
+                                    <v-icon class="teal--text text--lighten-3 mr-2">
+                                    mdi-cart
+                                    </v-icon>  
+                                    Total Sales Value
+                                    </div>
+                                <p class="font-weight-bold headline white--text">
+                                    {{totalValue | currency}}
+                                </p>
+                                </v-card-text>
+                                </v-card>
+                           </v-flex>
+                           <v-flex xs6 sm6 md4 lg4>
+                                <v-card
+                                color="#000028"
+                                dark
+                                class=ma-2
+                                >
+                                <v-card-text class="white--text">
+                                <div class="headline mb-2 teal--text text--lighten-3 font-weight-light">
+                                    <v-icon class="teal--text text--lighten-3 mr-2">
+                                    mdi-basket
+                                    </v-icon>               
+                                    Total Items Sold
+                                </div>
+                                <p class="font-weight-bold headline white--text">
+                                    {{salesCount}}
+                                </p>
+                                </v-card-text>
+                                </v-card>
+                           </v-flex>
+                           <v-flex xs6 sm6 md4 lg4 d-none d-sm-none d-md-flex>
+                                <v-card
+                                color="grey"
+                                dark
+                                class=ma-2
+                                >
+                                <v-card-text class="white--text">
+                                <div class="headline mb-2 teal--text text--lighten-3 font-weight-light">
+                                    <v-icon class="teal--text text--lighten-1 mr-2">
+                                    mdi-account-check-outline
+                                    </v-icon>  
+                                    Total Leads
+                                </div>
+                                <p class="font-weight-bold headline white--text">
+                                    coming soon
+                                </p>
+                                </v-card-text>
+                                </v-card>
+                           </v-flex>
+                    </v-layout>
   <v-row>
                        <v-col>
+                         <div class="pa-5 teal lighten-4 mb-2" style="border-radius:10px">
                          <v-text-field
                          v-model="search"
                          :clearable=true
@@ -15,6 +77,7 @@
             label="Search"
             placeholder="Search Product Name, Customer Name or Price"
           ></v-text-field>
+                         </div>
                        </v-col>
                      </v-row>
   <div>
@@ -90,6 +153,7 @@ const gradients = [
     ['#00c6ff', '#F0F', '#FF0'],
     ['#f72047', '#ffd200', '#1feaea'],
   ]
+  
 export default {
     data () {
       return {
@@ -151,6 +215,23 @@ export default {
       return this.userSales.filter((mysale) => {
         return mysale.acf.product.match(this.search) || mysale.acf.fullname.match(this.search) || mysale.acf.amount.match(this.search) || mysale.acf.ref_id.match(this.search)
       })
+    },
+    totalValue: function(){
+
+  let total = [];
+
+  Object.entries(this.userSales).forEach(([key, val]) => {
+      total.push(val.acf.amount) // the value of the current key.
+  });
+
+  return total.reduce(function(totall, num){ 
+    //console.log(typeof num)
+    return totall + Number(num)
+    }, 0);
+
+},
+ salesCount: function(){
+      return Object.keys(this.userSales).length;
     }
     },
      created() {

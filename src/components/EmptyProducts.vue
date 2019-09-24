@@ -14,11 +14,9 @@
                             >
                                 <v-card-text class="pt-0">
                                 <div class="text-center">
-                                    <v-img :src="require('../assets/successful.svg')" max-width="200"></v-img>
+                                    <v-img :src="require('../assets/successful.svg')" max-width="300" class="mb-3"></v-img>
                                 </div>
-                                </v-card-text>
-                            </v-card>
-                            <p class="text-center headline font-weight-light teal--text">
+                                <div class="text-center headline font-weight-light teal--text d-block">
                                 Welcome, let's create your first product!
                                 
                                 <!-- <v-divider class="mt-3"></v-divider>-->
@@ -27,10 +25,14 @@
                             indeterminate
                             color="green"
                             ></v-progress-linear> -->
-                            </p>
+                            </div>
+                             <AddProduct></AddProduct>
+                                </v-card-text>
+                            </v-card>
+                            
                             
                            
-                            <AddProduct></AddProduct>
+                           
                            
                             
                          </v-row>                       

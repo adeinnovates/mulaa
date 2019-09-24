@@ -2,7 +2,7 @@
     <v-dialog v-model="dialog" max-width="454" class="extra-round extra">
         <template v-slot:activator="{ on }">
    <v-btn text color="#23d2aa" value="addimage" v-on="on">
-     <span class="caption">edit</span> <v-icon small left>mdi-square-edit-outline</v-icon>
+     <span class="caption small">edit</span> <v-icon small left>mdi-square-edit-outline</v-icon>
     </v-btn>
         </template>
 
@@ -17,7 +17,7 @@
     >
            
               <v-snackbar v-model=infoBar :timeout="10000" top right :color="color" :value=infoMsg>
-  <span style="color:#1A227E">{{infoMsg}}</span>
+  <span style="color:#000028">{{infoMsg}}</span>
   <!--<v-btn flat color="white" @click="snackbar = false">close</v-btn>-->
 </v-snackbar>
             <v-card-title><span class="caption teal--text">Update: {{this.title}}</span></v-card-title>
@@ -178,7 +178,7 @@ export default {
                 this.$store.dispatch('loadAllProducts', 'top')
                 this.color = 'green lighten-1'
                 this.infoBar = true
-              this.infoMsg = '🤗 Boom Successfully updated'
+              this.infoMsg = '🤗 Product Successfully updated'
             
             })
             .catch((e) => {
@@ -186,7 +186,7 @@ export default {
                 console.error(e)
                 this.color = 'red darken-1'
                 this.infoBar = true
-              this.infoMsg = 'Error updating your boom, try again'
+              this.infoMsg = 'Error updating your product, try again'
                 //this.infoBar = true
               //this.infoMsg = 'profile update failed, try again later'
             })

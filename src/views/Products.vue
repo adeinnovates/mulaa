@@ -7,13 +7,13 @@
 
                      <v-row>
                        <v-col>
-                         <v-text-field
-                         v-model="search"
-                         :clearable=true
+                         <div class="pa-5 teal lighten-4 mb-5" style="border-radius:10px">
+                         <v-text-field v-model="search" :clearable=true
                          color="teal lighten-3 teal--text"
             label="Search"
             placeholder="Search Product Name or Price"
           ></v-text-field>
+          </div>
                        </v-col>
                      </v-row>
                         <p class="overline mb-0">products</p>
@@ -28,14 +28,14 @@
               <v-responsive class="pt-0">
                 <v-img
           :src="product.image"
-          aspect-ratio="2.75"
+          aspect-ratio="1.75"
          ></v-img>
               </v-responsive>
               <v-card-text>
                 <div class="subheading text-truncate">
                   {{product.title}}
                 </div>
-                <div class="grey--text text-truncate"> {{product.description}}</div>
+                <div class="grey--text text-truncate small"> {{product.description}}</div>
               </v-card-text>
               <v-card-actions>
                <!-- <v-btn text color="#23d2aa" :to="{name:'product',params: {
@@ -46,7 +46,7 @@
                 </v-btn>-->
                 <Editor :theproducts="product"></Editor>
                 <v-spacer></v-spacer>
-                <div class="grey--text"> ₦{{product.price}}</div>
+                <div class="grey--text small"> ₦{{product.price}}</div>
               </v-card-actions>
               </v-card>
         </v-flex>

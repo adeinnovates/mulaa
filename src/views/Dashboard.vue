@@ -1,19 +1,18 @@
 <template>
-    <div class="dashboard fill-height teal lighten-5 pa-1">
+    <div class="dashboard fill-height teal lighten-5 pa-1 page">
          <v-container fluid fill-height teal lighten-5>
              <v-layout row wrap equal>
-                <v-flex xs12 sm8 md8 pa-5>
-                     <div class="text-center pt-5 mt-3 mb-1">
-                        <v-sheet v-if="userAcctStatus != ' '" color="caption red lighten-4 pa-2 rounded my-3" style="color:#000028" elevation="0">
+                <v-flex xs12 sm8 md7 pa-5>
+                    <div class="text-center pt-5 mt-3 mb-1">
+                        <v-sheet v-if="counted == 1" color="caption red lighten-4 pa-2 rounded my-3" style="color:#000028" elevation="0">
 {{userAcctStatus}}
 </v-sheet>
 <v-sheet v-else color="caption orange lighten-4 pa-2 rounded" style="color:#000028" elevation="0">
 your link: {{userURL}}
 </v-sheet>
-<p v-if="copySucceeded === true">Copied!</p>
-    <p v-if="copySucceeded === false">Press CTRL+C to copy.</p>
 </div>
-                    <v-layout row wrap>
+
+                    <v-layout row wrap pt-10>
                        
                            <v-flex xs6 sm6 md4 lg4>
                                 <v-card
@@ -113,7 +112,7 @@ your link: {{userURL}}
                 <div class="subheading text-truncate">
                   {{product.title}}
                 </div>
-                <div class="grey--text text-truncate"> {{product.description}}</div>
+                <div class="grey--text text-truncate small"> {{product.description}}</div>
               </v-card-text>
               <v-card-actions>
                <!-- <v-btn text color="#23d2aa" :to="{name:'product',params: {
@@ -124,7 +123,7 @@ your link: {{userURL}}
                 </v-btn>-->
                 <Editor :theproducts="product"></Editor>
                 <v-spacer></v-spacer>
-                <div class="grey--text"> ₦{{product.price}}</div>
+                <div class="grey--text small"> ₦{{product.price}}</div>
               </v-card-actions>
               </div>
               
@@ -139,7 +138,7 @@ your link: {{userURL}}
                 <div class="subheading text-truncate">
                   {{product.title}}
                 </div>
-                <div class="grey--text text-truncate"> {{product.description}}</div>
+                <div class="grey--text text-truncate small"> {{product.description}}</div>
               </v-card-text>
               <v-card-actions>
                <!-- <v-btn text color="#23d2aa" :to="{name:'product',params: {
@@ -150,7 +149,7 @@ your link: {{userURL}}
                 </v-btn>-->
                 <Editor :theproducts="product"></Editor>
                 <v-spacer></v-spacer>
-                <div class="grey--text"> ₦{{product.price}}</div>
+                <div class="grey--text small mr-2"> ₦{{product.price}}</div>
               </v-card-actions>
               </div>
 
@@ -160,15 +159,28 @@ your link: {{userURL}}
                        <MoreBtn></MoreBtn>
                    </div>
                 </v-flex>
+                <!--
                 <v-flex sm1>
                     <v-divider
       class="mx-0"
       vertical
     ></v-divider>
                 </v-flex>
-                 <v-flex xs12 sm3 md3 pa-5 d-none d-sm-none d-md-flex>
-                     <div class="pt-5 mt-5">
-                        div right
+                -->
+                 <v-flex pa-5 d-none d-sm-none d-md-flex class="border-left">
+                  
+                     <div class="pt-5 mt-5 pl-10">
+                       <p class="caption small">
+                         My store link : 
+                         <v-chip
+      class="ma-1 teal lighten-4"
+    >
+      {{userURL}}
+    </v-chip>
+              
+
+                       </p>
+                        <vue-friendly-iframe :src="userURL"></vue-friendly-iframe>
                      </div>
                     
                 </v-flex>
@@ -231,7 +243,7 @@ export default {
         return{
           sheet: this.$route.params.sheet || false,
             copySucceeded: null,
-            userURL: 'https://shop.mulaa.co/u/'+this.$store.state.user,
+            userURL: 'https://mulaa.me/u/'+this.$store.state.user,
             slides: 5,
     active: 1,
             dialog: false,
@@ -239,7 +251,8 @@ export default {
             uploadMsg: '',
             infoBar: false,
             infoMsg: '', 
-            products: ''
+            products: '',
+            previewStore: this.userURL
         }
     },
     created() {
@@ -282,7 +295,7 @@ export default {
     
   },
   mounted(){
-       
+      //this.$store.dispatch('loadUserProducts', this.user)
     },
   computed: {
         ...mapGetters([
@@ -354,10 +367,45 @@ export default {
     hiddenProd: function(){
      
     }
+    },
+    watch: {
+      counted(newVal, oldVal){
+          if(newVal > 0){
+            return this.sheet = true
+          }
+      }
     }
 }
 </script>
 <style>
+.v-application .teal.lighten-5{
+  background-image: url('~@/assets/bg-wrap.png') !important;
+}
+.theme--light.v-text-field--outlined fieldset {
+    border-color: rgba(178, 223, 219, 0.54) !important;
+}
+.img-inputer.img-inputer--light, .img-inputer.img-inputer--{
+  border-color: rgba(178, 223, 219, 0.54) !important;
+  background-color:rgba(224, 242, 241, 0.24)!important;
+}
+.vue-friendly-iframe{
+  padding:6em 2em;
+  background-color:#B2DFDB;
+  max-width: 380px;
+    border-radius: 25px;
+}
+.vue-friendly-iframe iframe{
+  border:0;
+  height: 530px;
+  display:block;
+margin: 0 auto;
+}
+.teal-bg{
+  background-color:#B2DFDB;
+}
+.small{
+  font-size: 11px !important;
+}
 .hiddenProd{
     border-bottom: 2px solid red;
     filter: alpha(opacity=80);

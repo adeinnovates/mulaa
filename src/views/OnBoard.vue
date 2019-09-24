@@ -60,6 +60,26 @@ width="350"
         v-model="businessName"
     
         placeholder="Business Name"
+        prepend-inner-icon="mdi-account-card-details-outline"
+        class="teal--text form-field mb-0"
+        ></v-text-field>
+        </v-col>
+        </v-row>
+         <v-row class="mb-0 pb-0">
+        <v-col
+        cols="12"
+        sm="12"
+        class="mb-0 pb-0"
+        > 
+        <v-text-field
+        filled
+                    full-width
+                    single-line
+                    background-color="#f4f8f7"
+        color="teal lighten-3"
+        v-model="businessDesc"
+    
+        placeholder="Business Description"
         prepend-inner-icon="mdi-domain"
         class="teal--text form-field mb-0"
         ></v-text-field>
@@ -193,7 +213,7 @@ width="350"
         >
         <v-list-item two-line>
         <v-list-item-content>
-        <v-list-item-title class="headline mb-2 teal--text">Conversion Details</v-list-item-title>
+        <v-list-item-title class="headline mb-2 teal--text">Sales Details</v-list-item-title>
         <v-list-item-subtitle>Select your preferred payment provider</v-list-item-subtitle>
         </v-list-item-content>
         </v-list-item>
@@ -425,6 +445,7 @@ export default {
         Country: ['Nigeria', 'Ghana', 'Togo'],
         paystackKey: '',
         facebookPixel: '',
+        businessDesc: '',
          progressValue:'',
         overlay: false,
         userProfile:
@@ -496,6 +517,7 @@ const headers2 = {
                 country:this.Country,
                 facebook_pixel: this.facebookPixel,
                 brand_image: this.userProfile.profileImg,
+                business_description: this.businessDesc,
                 last_login: ''//dateFunction() //JSON.stringify({ user })
                 },
                  status: "publish"

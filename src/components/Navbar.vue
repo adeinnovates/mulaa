@@ -33,8 +33,8 @@
         target="_blank"
         color="teal"
       >
-       <span v-if="isLoggedIn"><a @click="logout" style="text-decoration: none;" class="teal--text">Logout</a></span>
-       <span v-else><router-link to="/user" style="text-decoration: none;" class="teal--text">Login</router-link></span>
+       <span v-if="isLoggedIn"><a @click="logout" style="text-decoration: none;" class="teal--text small">Logout</a></span>
+       <span v-else><router-link to="/user" style="text-decoration: none;" class="teal--text small">Login</router-link></span>
       </v-btn>
     </v-app-bar>
 
@@ -46,7 +46,7 @@
              Mulaa
           </v-list-item-title>
           <v-list-item-subtitle class="caption teal--text text--lighten-3">
-            The last link between you and sales
+            one simple link to better sales
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
@@ -128,7 +128,8 @@ export default {
                 {icon: 'mdi-view-dashboard-variant', text: 'Dashboard', route:'/'},
                 {icon: 'mdi-cart', text: 'Products', route:'/products'},
                 {icon: 'mdi-store', text: 'Sales', route:'/sales'},
-                {icon: 'mdi-settings', text: 'Settings', route:'/settings'}
+                {icon: 'mdi-settings', text: 'Settings', route:'/settings'},
+                {icon: 'mdi-account', text: 'Account Activation', route:'/onboard'}
             ],
             notice: false
         }
@@ -141,7 +142,8 @@ export default {
       'loading',
       'user',
       'allProducts',
-      'userEmail'
+      'userEmail',
+      'userDetails'
     ]),
         isLoggedIn: function() {
           return this.$store.getters.isLoggedIn;

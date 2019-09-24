@@ -20,7 +20,7 @@
         </template>
 
  <v-card 
-     class="mx-auto teal lighten-5"
+     class="mx-auto teal lighten-5 mb-0"
             >
              <v-snackbar v-model=infoBar :timeout="10000" top right :color="color" :value=infoMsg>
   <span style="color:#1A227E">{{infoMsg}}</span>
@@ -34,7 +34,7 @@
          <p class="teal--text mb-5 px-7 caption">
                     Tap the image uploader to select a photo from your phone, enter the product name below
                 </p>
-<v-container class="white lighten-5">
+<v-container class="white lighten-5 mb-0">
 
     <v-row>
         <v-col>

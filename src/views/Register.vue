@@ -144,6 +144,7 @@
 </template>
 <script>
 import { mapState, mapGetters } from 'vuex'
+import axios from 'axios'
 export default {
     created(){
       if(this.$store.getters.isLoggedIn=== true){
@@ -176,8 +177,12 @@ export default {
     },
     mounted(){
       //this.load();
+      this.test();
     },
     methods: {
+      test(){
+        console.log(decodeURI('https:\/\/mulaa.me\/u\/randommmmm'))
+      },
       login (user) {
         this.loading = true;
             this.$store
@@ -204,19 +209,36 @@ export default {
           },
           newlogin (user) {
         this.loading = true;
+        //console.log(JSON.stringify(user))
+        
+        const userUnik = user.username
+        const priUrl = 'https://shop.mulaa.co/u/'+userUnik
+        //user.username
+         /* axios.get('https://mulaa.me/u/api/?key=P1fjdH02F3y2&url='+priUrl+'&custom='+userUnik)
+          .then(resp => {
+          
+            console.log(resp.short);
+            //this.loading = false;
+          }).catch(err => {
+                this.loading = false
+                console.log(err)
+                }
+              );
+        */
             this.$store
               .dispatch("login", user)
               .then(
                 () => {
                   this.loading = false
-                  return this.$router.push({name: 'dashboard', params: { sheet: true }})
+                  axios.get('https://mulaa.me/u/api/?key=P1fjdH02F3y2&url='+priUrl+'&custom='+userUnik)
+                  return this.$router.push({name: 'dashboard'})//{name: 'dashboard', params: { sheet: true }}
                   }
                 ) //this.$router.push("/")
               .catch(err => {
                 this.loading = false
                 console.log(err)
                 }
-                );
+              ); 
           },
           sellerId (value) {
             const letters = /^[a-z]+$/;

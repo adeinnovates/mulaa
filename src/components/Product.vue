@@ -14,9 +14,9 @@
       class="pa-0"
     >
            
- <v-snackbar v-model=infoBar top right :color="color" :value=infoMsg>
+ <v-snackbar v-model=infoBar bottom right :color="color" :value=infoMsg>
   <span>{{infoMsg}}</span>
-  <v-btn text overline color="white" @click="infobar = false">close</v-btn>
+  <v-btn text overline color="white" @click="infoBar = false">close</v-btn>
 </v-snackbar>
 <v-row align="center" justify="center">
                     <v-img
@@ -98,10 +98,10 @@
         style="font-size:10px"
         >discount</span> <!-- <v-icon dark>mdi-check</v-icon> -->
       </template>
-      <span class="headline font-weight-light mb-0 teal--text">₦{{newAmount}}</span>
+      <span class="headline font-weight-light mb-0 teal--text">{{newAmount | currency}}</span>
     </v-badge>
     <p v-else class="headline font-weight-light mb-0 teal--text pl-3">
-       ₦{{newAmount}}
+       {{newAmount | currency}}
         </p>
              <v-btn
              text
@@ -297,7 +297,8 @@ pageurl: 'https://shop.mulaa.co/'+this.$route.path,
       registerMsg:'registerMsg',
       loading:'loading',
       userKey:'userKey',
-      theProduct:'theProduct'
+      theProduct:'theProduct',
+      userDetails:'userDetails'
       }),
       loading: {
       get() {
@@ -317,7 +318,7 @@ pageurl: 'https://shop.mulaa.co/'+this.$route.path,
         return text;
       },
       amount(){
-          if(this.discounted == false){
+          if(this.discounted == false || this.discounted == undefined){
               let amount = this.price
               console.log(this.discounted)
               console.log('amount: '+ amount)
@@ -343,6 +344,8 @@ pageurl: 'https://shop.mulaa.co/'+this.$route.path,
     },
      created() {
         this.fetchData()
+        this.updateData()
+//console.log(this.userKey)
     },
     methods: {
         salesRecord(response){
@@ -395,6 +398,7 @@ const salesData = {
           })
         },
         updateData(){
+          console.log(this.theProduct.price)
             if(this.theproducts === undefined){
                 console.log('refreshed')
                 this.title = this.theProduct.title
@@ -407,6 +411,7 @@ const salesData = {
             this.price = this.theProduct.price
             this.discounted = this.theProduct.show_discount
             this.newAmount = this.amount
+             console.log('refreshed amount '+this.newAmount) 
             }else{
                 console.log('valid click')
                 this.title = this.theproducts.title
@@ -481,7 +486,7 @@ const salesData = {
       },
       payWithPaystack() {
           const paystackOptions = {
-                    key: this.userKey,
+                    key: this.userDetails.payment_key,
                     email: this.buyerEmail,
                     amount: Number(this.amount2()),
                     ref: this.reference,
@@ -503,7 +508,6 @@ this.loading = false
     let paystackScript = document.createElement('script')
     paystackScript.setAttribute('src', 'https://js.paystack.co/v1/inline.js')
     document.head.appendChild(paystackScript)
-    this.updateData()
 
     var oLuanchBtn = document.getElementById('popupBtn');
             oLuanchBtn.style.display = 'none';

@@ -6,7 +6,7 @@
               <v-avatar class="my-2" size="80">
                 <avatar :username=this.user 
                   :rounded=true
-                  :src=this.userImage
+                  :src=this.userDetails.brand_image
                   :size=80
                   background-color="#23d2aa"
                   ></avatar>
@@ -15,7 +15,7 @@
                         {{name}}
                     </p>
                      <v-divider width=50% class="align-center d-block" style="margin: 0 auto"></v-divider>
-                     <p class="mt-2 mb-0 caption grey--text darken-1 font-weight-light">{{userDesc}}</p>
+                     <p class="mt-2 mb-0 caption grey--text darken-1 font-weight-light" style="max-width:550px;margin:0 auto"> {{this.userDetails.business_description}}</p>
                 </div>
                 <v-row justify="center" class="mb-4">
                     <v-btn small 
@@ -105,8 +105,9 @@
         </v-container>
        <v-row justify="center"> 
            <p class="caption text--grey my-5" style="margin: 0 auto">
-powered by <img :src="require('../assets/mulaalogo.png')" alt="" style="max-width:70px;margin-left:5px">
-           </p>
+             
+powered by <a href="https://mulaa.co/?utm_source=footer&utm_medium=userpage" target="_blank"><img :src="require('../assets/mulaalogo.png')" alt="" style="max-width:70px;margin-left:5px">
+         </a>  </p>
         
        </v-row>
     </div>
@@ -220,9 +221,10 @@ export default {
     },
     methods: {
     fetchData(){
-      console.log('this user '+this.name)
+      //console.log('this user '+this.name)
         this.$store.dispatch('loadUserProducts', this.name)
         this.$store.dispatch('loadUserDetails', this.name)
+        //console.log('biz desc '+this.userDesc)
     },
     getMerchant(){
       return this.userBusiness
@@ -231,7 +233,7 @@ export default {
       return this.userDetails
     },
     getUserPhone(){
-this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userPhone
+this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone_number
     }
     
   }
