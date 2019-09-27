@@ -3,7 +3,7 @@
          <v-container fluid fill-height teal lighten-5>
              <v-layout row wrap equal>
                 <v-flex xs12 sm8 md7 pa-5>
-                    <div class="text-center pt-5 mt-3 mb-1">
+                   <!-- <div class="text-center pt-5 mt-3 mb-1">
                         <v-sheet v-if="counted == 1" color="caption red lighten-4 pa-2 rounded my-3" style="color:#000028" elevation="0">
 {{userAcctStatus}}
 </v-sheet>
@@ -11,8 +11,51 @@
 your link: {{userURL}}
 </v-sheet>
 </div>
+-->
 
-                    <v-layout row wrap pt-10>
+<v-layout row wrap pt-10>
+                       
+                           <v-flex xs6 sm3 md3 lg3>
+                                <v-chip
+                                class="ma-2 teal lighten-4"
+                                color=""
+                                >
+                                <v-avatar left>
+                                <v-icon class="grey--text text--darken-4">
+                                    mdi-link
+                                    </v-icon>  
+                                </v-avatar>
+                                    Total Clicks 
+                                    <v-avatar right
+                                    class="teal darken-1 white--text"
+                                    >
+                                    {{linkStat.clicks}}
+                                     </v-avatar>
+                                </v-chip>
+                               
+                           </v-flex>
+                           <v-flex xs6 sm3 md3 lg3>
+                                <v-chip
+                                class="ma-2 teal lighten-4"
+                                color=""
+                                >
+                                <v-avatar left>
+                                <v-icon class="grey--text text--darken-4">
+                                    mdi-link
+                                    </v-icon>  
+                                </v-avatar>
+                                    Unique Clicks 
+                                    <v-avatar right
+                                    class="teal darken-1 white--text"
+                                    >
+                                    {{linkStat.uniqueClicks}}
+                                     </v-avatar>
+                                </v-chip>
+                           </v-flex>
+
+                          
+                    </v-layout>
+                    <v-layout row wrap pt-2>
                        
                            <v-flex xs6 sm6 md4 lg4>
                                 <v-card
@@ -21,13 +64,13 @@ your link: {{userURL}}
                                 class=ma-2
                                 >
                                 <v-card-text class="">
-                                <div class="headline mb-2 teal--text text--lighten-3 font-weight-light">
+                                <div class="title mb-2 teal--text text--lighten-3 font-weight-light">
                                     <v-icon class="teal--text text--lighten-3 mr-2">
                                     mdi-cart
                                     </v-icon>  
                                     Total Products
                                     </div>
-                                <p class="font-weight-bold headline white--text">
+                                <p class="font-weight-bold display-2 white--text">
                                     {{counted}}
                                 </p>
                                 </v-card-text>
@@ -40,13 +83,13 @@ your link: {{userURL}}
                                 class=ma-2
                                 >
                                 <v-card-text class="white--text">
-                                <div class="headline mb-2 teal--text text--lighten-3 font-weight-light">
+                                <div class="title mb-2 teal--text text--lighten-3 font-weight-light">
                                     <v-icon class="teal--text text--lighten-3 mr-2">
                                     mdi-basket
                                     </v-icon>               
                                     Total Sales
                                 </div>
-                                <p class="font-weight-bold headline white--text">
+                                <p class="font-weight-bold display-2 white--text">
                                     {{salesCount}}
                                 </p>
                                 </v-card-text>
@@ -59,19 +102,20 @@ your link: {{userURL}}
                                 class=ma-2
                                 >
                                 <v-card-text class="white--text">
-                                <div class="headline mb-2 teal--text text--lighten-3 font-weight-light">
+                                <div class="title mb-2 teal--text text--lighten-3 font-weight-light">
                                     <v-icon class="teal--text text--lighten-1 mr-2">
                                     mdi-account-check-outline
                                     </v-icon>  
                                     Total Leads
                                 </div>
-                                <p class="font-weight-bold headline white--text">
+                                <p class="font-weight-bold display-1 white--text">
                                     coming soon
                                 </p>
                                 </v-card-text>
                                 </v-card>
                            </v-flex>
                     </v-layout>
+
                    <EmptyState v-if="counted < 1"></EmptyState>
                    <div v-else>
                        <!-- <div class="text-center mt-5 pt-4">
@@ -171,7 +215,7 @@ your link: {{userURL}}
                   
                      <div class="pt-5 mt-5 pl-10">
                        <p class="caption small">
-                         My store link : 
+                         My store link preview: 
                          <v-chip
       class="ma-1 teal lighten-4"
     >
@@ -188,7 +232,7 @@ your link: {{userURL}}
          </v-container>
 
       <v-bottom-sheet v-model="sheet" class="teal--text text--lighten-3">
-      <v-sheet class="text-center" height="250px" style="background-color:#000028 !important;">
+      <v-sheet class="text-center" height="270px" style="background-color:#000028 !important;">
       <v-progress-linear
       :value="50"
       class="my-0"
@@ -202,17 +246,18 @@ your link: {{userURL}}
       @click="sheet = !sheet"
       >X</v-btn>-->
  <div class="pa-3">
-   <p class="text-center teal--text text--lighten-3">
-        Welcome {{this.user}},
+   <p class="text-center teal--text text--lighten-3 pt-2">
+      Congrats {{this.user}},
         <br>
-        Complete your profile to begin selling with mulaa  
+        You just uploaded a product for sale, well done! <br>
+        Before this becomes open for customers to buy, complete your profile to sell better with mulaa  
         <v-btn
         ripple
         small
       class="my-2"
       color="teal"
       to="/onboard"
-      >Click Here</v-btn>
+      >Update Profile</v-btn>
 <v-img :src="require('../assets/winner.svg')"></v-img>
       </p>
    </div>
@@ -287,7 +332,8 @@ export default {
         //this.$store.dispatch('loadAllProducts', 'top')
          this.$store.dispatch('loadUserSales', this.user)
          this.$store.dispatch('loadUserDetails', this.user)
-          this.$store.dispatch('loadUserProducts', this.user)
+          this.$store.dispatch('linkStats', this.user)
+          
          
        // this.$store.dispatch('getUser', this.user)
        //this.reload()
@@ -313,7 +359,8 @@ export default {
       userPhone: 'userPhone',
        userDetails: 'userDetails',
        userAcctStatus: 'userAcctStatus',
-       userProducts:'userProducts'
+       userProducts:'userProducts',
+       linkStat: 'linkStat'
       }),
     userSales: {
       get() {
@@ -378,6 +425,31 @@ export default {
 }
 </script>
 <style>
+.border-left{
+  border-left:1px dashed #4DB6AC;
+  background-color: #80CBC4!important;
+}
+.hotGrad{
+  background: #f857a6;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #ff5858, #f857a6);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #ff5858, #f857a6); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+.hotGrad2{
+  background: #e43a15;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #e65245, #e43a15);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #e65245, #e43a15); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+.calmGrad{
+  background: #5f2c82;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #49a09d, #5f2c82);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #49a09d, #5f2c82); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+.calmGrad2{
+  background: #24C6DC;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #514A9D, #24C6DC);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #514A9D, #24C6DC); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
 .v-application .teal.lighten-5{
   background-image: url('~@/assets/bg-wrap.png') !important;
 }

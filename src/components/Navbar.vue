@@ -45,7 +45,7 @@
           <v-list-item-title class="title teal--text text--lighten-3">
              Mulaa
           </v-list-item-title>
-          <v-list-item-subtitle class="caption teal--text text--lighten-3">
+          <v-list-item-subtitle class="caption teal--text text--lighten-2">
             one simple link to better sales
           </v-list-item-subtitle>
         </v-list-item-content>
@@ -69,7 +69,7 @@
               <v-list-item-title class="title teal--text text--lighten-3">
                 {{user}}
                 </v-list-item-title>
-              <v-list-item-subtitle class="caption white--text text--lighten-3">
+              <v-list-item-subtitle class="caption teal--text text--lighten-3">
                 {{userEmail}}
                 <v-icon class="teal--text text--lighten-3">
                    mdi-user

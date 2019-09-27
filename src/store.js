@@ -12,6 +12,7 @@ const API_URL = 'https://shop.mulaa.co/api/wp-json/wp/v2/product'
 const API_URL_USER = 'https://shop.mulaa.co/api/wp-json/wp/v2/users'
 const Token_ENDPOINT = '/jwt-auth/v1/token'
 const Products_ENDPOINT = '/mulaa-auth/v1/products'
+const STAT_URL = 'https://mulaa.me/u/api/details?key=P1fjdH02F3y2&alias='
 
 Vue.use(Vuex)
 
@@ -44,6 +45,7 @@ const vuexLocalStorage = new VuexPersist({
 
 export default new Vuex.Store({
   state: {
+    linkStat: [],
     status: '',
     token: localStorage.getItem('token') || '',
     user: '',
@@ -227,9 +229,30 @@ export default new Vuex.Store({
     },
     profileid(state, value){
       state.profileID = value
+    },
+    save_stat(state, value){
+      state.linkStat = value
     }
   },
   actions: {
+    linkStats ({commit, state}, data){
+      //state.loading = true
+        //console.log(data)
+        if (data != ''){
+          axios({ url: `${STAT_URL}`+data, method: 'GET' })
+          .then(resp => { 
+            const linkData = resp.data.data
+           // const socialData = resp.data.socialCount
+            console.log(resp.data.data)
+            commit('save_stat', linkData)
+          })
+          .catch(err => {
+            commit('load_error', err)
+            //console.log(err)
+            //reject(err)
+          })
+        }else {console.log('link not found')}
+      },
     createProfile({ commit, state }, data) {
       return new Promise((resolve, reject) => {
         //commit('auth_request')
@@ -403,7 +426,7 @@ export default new Vuex.Store({
 
             resolve(resp)
           }else{
-            commit('user_detail_blank', 'User account is not activated')
+            commit('user_detail_blank', 'Your store account is not activated yet')
             console.log('user acct not activated')
           }
             
