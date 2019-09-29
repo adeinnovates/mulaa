@@ -15,7 +15,7 @@ your link: {{userURL}}
 
 <v-layout row wrap pt-10>
                        
-                           <v-flex xs6 sm3 md3 lg3>
+                           <v-flex xs12 sm6 md3 lg3>
                                 <v-chip
                                 class="ma-2 teal lighten-4"
                                 color=""
@@ -34,7 +34,7 @@ your link: {{userURL}}
                                 </v-chip>
                                
                            </v-flex>
-                           <v-flex xs6 sm3 md3 lg3>
+                           <v-flex xs12 sm6 md3 lg3>
                                 <v-chip
                                 class="ma-2 teal lighten-4"
                                 color=""
@@ -154,7 +154,8 @@ your link: {{userURL}}
               </v-responsive>
               <v-card-text class="pb-0">
                 <div class="subheading text-truncate">
-                  {{product.title}}
+           
+ {{product.title}}
                 </div>
                 <div class="grey--text text-truncate small"> {{product.description}}</div>
               </v-card-text>
@@ -171,7 +172,22 @@ your link: {{userURL}}
               </v-card-actions>
               </div>
               
-               <div v-else class="">
+               <div v-else class="visibleProd">
+                  <v-chip
+                  class="ml-5 mt-4 point"
+                  color="white"
+                  text-color="grey darken-1"
+                  small
+                  >
+                  <v-avatar
+                  left
+                  class="ml-n4 grey lighten-4"
+                  small
+                  >
+                  {{product.pageView}}
+                  </v-avatar>
+                  <v-icon small color="grey lighten-2">mdi-eye</v-icon>
+                  </v-chip>
               <v-responsive class="pt-0">
                 <v-img
           :src="product.image"
@@ -224,7 +240,7 @@ your link: {{userURL}}
               
 
                        </p>
-                        <vue-friendly-iframe :src="userURL"></vue-friendly-iframe>
+                        <vue-friendly-iframe :src="previewUrl"></vue-friendly-iframe>
                      </div>
                     
                 </v-flex>
@@ -232,12 +248,13 @@ your link: {{userURL}}
          </v-container>
 
       <v-bottom-sheet v-model="sheet" class="teal--text text--lighten-3">
-      <v-sheet class="text-center" height="270px" style="background-color:#000028 !important;">
-      <v-progress-linear
+      <v-sheet class="text-center" height="270px" style="background-color:#000028 !important;border-top-left-radius:25px;border-top-right-radius:25px;">
+      <!--<v-progress-linear
       :value="50"
       class="my-0"
       height="3"
       ></v-progress-linear>
+      -->
 
       <!--<v-btn
       class="mt-2"
@@ -289,6 +306,7 @@ export default {
           sheet: this.$route.params.sheet || false,
             copySucceeded: null,
             userURL: 'https://mulaa.me/u/'+this.$store.state.user,
+            previewUrl:'https://shop.mulaa.co/u/'+this.$store.state.user,
             slides: 5,
     active: 1,
             dialog: false,
@@ -308,9 +326,16 @@ export default {
     },
      watch: {
     // call again the method if the route changes
-    //'$route': 'fetchData'
+    '$route': 'fetchData'
   },
     methods: {
+      linkData(){
+        if(linkStat.length>0){
+          console.log(linkStat)
+return linkStat;
+        }
+return 0;
+      },
       fetchUserData(){
         this.$store.dispatch('loadUserDetails', this.user)
         console.log('fetch userDetails')
@@ -483,6 +508,13 @@ margin: 0 auto;
     filter: alpha(opacity=80);
   /* Modern Browsers */
   opacity: 0.8;
+}
+.visibleProd{
+opacity: 1;
+}
+.visibleProd .point{
+position: absolute;
+  z-index:2;
 }
 .hiddenProd .point{
   position: absolute;

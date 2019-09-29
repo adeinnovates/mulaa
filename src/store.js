@@ -172,7 +172,7 @@ export default new Vuex.Store({
        //state.userDiscounted = Discounted
        state.theProduct = product.acf
        state.loading = false
-       console.log('the product: '+JSON.stringify(state.theProduct))
+       //console.log('the product: '+JSON.stringify(state.theProduct))
    },
     user_products (state, user_product) {
        
@@ -241,9 +241,9 @@ export default new Vuex.Store({
         if (data != ''){
           axios({ url: `${STAT_URL}`+data, method: 'GET' })
           .then(resp => { 
-            const linkData = resp.data.data
+            //const linkData = resp.data.data
            // const socialData = resp.data.socialCount
-            console.log(resp.data.data)
+           // console.log(resp.data.data)
             commit('save_stat', linkData)
           })
           .catch(err => {

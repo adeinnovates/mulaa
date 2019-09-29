@@ -150,6 +150,11 @@ export default {
     }*/,
      data(){
         return{
+          inputs: [
+            {
+                name: ''
+            }
+        ],
             search:'',
             userdata: this.$route.params.name,
             dialog: false,
@@ -219,6 +224,12 @@ export default {
         this.fetchData()
        // console.log('name: '+ this.name)
     },
+     watch: {
+    // call again the method if the route changes
+    getUserPhone(){
+this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone_number
+    }
+  },
     methods: {
     fetchData(){
       //console.log('this user '+this.name)

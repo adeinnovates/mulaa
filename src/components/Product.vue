@@ -239,6 +239,10 @@ powered by <img :src="require('../assets/mulaalogo.png')" alt="" style="max-widt
       </v-sheet>
     </v-bottom-sheet>
     
+    <iframe :src="mySrc" type="" width="1%" 
+    height="1%" frameborder="0" style="display:none;z-index:-999">
+  </iframe>
+
     </div>
 </template>
 <script>
@@ -255,6 +259,7 @@ export default {
     },
  data(){
         return {
+          
             hide:false,
 progress: 10,
 dialog: false,
@@ -271,6 +276,7 @@ pageurl: 'https://shop.mulaa.co/'+this.$route.path,
             discounted: this.theProduct.show_discount,*/
             sheet: false,
             title:'',
+            title2: '',
             delivery:'',
             description:'',
             discountPrice:'',
@@ -320,8 +326,8 @@ pageurl: 'https://shop.mulaa.co/'+this.$route.path,
       amount(){
           if(this.discounted == false || this.discounted == undefined){
               let amount = this.price
-              console.log(this.discounted)
-              console.log('amount: '+ amount)
+              //console.log(this.discounted)
+             // console.log('amount: '+ amount)
 
               return amount
           }else {
@@ -341,13 +347,26 @@ pageurl: 'https://shop.mulaa.co/'+this.$route.path,
        return false
         //return this.imageFile.length < 1; // or === 0   
     },
+    mySrc: {
+    get: function() {
+      //concat using template literal
+      return `https://shop.mulaa.co/api/product/${this.title2}`
+    }
+  }
+
     },
      created() {
         this.fetchData()
         this.updateData()
+        this.toUrlString(this.title)
 //console.log(this.userKey)
     },
     methods: {
+      toUrlString(productname){
+let productName = productname
+productName = productName.replace(/\s+/g, '-').toLowerCase();
+this.title2 = productName
+      },
         salesRecord(response){
             //console.log("sales: "+response)
 
@@ -398,7 +417,7 @@ const salesData = {
           })
         },
         updateData(){
-          console.log(this.theProduct.price)
+          //console.log(this.theProduct.price)
             if(this.theproducts === undefined){
                 console.log('refreshed')
                 this.title = this.theProduct.title
@@ -411,7 +430,7 @@ const salesData = {
             this.price = this.theProduct.price
             this.discounted = this.theProduct.show_discount
             this.newAmount = this.amount
-             console.log('refreshed amount '+this.newAmount) 
+             //console.log('refreshed amount '+this.newAmount) 
             }else{
                 console.log('valid click')
                 this.title = this.theproducts.title
@@ -509,9 +528,14 @@ this.loading = false
     paystackScript.setAttribute('src', 'https://js.paystack.co/v1/inline.js')
     document.head.appendChild(paystackScript)
 
+//let phpUrl = document.createElement('iframe')
+//phpUrl.setAttribute('src', 'https://shop.mulaa.co/api/product/the-uju-set')
+//document.body.appendChild(phpUrl)
+
     var oLuanchBtn = document.getElementById('popupBtn');
             oLuanchBtn.style.display = 'none';
-         // this.showPopup()     
+         // this.showPopup()   
+          //console.log('userdetails: '+JSON.stringify(this.userDetails))  
   }
 }
 </script>

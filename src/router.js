@@ -133,7 +133,7 @@ export default new Router({
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth) {
     if (store.getters.isLoggedIn != true) {
-      console.log('/userr')
+      //console.log('/userr')
       return next('/user')
       //return
     }
@@ -143,5 +143,9 @@ router.beforeEach((to, from, next) => {
   }
 })
 
+router.afterEach((to, from) => {
+  // ...
+  //console.log('to: '+to.fullPath+store.state.userDetails.username)
+})
 
 export default router

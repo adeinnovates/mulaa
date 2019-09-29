@@ -9,6 +9,9 @@ import VueMeta from 'vue-meta'
 import VueFriendlyIframe from 'vue-friendly-iframe';
 import VueCurrencyFilter from 'vue-currency-filter'
 
+import vueCustomElement from 'vue-custom-element'
+Vue.use(vueCustomElement)
+
 import VueClipboard from 'vue-clipboard2'
 import ImgInputer from 'vue-img-inputer'
 import 'vue-img-inputer/dist/index.css'
@@ -60,9 +63,16 @@ const base = axios.create({
 
 Vue.prototype.$http = base
 
+/*
 new Vue({
   router,
   store,
   vuetify,
   render: h => h(App)
 }).$mount('#app')
+*/
+
+App.store = store
+App.router = router
+App.vuetify = vuetify
+Vue.customElement('mulaa-sdk', App)
