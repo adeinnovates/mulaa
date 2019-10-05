@@ -205,7 +205,15 @@ export default {
       //user: 'user',
       registerMsg:'registerMsg',
       userId:'userId'
-      })
+      }),
+      loading: {
+      get() {
+        return this.$store.state.loading;
+      },
+      set(value) {
+        this.$store.commit('loading', value);
+      }
+    }
     }  
 }
 </script>

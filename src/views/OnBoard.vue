@@ -500,10 +500,22 @@ const headers2 = {
           })
   },
   updateUser () {
+
+    const Hoptions = {
+  headers: {'Authorization': 'Bearer sk_test_0fe01ff01cdb2bd222084d4270c69ec2c98f8544'}
+}
                 this.loading = true;
                 //const interestsJson = this.interests
                 //console.log(JSON.stringify({ interestsJson }))
-                this.$http.post('/users/'+this.userId, {
+                this.$http.post('https://api.paystack.co/customer', {
+                  email:this.userEmail,
+                  phone:this.phoneNumber
+                },Hoptions)
+                .then(
+                  respA =>
+    Promise.all([
+      respA,
+      this.$http.post('/users/'+this.userId, {
                 title: '',
                 content: '',
                 fields : {
@@ -518,14 +530,19 @@ const headers2 = {
                 facebook_pixel: this.facebookPixel,
                 brand_image: this.userProfile.profileImg,
                 business_description: this.businessDesc,
+                customer_code: respA.data.customer_code,
+                customer_id: respA.data.id,
                 last_login: ''//dateFunction() //JSON.stringify({ user })
                 },
                  status: "publish"
-            }).then((response) => {
+            })
+    ]) 
+                )
+                .then(([respA,response]) => {
                 this.loading = false;
                 //this.clear()
                 //this.loadProducts()
-                console.log(response)
+                console.log(response, respA)
                 this.$router.push({name: 'dashboard', params: { sheet: false }})
                 //console.log(response.data.id)
                 //this.profileId = response.data.id
