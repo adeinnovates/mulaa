@@ -129,7 +129,7 @@ export default {
                 {icon: 'mdi-cart', text: 'Products', route:'/products'},
                 {icon: 'mdi-store', text: 'Sales', route:'/sales'},
                 {icon: 'mdi-settings', text: 'Settings', route:'/settings'},
-                {icon: 'mdi-account', text: 'Account Activation', route:'/onboard'}
+                //{icon: 'mdi-account', text: 'Account Activation', route:'/onboard'}
             ],
             notice: false
         }

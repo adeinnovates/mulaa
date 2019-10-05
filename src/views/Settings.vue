@@ -1,45 +1,182 @@
 <template>
     <div class="dashboard fill-height teal lighten-5 page pa-5 mt-10">
-      <v-sheet v-if="userAcctStatus != ''" color="caption red lighten-2 pa-2 rounded my-3" style="color:#000028" elevation="1">
-{{userAcctStatus}}
-<v-btn small text
->
-    <!--<span class="caption teal--text">
-    copy
-    </span>-->
-    </v-btn>
-</v-sheet>
-<v-sheet v-else color="caption orange lighten-4 pa-2 rounded my-3" style="color:#000028" elevation="1">
-Hello {{user}}
-</v-sheet>
 
-        <v-expansion-panels>
-    <v-expansion-panel
-      v-for="(item,i) in 5"
-      :key="i"
-    >
-      <v-expansion-panel-header>Item</v-expansion-panel-header>
-      <v-expansion-panel-content>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-      </v-expansion-panel-content>
-    </v-expansion-panel>
-  </v-expansion-panels>
+<div
+class="headline lighten-4 pa-4 font-weight-light teal--text mb-n6"
+>
+Hello, <br> {{user}}
+</div>
+ <v-snackbar v-model=infoBar :timeout="10000" top right :color="color" :value=infoMsg>
+  <span style="color:#000028">{{infoMsg}}</span>
+  <!--<v-btn flat color="white" @click="snackbar = false">close</v-btn>-->
+</v-snackbar>
+ <v-container fluid fill-height teal lighten-5>
+             <v-layout row wrap equal>
+                <v-flex xs12 sm8 md7 pa-5>
+
+<v-list two-line subheader class="pa-5" style="border-top-left-radius:15px;border-top-right-radius:15px;">
+      <v-subheader>Profile Settings  
+        <div class="flex-grow-1"></div>
+        <EditSettings :theuser="userDetails" :user="user" :userImg="this.userProfile.profileImg"></EditSettings>
+        </v-subheader>
+
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title>Business Name</v-list-item-title>
+          <v-list-item-subtitle class="caption">{{userDetails.business_name}}</v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-list-item three-line>
+        <v-list-item-content>
+          <v-list-item-title>Business Description</v-list-item-title>
+          <v-list-item-subtitle class="caption">{{userDetails.business_description}}</v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+
+
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title>Business Address</v-list-item-title>
+          <v-list-item-subtitle class="caption">{{userDetails.business_address}}</v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
+
+    
+
+    <v-divider></v-divider>
+
+
+    <v-list two-line subheader class="pa-5">
+
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title>Payment Key</v-list-item-title>
+          <v-list-item-subtitle class="caption grey lighten-4 pa-3 mt-2">{{userDetails.payment_key}}</v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title>Facebook Pixel</v-list-item-title>
+          <v-list-item-subtitle class="caption grey lighten-4 pa-3 mt-2">{{userDetails.facebook_pixel}}</v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+
+
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title>Profile Photo</v-list-item-title>
+          <v-list-item-subtitle>
+          
+          </v-list-item-subtitle>
+        </v-list-item-content>
+
+        <v-list-item-avatar
+        tile
+        size="100"
+      >
+       <input 
+accept="image/png, image/jpeg, image/bmp"
+type="file" 
+style="display:none;" 
+@change="onFileChanged"
+ref="imageinput"
+>
+<v-overlay 
+:value="overlay"
+dark
+:z-index="9999">
+ <v-progress-circular :value="progressValue"></v-progress-circular>
+    </v-overlay>
+
+    <div class="text-center mb-5">
+    <v-avatar color="#23d2aa" @click="$refs.imageinput.click()" width="70" height="70">
+      <img v-if="userProfile.profileImg !=null || undefined" :src="userProfile.profileImg" alt="avatar">
+      <v-icon v-else dark>mdi-camera</v-icon>
+    </v-avatar>
+   <span class="d-block overline mt-3">Profile Image/Logo</span>
+  </div>
+      </v-list-item-avatar>
+      </v-list-item>
+
+    </v-list>
+                </v-flex>
+             </v-layout>
+ </v-container>
     </div>
 </template>
 
 <script>
 import { mapState, mapGetters } from 'vuex'
+import Avatar from 'vue-avatar'
+import EditSettings from '@/components/EditSettings'
+import axios from 'axios'
 
 export default {
+  components: {
+    Avatar,
+     EditSettings,
+  },
     data() {
       return {
-
+         infoMsg: '', 
+        infoBar: false,
+ valid:'',
+  overlay: false,
+   progressValue:'',
+  userProfile: 
+            {
+                city:'',
+                phone:'',
+                validid: [],
+                profileImg: this.myProfileImg
+            },
       }
     },
      created() {
         return this.fetchUserData()
     },
      methods: {
+        onFileChanged (event) {
+    this.userProfile.profileImg = event.target.files[0]
+    this.overlay = true
+    this.onUpload()
+  },
+  onUpload() {
+    // upload file
+    const formData = new FormData()
+    formData.append('avatar', this.userProfile.profileImg, this.userProfile.profileImg.name)
+    formData.append('username', this.user);
+
+const headers2 = {
+  'Content-Type': 'multipart/form-data'
+}
+    //axios.post(`//dev.mulaa.co/imgapi/upload.php`, formData, {
+       axios.post(`https://shop.mulaa.co/imgapi/upload.php`, formData, {
+    headers: headers2,
+    onUploadProgress: progressEvent => {
+       this.progressValue = Math.round(progressEvent.loaded / progressEvent.total *100)
+      console.log(Math.round(progressEvent.loaded / progressEvent.total *100) + '%')
+    }
+  })
+    .then(resp => {
+           console.log(resp.data.url)
+           this.userProfile.profileImg = resp.data.url
+            this.overlay = false
+            this.infoBar = true
+            this.infoMsg = 'profile image uploaded'
+            //resolve(resp)
+          })
+          .catch(err => {
+              console.log(err)
+              this.overlay = false
+              //this.infoBar = true
+              //this.infoMsg = 'profile image failed, try again'
+            //reject(err)
+          })
+  },
 fetchUserData(){
         this.$store.dispatch('loadUserDetails', this.user)
         //console.log(userDetails)
@@ -88,7 +225,13 @@ fetchUserData(){
     },
     salesCount: function(){
       return Object.keys(this.userSales).length;
+    },
+    myProfileImg: {
+    get: function() {
+      //concat using template literal
+      return userDetails.brand_image 
     }
+  }
     }
 
 }

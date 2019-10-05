@@ -387,7 +387,7 @@ export default new Vuex.Store({
       if (userdata != ''){ //http://dev.mulaa.africa/admin/wp-json/wp/v2/product
         axios({ url: `${API_URL}`+'/'+userdata, method: 'GET' })// url: `${API_URL}`+'/'+userdata
         .then(resp => { 
-          console.log(userdata)
+          //console.log(userdata)
           if(resp.data.hidden == false || resp.data.hidden == null){//resp.data.acf.hidden 
             const the_product = resp.data
             //const authorID = resp.data.author

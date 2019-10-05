@@ -120,6 +120,75 @@
         </v-col>
          
     </v-row>
+
+  <v-expansion-panels popout>
+      <v-expansion-panel>
+        <v-expansion-panel-header>Advanced</v-expansion-panel-header>
+        <v-expansion-panel-content>
+          
+
+<v-card
+    class="pa-5"
+    outlined
+  >
+    <v-card-title class="overline font-weight-light teal--text">Product Options {{options.length}}</v-card-title>
+    <v-card-text>
+      <v-row>
+      <v-col>
+          <div class="form-group" v-for="(option,k) in options" :key="k">
+          <v-row>
+            <v-col
+            cols="6"
+        sm="6"
+            >
+                <v-text-field
+                class="teal--text form-field ma-0"
+                v-model="option.name"
+                label="option label"
+                type="text"
+                placeholder="item option"
+                color="teal lighten-3"
+                ></v-text-field>
+            </v-col>
+            <v-col
+            cols="4"
+        sm="4"
+            >
+                <v-text-field
+                class="teal--text form-field ma-0"
+                v-model="option.price"
+                label="option price"
+                type="number"
+                placeholder="price"
+                prefix="₦"
+                color="teal lighten-3"
+                ></v-text-field>
+            </v-col>
+              <v-col
+            cols="2"
+        sm="2"
+            >
+<span>
+            <v-icon class="teal--text text--darken-1" @click="remove(k)" v-show="k || ( !k && options.length > 1)">
+                                    mdi-minus-circle-outline
+                                    </v-icon> 
+                                    <v-icon class="teal--text text--darken-1" @click="add(k)" v-show="k == options.length-1">
+                                    mdi-plus-circle
+                                    </v-icon> 
+          </span>
+              </v-col>
+          </v-row>
+          
+          </div>
+      </v-col>
+    </v-row>
+      </v-card-text>
+  </v-card>
+
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+  </v-expansion-panels>
+
 </v-container>
 <v-card-actions style=background-color:#000028>
     <v-tooltip top>
@@ -149,6 +218,7 @@ import { mapState, mapGetters } from 'vuex'
 export default {
     data(){
         return{
+          inset:'false',
             title: '',
             price: '',
             discount: '',
@@ -167,10 +237,22 @@ export default {
         infoMsg: '', 
         color: '',
         date: this.dateFunction(),
-        owner: this.$store.state.userId
+        owner: this.$store.state.userId,
+        options: [
+          {
+            name:'',
+            price: ''
+          }
+        ]
         }
     },
     methods: {
+      add(index) {
+            this.options.push({ name: '' });
+        },
+        remove(index) {
+            this.options.splice(index, 1);
+        },
       dateFunction() {
    
             var currentDate = new Date();
@@ -224,7 +306,9 @@ export default {
                 delivery_locations: this.deliveryLocations,
                 image: this.imgUrl,
                 owner : this.owner,
-                date_posted: this.date
+                date_posted: this.date,
+                product_options: this.options
+
                 },
                  status: "publish"
             }).then((response) => {

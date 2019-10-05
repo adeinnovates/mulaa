@@ -96,7 +96,7 @@
         <span 
         class="px-2" 
         style="font-size:10px"
-        >discount</span> <!-- <v-icon dark>mdi-check</v-icon> -->
+        >discount</span> <!-- <v-icon dark>mdi-check</v-icon> payWithPaystack -->
       </template>
       <span class="headline font-weight-light mb-0 teal--text">{{newAmount | currency}}</span>
     </v-badge>
@@ -105,7 +105,7 @@
         </p>
              <v-btn
              text
-             @click="payWithPaystack"
+             @click="sheet = true"
              color="#23d2aa" 
              class="ml-10"
              :disabled=disabled :loading="loading"
@@ -211,37 +211,55 @@ powered by <img :src="require('../assets/mulaalogo.png')" alt="" style="max-widt
        </v-row>
 
        <v-bottom-sheet v-model="sheet">
-      <v-sheet class="text-center" height="200px">
+      <v-sheet class="" height="200px">
         <v-progress-linear
           :value="50"
           class="my-0"
           height="3"
+          color="teal"
         ></v-progress-linear>
 
-        <v-btn
+       <!-- <v-btn
           class="mt-4"
           text
           color="red"
           @click="sheet = !sheet"
-        >close</v-btn>
+        >close</v-btn>-->
 <v-list-item three-line>
       <v-list-item-content>
-        <v-list-item-title>Quick Buy</v-list-item-title>
+        <div class="overline mb-4">Order Confirmation</div>
+        <v-list-item-title class="headline mb-1 teal--text text--darken-4">Total: {{newAmount | currency}}</v-list-item-title>
+        <v-list-item-subtitle>{{this.title}}</v-list-item-subtitle>
         <v-list-item-subtitle>
-          Get this in addition to your purchase
-        </v-list-item-subtitle>
-        <v-list-item-subtitle>
-          consectetur adipiscing elit.
-        </v-list-item-subtitle>
+          <v-btn
+             @click="payWithPaystack"
+             color="#23d2aa" 
+             class="mt-3"
+             :disabled=disabled :loading="loading"
+             >
+              <v-icon small left>mdi-cash</v-icon>
+                Checkout
+             </v-btn>
+          </v-list-item-subtitle>
       </v-list-item-content>
-          </v-list-item>
-        <div class="py-3">This is a bottom sheet using the controlled by v-model instead of activator</div>
+
+      <v-list-item-avatar
+        tile
+        size="80"
+        color="#000028"
+      >
+      <v-icon dark>mdi-cart</v-icon>
+      </v-list-item-avatar>
+    </v-list-item>
+
       </v-sheet>
     </v-bottom-sheet>
     
     <iframe :src="mySrc" type="" width="1%" 
     height="1%" frameborder="0" style="display:none;z-index:-999">
   </iframe>
+
+
 
     </div>
 </template>
@@ -288,6 +306,7 @@ pageurl: 'https://shop.mulaa.co/'+this.$route.path,
             buyerPhone: '',
             buyerAddress:'',
             newAmount: null,
+            delivery:'',
         infoMsg: '', 
         color: '',
         paymentStatus: [],
@@ -395,7 +414,7 @@ const salesData = {
             product: this.title,
             customer_email: this.buyerEmail,
             customer_phone: this.buyerPhone,
-            location: "",
+            location: this.delivery,
             transaction: response.transaction,
             merchant: this.$route.params.name
                 },
@@ -406,7 +425,7 @@ const salesData = {
            axios.post(`https://shop.mulaa.co/api/wp-json/wp/v2/sale`,
            salesData, options
 ).then(resp => {
-            console.log(resp.data)
+            //console.log(resp.data)
             this.loading = false
             })
             //resolve(resp)
@@ -419,7 +438,7 @@ const salesData = {
         updateData(){
           //console.log(this.theProduct.price)
             if(this.theproducts === undefined){
-                console.log('refreshed')
+                //console.log('refreshed')
                 this.title = this.theProduct.title
             this.hidethis = this.theProduct.hidden
             this.datePosted = this.theProduct.date_posted
@@ -432,7 +451,7 @@ const salesData = {
             this.newAmount = this.amount
              //console.log('refreshed amount '+this.newAmount) 
             }else{
-                console.log('valid click')
+                //console.log('valid click')
                 this.title = this.theproducts.title
             this.hidethis = this.theproducts.hidden
             this.datePosted = this.theproducts.date_posted
@@ -443,7 +462,7 @@ const salesData = {
             this.price = this.theproducts.price
             this.discounted = this.theproducts.show_discount
             this.newAmount = this.amount
-            console.log(this.newAmount)
+            //console.log(this.newAmount)
             }
         },
         amount2(){

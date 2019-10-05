@@ -5,12 +5,9 @@
     <v-layout row wrap align-center="align-center" justify-center="justify-center" pa-5>
       <v-flex xs12 sm4 id="sign-in-text-wrapper" text-xs-center px-5>
         <div class="headline font-weight-light text-center my-5" v-if="!show2">
-          Sign Up
-             
-            </div>
+          Sign Up</div>
             <div class="headline font-weight-light text-center my-2" v-else>
-             Welcome
-             
+             Welcome Back
             </div>
             <div>
                  <p v-if=" !show2 " class="body-2 teal--text text--lighten-3 text-capitalize text-center">Already have an account? <span @click="show2 = true" style="cursor: pointer;text-decoration:underline">Login</span></p>
@@ -27,10 +24,27 @@
     light="light"
     :loading="loading"
   >
-    <v-card-title class="caption text-capitalize text-center d-block py-5" v-if="!show2">
-        The last link between you and sales.
+    <v-card-title class="caption text-center d-block py-5" v-if="!show2">
+     <v-row
+      justify="space-around"
+    >
+    <v-col
+        class="text-center"
+        cols="12"
+      >
+ <v-icon class="teal--text">mdi-account-key-outline</v-icon>
+    </v-col>
+     </v-row>
+        <p class="text-center title teal--text font-weight-light">
+          
+          Your one link, multiple products, sell better, starts below</p>
     </v-card-title>
-    <v-card-title class="body-2 text-capitalize text-center d-block py-5" v-else>Sign in</v-card-title>
+    <v-card-title class="body-2 text-capitalize text-center d-block py-5" v-else>
+      Sign in <br>
+       <p class="text-center caption teal--text font-weight-light">
+      Enable more sales in less time
+</p>
+    </v-card-title>
     <v-card-text>
       <v-layout column align-center justify-center pa-0>
       <v-form 
@@ -43,7 +57,7 @@
               full-width
               single-line
              v-model="userCred.username"
-              label="Name"
+              label="Username"
               :rules="nameRules"
               hint="a-z no spaces allowed"
               background-color="#f4f8f7"
@@ -85,7 +99,7 @@
               full-width
               single-line
              v-model="user.username"
-              label="Name"
+              label="username"
               background-color="#f4f8f7"
               class="teal--text form-field"
               prepend-inner-icon="mdi-account-outline" mb-0

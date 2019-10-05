@@ -65,8 +65,10 @@
                 <v-img
           :src="product.image"
           aspect-ratio="1.15"
+          @click="overlay = !overlay"
          ></v-img>
               </v-responsive>
+                 
               <!--<v-card-text>
                 <div class="subheading text-truncate">
                   {{product.title.rendered}}
@@ -98,6 +100,7 @@
               </v-card-actions>
               </v-card>
               </transition>
+              
         </v-flex>
        
                        </v-layout>
@@ -118,7 +121,7 @@ import Buy from '@/components/BuyProduct'
 import Avatar from 'vue-avatar'
 export default {
   metaInfo() {
-    let pageTitle = this.userBusiness
+    let pageTitle = this.name
     return {
       title: pageTitle ? pageTitle : this.getMerchant,
       titleTemplate: '%s - mulaa.co',
@@ -156,6 +159,7 @@ export default {
             }
         ],
             search:'',
+            overlay:false,
             userdata: this.$route.params.name,
             dialog: false,
             rules: [v => v.length <= 50 || 'Max 50 characters'],
