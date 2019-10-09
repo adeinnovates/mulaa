@@ -320,14 +320,14 @@ export default {
     },
     created() {
       //this.fetchUserData()
-      console.log('created')
+      //console.log('created')
         return this.fetchData()
         
     },
-     watch: {
+    /* watch: {
     // call again the method if the route changes
     '$route': 'fetchData'
-  },
+     },*/
     methods: {
       linkData(){
         if(linkStat.length>0){
@@ -338,7 +338,7 @@ return 0;
       },
       fetchUserData(){
         this.$store.dispatch('loadUserDetails', this.user)
-        console.log('fetch userDetails')
+        //console.log('fetch userDetails')
     },
         handleCopyStatus(status) {
       this.copySucceeded = status
@@ -441,8 +441,9 @@ return 0;
     }
     },
     watch: {
+      '$route': 'fetchData',
       counted(newVal, oldVal){
-          if(newVal > 0){
+          if(newVal == 1){
             return this.sheet = true
           }
       }

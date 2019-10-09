@@ -123,20 +123,20 @@
 
   <v-expansion-panels popout>
       <v-expansion-panel>
-        <v-expansion-panel-header>Advanced</v-expansion-panel-header>
+        <v-expansion-panel-header class="font-weight-light">Product Variations</v-expansion-panel-header>
         <v-expansion-panel-content>
           
-
+<p class="caption grey--text lighten-1">Add options if this product comes in multiple variations, like different sizes or colors.</p>
 <v-card
-    class="pa-5"
+    class="pa-1"
     outlined
   >
-    <v-card-title class="overline font-weight-light teal--text">Product Options {{options.length}}</v-card-title>
+    <v-card-title class="overline teal--text">Options ({{options.length}})</v-card-title>
     <v-card-text>
       <v-row>
-      <v-col>
+      <v-col class="pa-0">
           <div class="form-group" v-for="(option,k) in options" :key="k">
-          <v-row>
+          <v-row class="teal lighten-5 mb-1">
             <v-col
             cols="6"
         sm="6"
@@ -144,7 +144,7 @@
                 <v-text-field
                 class="teal--text form-field ma-0"
                 v-model="option.name"
-                label="option label"
+                label="label"
                 type="text"
                 placeholder="item option"
                 color="teal lighten-3"
@@ -157,7 +157,7 @@
                 <v-text-field
                 class="teal--text form-field ma-0"
                 v-model="option.price"
-                label="option price"
+                label="price"
                 type="number"
                 placeholder="price"
                 prefix="₦"
@@ -293,6 +293,7 @@ export default {
       console.warn("onExceed -> file", file);
     },
     postProduct:  function() {
+      //console.log(JSON.stringify(this.options))
                 this.loading = true;
                 this.$http.post('/product', {
                 title: this.title, // + '-' + this.user,
@@ -307,11 +308,11 @@ export default {
                 image: this.imgUrl,
                 owner : this.owner,
                 date_posted: this.date,
-                product_options: this.options
+                product_options: JSON.stringify(this.options)
 
                 },
                  status: "publish"
-            }).then((response) => {
+                }).then((response) => {
                 this.loading = false;
                 //this.clear()
                 //this.loadProducts()

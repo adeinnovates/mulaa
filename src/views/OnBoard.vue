@@ -45,6 +45,27 @@ width="350"
           {{userDetail}}
         <v-container>
 
+<v-row class="mb-0 pb-0">
+        <v-col
+        cols="12"
+        sm="12"
+        class="mb-0 pb-0"
+        > 
+        <v-text-field
+        filled
+                    full-width
+                    single-line
+                    background-color="#f4f8f7"
+        color="teal lighten-3"
+        v-model="referral"
+    
+        placeholder="Who referred you"
+        prepend-inner-icon="mdi-account-outline"
+        class="teal--text form-field mb-0"
+        ></v-text-field>
+        </v-col>
+        </v-row>
+
         <v-row class="mb-0 pb-0">
         <v-col
         cols="12"
@@ -59,7 +80,7 @@ width="350"
         color="teal lighten-3"
         v-model="businessName"
     
-        placeholder="Business Name"
+        placeholder="Your Business Name"
         prepend-inner-icon="mdi-account-card-details-outline"
         class="teal--text form-field mb-0"
         ></v-text-field>
@@ -437,6 +458,7 @@ export default {
           e1: 0,
             slides: 3,
     active: 1,
+    referral: '',
         businessName : '',
         Instagram: '',
         phoneNumber: '',
@@ -532,6 +554,7 @@ const headers2 = {
                 business_description: this.businessDesc,
                 customer_code: respA.data.customer_code,
                 customer_id: respA.data.id,
+                referral: this.referral,
                 last_login: ''//dateFunction() //JSON.stringify({ user })
                 },
                  status: "publish"

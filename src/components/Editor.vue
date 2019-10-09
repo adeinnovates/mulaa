@@ -159,7 +159,7 @@ export default {
                 this.loading = true;
                 
                 this.$http.put('/product/'+this.thepost, {
-                title: this.user +'-'+ this.title,
+                title: this.title,
                 content: this.description,
                 fields : {
                 description: this.description,
@@ -168,6 +168,7 @@ export default {
                 show_discount: this.discountEnable,
                 delivery_locations: this.deliveryLocations,
                 image: this.imgUrl,
+                hidden: this.hidethis
                 },
                  status: "publish"
             }).then((response) => {

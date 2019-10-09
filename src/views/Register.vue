@@ -289,7 +289,7 @@ export default {
        nameRules: [
         (v)=> /^[a-z0-9]+$/.test(v) || 'lowercase only, no space allowed',
       (v) => !!v || 'Name is required',
-      (v) => v && v.length <= 10 || 'Name must be less than 10 characters'
+      (v) => v && v.length <= 15 || 'Name must be less than 15 characters'
     ]
       }
     }

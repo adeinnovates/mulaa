@@ -55,7 +55,7 @@
                   </span>
                             </div>
                 <div v-else> 
-        <v-layout row wrap pt-2 mt-1>
+        <v-layout row wrap pt-2 mt-1 class="layout-desktop">
                            
                          
                            <v-flex xs6 sm6 md4 lg4 v-for="product in filterHiddenProduct" :key="product.productID">
@@ -83,7 +83,7 @@
                    name: 'product',
                    params: {
                        id: product.productID,
-                       theproducts:product
+                       theproducts:product,
                    }
                }"
                 >
@@ -267,4 +267,10 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
   transform: translateX(10px);
   opacity: 0;
 }
+/*
+.layout-desktop{
+  max-width:70%;
+  margin: 0 auto;
+}
+*/
 </style>

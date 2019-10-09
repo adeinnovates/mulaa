@@ -4,12 +4,15 @@ import axios from 'axios'
 import VuexPersist from 'vuex-persist';
 //import { exists } from 'fs';
 
-//const BASEURL = 'http://dev.mulaa.africa/admin/wp-json'
+/*const BASEURL = 'http://dev.mulaa.africa/admin/wp-json'
+const API_URL = 'http://dev.mulaa.africa/admin/wp-json/wp/v2/product'
+const API_URL_USER = 'http://dev.mulaa.africa/admin/wp-json/wp/v2/users'
+*/
+
 const BASEURL = 'https://shop.mulaa.co/api/wp-json'
-//const API_URL = 'http://dev.mulaa.africa/admin/wp-json/wp/v2/product'
 const API_URL = 'https://shop.mulaa.co/api/wp-json/wp/v2/product'
-//const API_URL_USER = 'http://dev.mulaa.africa/admin/wp-json/wp/v2/users'
 const API_URL_USER = 'https://shop.mulaa.co/api/wp-json/wp/v2/users'
+
 const Token_ENDPOINT = '/jwt-auth/v1/token'
 const Products_ENDPOINT = '/mulaa-auth/v1/products'
 const STAT_URL = 'https://mulaa.me/u/api/details?key=P1fjdH02F3y2&alias='
@@ -171,6 +174,7 @@ export default new Vuex.Store({
        });*/
        //state.userDiscounted = Discounted
        state.theProduct = product.acf
+       console.log(product.acf)
        state.loading = false
        //console.log('the product: '+JSON.stringify(state.theProduct))
    },
@@ -182,6 +186,7 @@ export default new Vuex.Store({
         state.userDiscounted = Discounted
         state.myproducts = user_product
         state.userProducts = user_product
+        //console.log(state.userProducts)
         
        // console.log('mutation: '+user_product)
 /*
@@ -400,7 +405,7 @@ export default new Vuex.Store({
             state.loading = false
           }
           
-          resolve(resp)
+          //resolve(resp)
         })
         .catch(err => {
           commit('load_error', err)

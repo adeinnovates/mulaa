@@ -165,19 +165,6 @@ type="number"
                 ></v-text-field>
                 </v-col>
                 </v-row>
-        
-       <!--   <paystack
-        :amount="amount"
-        :email="buyerEmail"
-        :paystackkey="userKey"
-        :reference="reference"
-        :callback="callback"
-        :close="close"
-        :embed="false"
-    >
-       <i class="fas fa-money-bill-alt"></i>
-       Make Payment
-    </paystack>-->
 
 <v-row>
                 <v-col>
@@ -190,6 +177,36 @@ type="number"
                 ></v-text-field>
                 </v-col>
                 </v-row>
+
+
+                <v-card
+    class="mx-auto"
+    outlined
+  >
+  <v-card-title class="overline">Add [+] options</v-card-title>
+<v-card-text>
+            <div class="form-group d-inline-block" v-for="(option,k) in kOptions" :key="k">
+               <div v-if="checkOption != false">
+                      <v-btn class="my-2 mr-2 lighten-1 white--text caption" 
+                      small 
+                      :color="optionColor" 
+                    :loading="btnloading"
+                      rounded
+                      :disabled="clicked.includes(k)"
+                      @click="addOption(k,option.name,option.price)"
+                      >
+                        <v-icon small>mdi-plus</v-icon>
+                        {{option.name}}
+                        <span class="ml-2 pa-2 white--text" :class="priceOption">
+₦ {{option.price}}
+                        </span>
+                      </v-btn>
+               </div>
+               <div v-else>no options</div>
+            </div>
+            </v-card-text>
+                </v-card>
+              
 
     </div>
          <!-- <p class="caption grey--text text--darken-2 font-weight-light mb-0">
@@ -227,10 +244,18 @@ powered by <img :src="require('../assets/mulaalogo.png')" alt="" style="max-widt
         >close</v-btn>-->
 <v-list-item three-line>
       <v-list-item-content>
-        <div class="overline mb-4">Order Confirmation</div>
-        <v-list-item-title class="headline mb-1 teal--text text--darken-4">Total: {{newAmount | currency}}</v-list-item-title>
-        <v-list-item-subtitle>{{this.title}}</v-list-item-subtitle>
-        <v-list-item-subtitle>
+        <div class="overline mb-0">Order Confirmation</div>
+        <v-list-item-title class="title mb-0 teal--text text--darken-4"><span class="overline">Total:</span><br> {{newAmount | currency}}</v-list-item-title>
+        <v-list-item-subtitle>{{this.title}}
+<div v-for="(option,i) in Options" :key="i" class="mt-1">
+<v-chip
+small
+class="my-0 d-inline green lighten-5 font-weight-light ml-n2"
+>{{option.name}}
+  </v-chip>
+</div>
+        </v-list-item-subtitle>
+       <!-- <v-list-item-subtitle>
           <v-btn
              @click="payWithPaystack"
              color="#23d2aa" 
@@ -240,15 +265,25 @@ powered by <img :src="require('../assets/mulaalogo.png')" alt="" style="max-widt
               <v-icon small left>mdi-cash</v-icon>
                 Checkout
              </v-btn>
-          </v-list-item-subtitle>
+          </v-list-item-subtitle>-->
       </v-list-item-content>
 
       <v-list-item-avatar
         tile
-        size="80"
-        color="#000028"
+        size="150"
+        color="transparent"
       >
-      <v-icon dark>mdi-cart</v-icon>
+      <!--<v-icon dark>mdi-cart</v-icon>-->
+      <v-btn
+             @click="payWithPaystack"
+             color="green" 
+             class="mt-n3 white--text"
+             tile
+             :disabled=disabled :loading="loading"
+             >
+              <v-icon x-small left>mdi-cash</v-icon>
+                Checkout
+             </v-btn>
       </v-list-item-avatar>
     </v-list-item>
 
@@ -277,7 +312,12 @@ export default {
     },
  data(){
         return {
-          
+          checkOption: false,
+          optionColor: 'green',
+          priceOption: 'black',
+          loader: null,
+        btnloading: false,
+          clicked: [],
             hide:false,
 progress: 10,
 dialog: false,
@@ -298,6 +338,10 @@ pageurl: 'https://shop.mulaa.co/'+this.$route.path,
             delivery:'',
             description:'',
             discountPrice:'',
+            productOptions: '',
+            Options: [
+           
+            ],
             image: '',
             price: '',
             discounted: '',
@@ -366,6 +410,19 @@ pageurl: 'https://shop.mulaa.co/'+this.$route.path,
        return false
         //return this.imageFile.length < 1; // or === 0   
     },
+   kOptions: {
+      get: function(){
+        if(this.productOptions){
+          if(JSON.parse(this.productOptions).length > 1){
+            this.checkOption = true
+          }
+          //console.log(JSON.parse(this.productOptions).length)
+          
+          return JSON.parse(this.productOptions);
+        }
+        return  //this.productOptions//JSON.parse(this.productOptions);
+      }
+    },
     mySrc: {
     get: function() {
       //concat using template literal
@@ -378,9 +435,19 @@ pageurl: 'https://shop.mulaa.co/'+this.$route.path,
         this.fetchData()
         this.updateData()
         this.toUrlString(this.title)
-//console.log(this.userKey)
+
+//console.log(this.theProduct)
     },
     methods: {
+      addOption(index,name,price) {
+        console.log(name)
+        this.loader = 'btnloading'
+        //let nprice = parseInt(price)
+        this.newAmount = parseInt(this.newAmount) + parseInt(price)
+        this.price = parseInt(this.price) + parseInt(price)
+this.clicked.push(index)
+            this.Options.push({ name: name, price: price });
+        },
       toUrlString(productname){
 let productName = productname
 productName = productName.replace(/\s+/g, '-').toLowerCase();
@@ -449,9 +516,12 @@ const salesData = {
             this.price = this.theProduct.price
             this.discounted = this.theProduct.show_discount
             this.newAmount = this.amount
+            this.productOptions = this.theProduct.productOptions
+            console.log(this.theProduct.productOptions)
              //console.log('refreshed amount '+this.newAmount) 
             }else{
                 //console.log('valid click')
+                //console.log(this.theproducts)
                 this.title = this.theproducts.title
             this.hidethis = this.theproducts.hidden
             this.datePosted = this.theproducts.date_posted
@@ -461,6 +531,7 @@ const salesData = {
             this.image = this.theproducts.image
             this.price = this.theproducts.price
             this.discounted = this.theproducts.show_discount
+            this.productOptions = this.theproducts.productOptions
             this.newAmount = this.amount
             //console.log(this.newAmount)
             }
@@ -555,7 +626,17 @@ this.loading = false
             oLuanchBtn.style.display = 'none';
          // this.showPopup()   
           //console.log('userdetails: '+JSON.stringify(this.userDetails))  
-  }
+  },
+  watch: {
+      loader () {
+        const l = this.loader
+        this[l] = !this[l]
+
+        setTimeout(() => (this[l] = false), 3000)
+
+        this.loader = null
+      },
+    }
 }
 </script>
 <style>
