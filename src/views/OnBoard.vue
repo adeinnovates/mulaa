@@ -509,7 +509,7 @@ import banks from '@/data/banks.json'
 import liststates from '@/data/liststates.json'
 
 const PaystackOptions = {
-  headers: {'Authorization': 'Bearer sk_test_0fe01ff01cdb2bd222084d4270c69ec2c98f8544'}
+  headers: {'Authorization': 'Bearer sk_live_01952d79b3b14815af91d560256959358299e123'}
 }
 
 export default {
@@ -705,7 +705,7 @@ const headers2 = {
   updateUser () {
 
     const Hoptions = {
-  headers: {'Authorization': 'Bearer sk_test_0fe01ff01cdb2bd222084d4270c69ec2c98f8544'}
+  headers: {'Authorization': 'Bearer sk_live_01952d79b3b14815af91d560256959358299e123'}
 }
                 this.loading = true;
                 //const interestsJson = this.interests
@@ -855,7 +855,7 @@ const headers2 = {
         if(val.length == 10){
           //console.log(PaystackOptions)
         let config = {
-  headers: {'Authorization': 'Bearer sk_test_0fe01ff01cdb2bd222084d4270c69ec2c98f8544'},
+  headers: {'Authorization': 'Bearer sk_live_01952d79b3b14815af91d560256959358299e123'},
   params: {
                   account_number:val,
                   bank_code:this.bank.value

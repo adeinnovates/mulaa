@@ -122,7 +122,10 @@
         <th class="text-left">Email</th>
         <th class="text-left">Status</th>
         <th class="text-left">Message</th>
+        <th class="text-left">Delivery</th>
         <th class="text-left">Date</th>
+         <th class="text-left">Product ID</th>
+         <th class="text-left">Others</th>
       </tr>
     </thead>
     <tbody>
@@ -135,7 +138,10 @@
         <td class="caption">{{ item.acf.customer_email }}</td>
         <td class="caption">{{ item.acf.status }}</td>
         <td class="caption">{{ item.acf.message }}</td>
+         <td class="caption">{{ item.acf.location }}</td>
          <td class="caption">{{ item.date }}</td>
+         <td class="caption">{{ item.acf.product_id }}</td>
+          <td class="caption">{{ item.acf.others }}</td>
       </tr>
     </tbody>
   </v-simple-table>

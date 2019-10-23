@@ -529,9 +529,11 @@ const salesData = {
             product: this.title,
             customer_email: this.buyerEmail,
             customer_phone: this.buyerPhone,
-            location: this.delivery,
+            location: this.buyerAddress,
             transaction: response.transaction,
-            merchant: this.$route.params.name
+            merchant: this.$route.params.name,
+            delivery: this.buyerAddress,
+            others: this.Options
                 },
                  status: "publish"
             }
@@ -573,7 +575,7 @@ const salesData = {
                 this.title = this.theproducts.title
             this.hidethis = this.theproducts.hidden
             this.datePosted = this.theproducts.date_posted
-            this.delivery = this.theproducts.description
+            this.delivery = this.theproducts.delivery_locations
             this.description = this.theProduct.description
             this.discountPrice = this.theproducts.discount_price
             this.image = this.theproducts.image
