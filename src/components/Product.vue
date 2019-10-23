@@ -342,7 +342,7 @@ import axios from 'axios'
 //import Rave from 'vue-ravepayment';
 //import paystack from 'vue-paystack';
 import Callback from '@/components/Callback'
-
+const mulaa_key = 'pk_live_d2ea70959fc4383baf5844b947709e17db19b1d0'
 export default {
     props: ['name','theproducts'],
      components: {
@@ -477,6 +477,7 @@ pageurl: 'https://shop.mulaa.co/'+this.$route.path,
         this.fetchData()
         this.updateData()
         this.toUrlString(this.title)
+       
 /*
         const script = document.createElement('script')
         script.src = 'https://api.ravepay.co/flwv3-pug/getpaidx/api/flwpbf-inline.js'
@@ -641,7 +642,33 @@ const salesData = {
           console.log("Payment closed")
       },
       payWithPaystack() {
+        if(this.userDetails.subaccount_code !='' || this.userDetails.subaccount_code !=null)
+        {
+          //console.log('use subaccount '+ mulaa_key)
+          //
           const paystackOptions = {
+                    key: mulaa_key,
+                    email: this.buyerEmail,
+                    amount: Number(this.amount2()),
+                    subaccount: this.userDetails.subaccount_code,
+                    transaction_charge: 0,
+                    bearer: 'subaccount',
+                    ref: this.reference,
+                    callback: (response) => { //message: "Approved" reference: "rVZKHQSn6b" status: "success" trans: "256223954" transaction: "256223954" trxref: "rVZKHQSn6b"
+                        this.callback(response)
+                        //this.showPopup(response)
+                    },
+                    onClose: () => {
+                        this.close()
+                        this.$router.go(-1)
+                    }
+                }
+            //console.log(paystackOptions)
+          const handler = window.PaystackPop.setup(paystackOptions)
+          handler.openIframe()
+          //
+        }else{
+ const paystackOptions = {
                     key: this.userDetails.payment_key,
                     email: this.buyerEmail,
                     amount: Number(this.amount2()),
@@ -652,14 +679,18 @@ const salesData = {
                     },
                     onClose: () => {
                         this.close()
+                        this.$router.go(-1)
                     }
                 }
             //console.log(paystackOptions)
           const handler = window.PaystackPop.setup(paystackOptions)
           handler.openIframe()
+        }
+         
       }
   },
   mounted() {
+     //console.log(this.userDetails.subaccount_code)
 this.loading = false
     let paystackScript = document.createElement('script')
     paystackScript.setAttribute('src', 'https://js.paystack.co/v1/inline.js')
