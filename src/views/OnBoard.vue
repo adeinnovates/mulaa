@@ -796,8 +796,8 @@ const headers2 = {
             .catch((e) => {
                 this.loading = false;
                 console.error(e)
-                this.infoBar = true
-              this.infoMsg = 'profile update failed, try again later'
+                //this.infoBar = true
+              //this.infoMsg = 'profile update failed, try again later'
             })
   },
   fetchUserData(){
@@ -842,6 +842,10 @@ const headers2 = {
 
          }else{
            this.loading = false
+           this.bank = {
+             text: '',
+             value: ''
+           }
            return this.e1 = 3
          }
         
