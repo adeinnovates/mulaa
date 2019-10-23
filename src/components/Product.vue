@@ -26,8 +26,9 @@
                     class="grey lighten-2 mb-3"
                     max-width="500"
                     max-height="300"
+                    @click="overlay = !overlay"
                     >
-                    
+
 <v-row class="fill-height d-flex wrap justify-space-between" style="flex-direction: column;height:100%">
 <v-card-title class="ml-5">
 
@@ -61,6 +62,45 @@
 </v-row>
 
                     </v-img>
+
+<v-overlay 
+:value="overlay"
+:opacity="0.9"
+>
+<v-layout row wrap mx-auto>
+  <v-flex xs10 sm9 md9 lg9>
+<div class="headline font-weight-light">{{this.title}}</div>
+  </v-flex>
+ <v-flex xs2 sm3 md3 lg3 text-right>
+    <v-btn
+icon
+@click="overlay = false"
+>
+<v-icon right>mdi-close</v-icon>
+</v-btn>
+  </v-flex>
+</v-layout>
+
+
+<v-img
+:src="image"
+lazy-src="https://picsum.photos/id/11/10/6"
+height='300'
+width="300"
+class="grey lighten-2 mb-3"
+
+@click="overlay = !overlay"
+>
+</v-img>
+
+<v-btn text color="#23d2aa" 
+               class="caption"
+               @click="overlay = false"
+                >
+                  <v-icon small left>mdi-cart</v-icon>
+                  Buy Now
+                </v-btn>
+</v-overlay>
 </v-row>
 
                <!-- <v-card-title>-->
@@ -294,13 +334,12 @@ class="my-0 d-inline green lighten-5 font-weight-light ml-n2"
     height="1%" frameborder="0" style="display:none;z-index:-999">
   </iframe>
 
-
-
     </div>
 </template>
 <script>
 import { mapState, mapGetters } from 'vuex'
 import axios from 'axios'
+//import Rave from 'vue-ravepayment';
 //import paystack from 'vue-paystack';
 import Callback from '@/components/Callback'
 
@@ -308,10 +347,13 @@ export default {
     props: ['name','theproducts'],
      components: {
         //paystack
-        Callback
+        Callback,
+        // Rave
     },
  data(){
         return {
+          //raveKey: "FLWPUBK-xxxxxxxxxxxxxxxxxx-X",
+          overlay:true,
           checkOption: false,
           optionColor: 'green',
           priceOption: 'black',
@@ -435,6 +477,11 @@ pageurl: 'https://shop.mulaa.co/'+this.$route.path,
         this.fetchData()
         this.updateData()
         this.toUrlString(this.title)
+/*
+        const script = document.createElement('script')
+        script.src = 'https://api.ravepay.co/flwv3-pug/getpaidx/api/flwpbf-inline.js'
+        document.getElementsByTagName('head')[0].appendChild(script)
+        */
 
 //console.log(this.theProduct)
     },

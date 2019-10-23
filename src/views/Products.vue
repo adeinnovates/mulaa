@@ -12,6 +12,7 @@
                          color="teal lighten-3 teal--text"
             label="Search"
             placeholder="Search Product Name or Price"
+            prepend-inner-icon="mdi-magnify"
           ></v-text-field>
           </div>
                        </v-col>

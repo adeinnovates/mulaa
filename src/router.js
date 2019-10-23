@@ -100,7 +100,7 @@ export default new Router({
     },
     {
       path: '/u/',
-      name: 'user',
+      name: 'new user',
       component: Register,
       meta: { 
         hideNavigation: true,

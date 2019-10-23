@@ -12,6 +12,7 @@
 <v-img :src="require('../assets/winner.svg')"
 width="350"
 ></v-img>
+
 <v-stepper v-model="e1" style="max-width:454px" class="mx-3">
     <v-stepper-header>
       <v-stepper-step :complete="e1 > 1" step="1" color="#000028">Business Info</v-stepper-step>
@@ -79,7 +80,7 @@ width="350"
                     background-color="#f4f8f7"
         color="teal lighten-3"
         v-model="businessName"
-    
+    :rules="[nurules.required]"
         placeholder="Your Business Name"
         prepend-inner-icon="mdi-account-card-details-outline"
         class="teal--text form-field mb-0"
@@ -99,7 +100,7 @@ width="350"
                     background-color="#f4f8f7"
         color="teal lighten-3"
         v-model="businessDesc"
-    
+    :rules="[nurules.required]"
         placeholder="Business Description"
         prepend-inner-icon="mdi-domain"
         class="teal--text form-field mb-0"
@@ -139,7 +140,7 @@ width="350"
                     background-color="#f4f8f7"
         color="teal lighten-3"
         v-model="phoneNumber"
-        
+        :rules="[nurules.required, nurules.min]"
         type="number"
         class="teal--text form-field"
         placeholder="080 000 00000"
@@ -149,7 +150,156 @@ width="350"
 
         </v-row>
 
+        </v-container>
+        </v-card-text>
 
+        <v-card-actions>
+       <v-btn
+          @click="e1 = 2"
+          rounded 
+      large 
+      class="px-5 mb-5 ml-5 text teal--text" 
+      color="#23d2aa" 
+      :disabled=disabled 
+        >
+          Continue
+        </v-btn>
+        </v-card-actions>
+        </v-card>
+ </v-stepper-content>
+
+<v-stepper-content step="2" class="pa-0">
+        <v-card
+        max-width="454"
+        class="mx-auto"
+        outlined
+        :loading="loading"
+        >
+        <v-list-item two-line>
+        <v-list-item-content>
+        <v-list-item-title class="headline mb-2 teal--text">Sales Details</v-list-item-title>
+        <v-list-item-subtitle>Please enter a few personal details</v-list-item-subtitle>
+        </v-list-item-content>
+        </v-list-item>
+        <v-divider class="mx-4"></v-divider>
+
+        <v-card-text>
+        <v-container>
+<div v-if="!show2 ">
+
+        <v-row class="mb-0 pb-0">
+        <v-col
+        cols="12"
+        sm="12"
+        class="mb-0 pb-0"
+        > 
+        <span class="overline mb-2">
+          Got Paystack?
+        </span>
+        <p class="mb-2">
+  Let us know where to send your customer payments, all details must be valid to allow your customers pay you. 
+</p>
+        
+        
+        <v-text-field
+        filled
+        hint="copy public key from your Paystack dashboard"
+                    full-width
+                    single-line
+                    background-color="#f4f8f7"
+        color="teal lighten-3"
+        v-model="paystackKey"
+    
+        placeholder="Paystack Public Key"
+        prepend-inner-icon="mdi-cash"
+        class="teal--text form-field mb-0"
+        ></v-text-field>
+      <p class="caption red--text text-capitalize">
+   No Paystack Key?
+   <span @click="show2 = true" style="cursor: pointer;text-decoration:underline">click here to enter bank details</span>
+   </p>
+        </v-col>
+        </v-row>
+        
+ <v-divider class="my-4"></v-divider>
+ 
+ </div>
+
+ <div v-else>
+    <p class="caption red--text text-capitalize">
+   Already have a Paystack account? 
+   <span @click="show2 = false" style="cursor: pointer;text-decoration:underline">click here to use Paystack key</span>
+   </p>
+  <span class="overline teal--text">
+          Setup Bank Details
+        </span>
+        <p>Kindly provide banking details for settlement purposes and connect your mulaa account to a payment gateway</p>
+        <v-row class="mb-0 pb-0">
+        <v-col
+        cols="12"
+        sm="12"
+        class="mb-0 pb-0"
+        > 
+        <v-select
+         v-model="bank"
+          :items="bankList"
+          item-text="text"
+          item-value="value"
+          filled
+          label="Select your bank"
+          background-color="#f4f8f7"
+         return-object
+         single-line
+        ></v-select>
+
+        </v-col>
+        </v-row>
+
+        <v-row class="mb-0 pb-0">
+        <v-col
+        cols="12"
+        sm="12"
+        class="mb-0 pb-0"
+        > 
+       <v-text-field
+        filled
+        hint="Bank account number"
+                    full-width
+                    single-line
+                    background-color="#f4f8f7"
+        color="teal lighten-3"
+        v-model="bankaccountNumb"
+    :rules="[nurules.required, nurules.min]"
+    :error-messages="errors"
+        placeholder="Enter your bank account number"
+        prepend-inner-icon="mdi-cash"
+        class="teal--text form-field mb-0"
+        ></v-text-field>
+
+        </v-col>
+        </v-row>
+
+  <v-row class="mb-0 pb-0">
+        <v-col
+        
+        class="mb-0 pb-0"
+        > 
+       <v-text-field
+        filled
+        hint="Full name"
+                    full-width
+                    single-line
+                    background-color="#f4f8f7"
+        color="teal lighten-3"
+        v-model="fname"
+    :disabled="true"
+        placeholder="Full Name"
+        prepend-inner-icon="mdi-user-outline"
+        class="teal--text form-field mb-0"
+        ></v-text-field>
+</v-col>
+        </v-row>
+</div>
         <v-row class="mb-0 pb-0">
         <v-col
         cols="12"
@@ -163,7 +313,7 @@ width="350"
                     background-color="#f4f8f7"
         color="teal lighten-3"
         v-model="BusinessAddress"
-        placeholder="Business Address"
+        placeholder="Registered Business Address"
         prepend-inner-icon="mdi-map-marker"
         class="teal--text form-field mb-0"
         ></v-text-field>
@@ -177,19 +327,16 @@ width="350"
         sm="6"
         class="mb-0 pb-0"
         > 
-        <v-text-field
-        filled
-                    full-width
-                    single-line
-                    background-color="#f4f8f7"
-        color="teal lighten-3"
-        v-model="stateResidence"
-        prepend-inner-icon="mdi-crosshairs-gps"
         
-        placeholder="State"
-        class="teal--text form-field"
-       
-        ></v-text-field>
+        <v-select
+        prepend-inner-icon="mdi-crosshairs-gps"
+          :items="statelist"
+          filled
+          label="State"
+          v-model="stateResidence"
+          background-color="#f4f8f7"
+        color="teal lighten-3"
+        ></v-select>
         </v-col>
 
         <v-col
@@ -208,85 +355,6 @@ width="350"
 
         </v-row>
 
-        </v-container>
-        </v-card-text>
-
-        <v-card-actions>
-       <v-btn
-          @click="e1 = 2"
-          rounded 
-      large 
-      class="px-5 mb-5 text teal--text" 
-      color="#23d2aa" 
-        >
-          Continue
-        </v-btn>
-        </v-card-actions>
-        </v-card>
- </v-stepper-content>
-
-<v-stepper-content step="2" class="pa-0">
-        <v-card
-        max-width="454"
-        class="mx-auto"
-        outlined
-        
-        >
-        <v-list-item two-line>
-        <v-list-item-content>
-        <v-list-item-title class="headline mb-2 teal--text">Sales Details</v-list-item-title>
-        <v-list-item-subtitle>Select your preferred payment provider</v-list-item-subtitle>
-        </v-list-item-content>
-        </v-list-item>
-        <v-divider class="mx-4"></v-divider>
-
-        <v-card-text>
-        <v-container>
-
-        <v-row class="mb-0 pb-0">
-        <v-col
-        cols="12"
-        sm="12"
-        class="mb-0 pb-0"
-        > 
-        <v-text-field
-        filled
-        hint="copy public key from your Paystack dashboard"
-                    full-width
-                    single-line
-                    background-color="#f4f8f7"
-        color="teal lighten-3"
-        v-model="paystackKey"
-    
-        placeholder="Paystack Public Key"
-        prepend-inner-icon="mdi-cash"
-        class="teal--text form-field mb-0"
-        ></v-text-field>
-        </v-col>
-        </v-row>
-
-
-        <v-row class="mb-0 pb-0">
-        <v-col
-        cols="12"
-        sm="12"
-        class="mb-0 pb-0"
-        > 
-        <v-text-field
-        filled
-                    full-width
-                    single-line
-                    background-color="#f4f8f7"
-        color="teal lighten-3"
-        v-model="facebookPixel"
-        placeholder="Facebook Pixel"
-        prepend-inner-icon="mdi-facebook"
-        class="teal--text form-field mb-0"
-        :disabled="true"
-        hint="coming soon"
-        ></v-text-field>
-        </v-col>
-        </v-row>
 
         </v-container>
         </v-card-text>
@@ -296,18 +364,19 @@ width="350"
           @click="e1 = 1"
           rounded 
       large 
-      class="px-5 mb-5 text teal--text" 
+      class="px-5 mb-5 ml-5 text teal--text" 
       color="#000028" 
         >
           Back
         </v-btn>
 
        <v-btn
-          @click="e1 = 3"
+          @click="createSubaccount()"
           rounded 
       large 
       class="px-5 mb-5 text teal--text mr-3" 
       color="#23d2aa" 
+      :loading="loading"
         >
           Continue
         </v-btn>
@@ -330,6 +399,7 @@ width="350"
         </v-list-item-content>
         </v-list-item>
         <v-divider class="mx-4"></v-divider>
+
 
         <v-card-text>
         <v-container>
@@ -365,6 +435,34 @@ dark
   </div>
         </v-col>
         </v-row>
+ <v-divider class="my-4"></v-divider>
+          <v-row class="mb-0 pb-0">
+        <v-col
+        cols="12"
+        sm="12"
+        class="mb-0 pb-0"
+        > 
+        <span class="overline">
+          add conversion pixel
+        </span>
+        <p>
+          With your Facebook Pixel build targeted audiences for future ads, and remarket to people who have already visited and not ordered
+        </p>
+        <v-text-field
+        filled
+                    full-width
+                    single-line
+                    background-color="#f4f8f7"
+        color="teal lighten-3"
+        v-model="facebookPixel"
+        placeholder="Facebook Pixel"
+        prepend-inner-icon="mdi-facebook"
+        class="teal--text form-field mb-0"
+        :disabled="true"
+        hint="coming soon"
+        ></v-text-field>
+        </v-col>
+        </v-row>
 
         </v-container>
         </v-card-text>
@@ -386,7 +484,7 @@ dark
       large 
       class="px-5 mb-5 text teal--text mr-3" 
       color="#23d2aa" 
-      
+       :loading="loading"
         >
           Submit
         </v-btn>
@@ -407,17 +505,30 @@ dark
 import store from '@/store' 
 import { mapState, mapGetters } from 'vuex'
 import axios from 'axios'
+import banks from '@/data/banks.json'
+import liststates from '@/data/liststates.json'
+
+const PaystackOptions = {
+  headers: {'Authorization': 'Bearer sk_test_0fe01ff01cdb2bd222084d4270c69ec2c98f8544'}
+}
+
 export default {
     created(){
       this.fetchUserData()
+      //this.listOfBanks()
       if(this.$store.getters.isLoggedIn=== true){
        // this.$router.push('/') //this.$store.getters.isLoggedIn
       }
+      //console.log('email: '+this.userEmail)
+      
     },
+    mounted() {
+  this.dateFunction;
+  
+  },
     computed: {
       ...mapState({
       registerMsg:'registerMsg',
-      color:'color',
       show:'show',
       loading:'loading',
       user:'user',
@@ -441,19 +552,46 @@ export default {
         this.$store.commit('loading', value);
       }
     },
+    accountEmail:{
+      get(){
+        return this.$store.state.userEmail;
+      },
+      set(value){
+        this.$store.commit('userEmail', value);
+      }
+    },
     dateFunction() {
    
             var currentDate = new Date();
-            console.log(currentDate);
+           // console.log(currentDate);
   
             var currentDateWithFormat = new Date().toJSON().slice(0,10).replace(/-/g,'/');
-            console.log(currentDateWithFormat);
+            //console.log(currentDateWithFormat);
+            this.entryDate = currentDateWithFormat
             return currentDateWithFormat
      
-        }
+        },
+         disabled() {
+       if (this.businessName.length < 5 || this.phoneNumber.length < 10){
+           this.infoBar = true
+           this.infoMsg = 'fill in your details to activate your account'
+           this.color='teal'
+         return true
+       }
+       return false
+        //return this.imageFile.length < 1; // or === 0   
+    }
     },
     data() {
       return {
+        show1: false,
+        show2: true,
+        errors: [],
+        infoBar:'',
+        color:'',
+        fname:'',
+        lname:'',
+        bankaccountNumb: '',
           valid:'',
           e1: 0,
             slides: 3,
@@ -464,25 +602,68 @@ export default {
         phoneNumber: '',
         BusinessAddress: '',
         stateResidence: '',
-        Country: ['Nigeria', 'Ghana', 'Togo'],
+        Country: ['Nigeria'],
         paystackKey: '',
+        subaccount: true,
+        subaccount_created:null,
         facebookPixel: '',
         businessDesc: '',
-         progressValue:'',
+        progressValue:'',
         overlay: false,
         userProfile:
             {
                 city:'',
                 phone:'',
                 validid: [],
-                profileImg: null
+                profileImg: null,
             },
           getid: this.userId,
-          userDetail: this.userDetails
-
+          userDetail: this.userDetails,
+          bankList:banks,
+          statelist: liststates,
+          bankcode: null,
+          legalID: null,
+          subaccount_code: '',
+          is_verified: 'false',
+          bank: null,
+          entryDate:null,
+           rules: [
+             v => !!v || 'This is required',
+        value => !value || value.size < 3000000 || 'File size should be less than 3 MB!',
+      ],
+        nameRules: [
+       // (v)=> /^[a-z0-9]+$/.test(v) || 'lowercase only, no space allowed',
+      (v) => !!v || 'This is required',
+      (v) => v && v.length <= 20 || 'Name must be less than 20 characters'
+    ],
+    nurules: {
+          required: value => !!value || 'Required.',
+          min: v => v.length >= 10 || 'Min 10 characters',
+          emailMatch: () => ('The email and password you entered don\'t match'),
+        }
       }
     },
      methods: {
+      
+      listOfBanks(){
+ this.$http.get('https://api.paystack.co/bank',PaystackOptions)
+                .then(resp => {
+           console.log(resp.data.data)
+          const results = resp.data.data
+           const banklist = results.map(({name,code}) => ({text, value}));
+           //const bankcodes = results.map(({code,name}) => (code));
+           this.bankList = banklist
+          // this.bankcode = bankcodes
+           console.log('the list : '+JSON.stringify(banklist))
+            //resolve(resp)
+          }).catch(err => {
+              console.log(err)
+              
+              //this.infoBar = true
+              //this.infoMsg = 'profile image failed, try again'
+            //reject(err)
+          })
+      },
      onFileChanged (event) {
     this.userProfile.profileImg = event.target.files[0]
     this.overlay = true
@@ -534,14 +715,50 @@ const headers2 = {
                   phone:this.phoneNumber
                 },Hoptions)
                 .then(
-                  respA =>
-    Promise.all([
+                  respA => {
+                
+                    const cust_id = respA.data.data.id
+                    const cust_code = respA.data.data.customer_code
+                    
+                    return this.$http.post('/users/'+this.userId, {
+                title: '',
+                content: '',
+                fields : {
+                
+                business_name: this.businessName,
+                instagram: this.Instagram,
+                email: this.userEmail,
+                phone_number: this.phoneNumber,
+                business_address: this.BusinessAddress,
+                state:this.stateResidence,
+                country:this.Country,
+                facebook_pixel: this.facebookPixel,
+                brand_image: this.userProfile.profileImg,
+                business_description: this.businessDesc,
+                customer_code: cust_code,
+                bank_acct: this.bankaccountNumb,
+                bank_name: this.bank.text,
+                bank_code: this.bank.value,
+                customer_id: cust_id,
+                first_name: this.fname,
+                last_name: this.lname,
+                referral: this.referral,
+                legalid:this.legalID,
+                subaccount: this.subaccount,
+                subaccount_code: this.subaccount_code,
+                is_verified: this.is_verified,
+                last_login: this.entryDate //JSON.stringify({ user })
+                },
+                 status: "publish"
+            })
+                  }
+   /* Promise.all([
       respA,
       this.$http.post('/users/'+this.userId, {
                 title: '',
                 content: '',
                 fields : {
-                /*date_joined: dateFunction,*/
+                
                 business_name: this.businessName,
                 instagram: this.Instagram,
                 email: this.userEmail,
@@ -553,19 +770,25 @@ const headers2 = {
                 brand_image: this.userProfile.profileImg,
                 business_description: this.businessDesc,
                 customer_code: respA.data.customer_code,
+                bank_acct: this.bankaccountNumb,
+                bank_name: this.bank,
                 customer_id: respA.data.id,
+                first_name: this.fname,
+                last_name: this.lname,
                 referral: this.referral,
-                last_login: ''//dateFunction() //JSON.stringify({ user })
+                legalid:this.legalID,
+                last_login: this.entryDate //JSON.stringify({ user })
                 },
                  status: "publish"
             })
-    ]) 
+    ]) */
                 )
-                .then(([respA,response]) => {
+               // .then(([respA,response]) => {
+                  .then(response => {
                 this.loading = false;
                 //this.clear()
                 //this.loadProducts()
-                console.log(response, respA)
+                //console.log(response.data)
                 this.$router.push({name: 'dashboard', params: { sheet: false }})
                 //console.log(response.data.id)
                 //this.profileId = response.data.id
@@ -579,9 +802,100 @@ const headers2 = {
   },
   fetchUserData(){
         this.$store.dispatch('loadUserDetails', this.user)
+       // console.log('account email: '+this.accountEmail)
         //console.log(userDetails)
-    }
+        
+    },
+    checkAcct(evt){
+      console.log(evt)
+         if(this.bankaccountNumb.length < 10){
+           console.log("less than 10")
+           return
+         }
+         return
+       },
+       createSubaccount(){
+         if(this.fname != '' && this.businessName != '' && this.subaccount_code ==''){
+            this.loading = true
+
+            this.$http.post('https://api.paystack.co/subaccount', {
+                business_name: this.businessName,
+                settlement_bank: this.bank.text,
+                account_number: this.bankaccountNumb,
+                percentage_charge: 1,
+                primary_contact_email:this.userEmail,
+                primary_contact_name: this.fname,
+                primary_contact_phone: this.userProfile.phone
+            }, PaystackOptions)
+            .then(response => {
+              //console.log(response.data)
+              this.subaccount = true
+      this.subaccount_code = response.data.data.subaccount_code
+          this.is_verified = 'false'
+              this.loading = false
+              this.e1 = 3
+            })
+             .catch((e) => {
+               this.loading = false
+               console.error(e)
+             })
+
+         }else{
+           this.loading = false
+           return this.e1 = 3
+         }
+        
+        
+       }
   },
+   watch: {
+      bankaccountNumb (val) {
+        
+        //console.log(val + '/'+ this.bank.value)
+        if(val.length == 10){
+          //console.log(PaystackOptions)
+        let config = {
+  headers: {'Authorization': 'Bearer sk_test_0fe01ff01cdb2bd222084d4270c69ec2c98f8544'},
+  params: {
+                  account_number:val,
+                  bank_code:this.bank.value
+                },
+}
+        axios.get('https://api.paystack.co/bank/resolve', config)
+                .then(resp => {
+                  //console.log(resp.data)
+                  this.fname = resp.data.data.account_name
+          //this.errors = valid ? [] : ['async error']
+        })
+        .catch((e) => {
+                //console.error(e)
+                this.errors = "Please enter a valid account number"
+            })
+        }
+        /*axios.get('/check?value=' + val).then(valid => {
+          this.errors = valid ? [] : ['async error']
+        })*/
+      },
+      paystackKey(val){
+        if(val.lenght >= 20){
+          this.subaccount = false
+        }
+        return
+      },
+      fname(val){
+        if(this.fname !=''){
+          console.log(val)
+        }
+        return 
+      },
+      e1(val){
+        if(val == 3){
+          //this.loading = true
+
+        }
+
+      }
+   }
 }
 </script>
 <style>

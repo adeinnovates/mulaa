@@ -16,13 +16,13 @@
                                 class=ma-2
                                 >
                                 <v-card-text class="">
-                                <div class="headline mb-2 teal--text text--lighten-3 font-weight-light">
-                                    <v-icon class="teal--text text--lighten-3 mr-2">
+                                <div class="title mb-2 teal--text text--lighten-3 font-weight-light">
+                                    <v-icon small class="teal--text text--lighten-3 mr-2 d-block">
                                     mdi-cart
                                     </v-icon>  
                                     Total Sales Value
                                     </div>
-                                <p class="font-weight-bold headline white--text">
+                                <p class="font-weight-bold title white--text">
                                     {{totalValue | currency}}
                                 </p>
                                 </v-card-text>
@@ -35,13 +35,13 @@
                                 class=ma-2
                                 >
                                 <v-card-text class="white--text">
-                                <div class="headline mb-2 teal--text text--lighten-3 font-weight-light">
-                                    <v-icon class="teal--text text--lighten-3 mr-2">
+                                <div class="title mb-2 teal--text text--lighten-3 font-weight-light">
+                                    <v-icon small class="teal--text text--lighten-3 mr-2 d-block">
                                     mdi-basket
                                     </v-icon>               
                                     Total Items Sold
                                 </div>
-                                <p class="font-weight-bold headline white--text">
+                                <p class="font-weight-bold title white--text">
                                     {{salesCount}}
                                 </p>
                                 </v-card-text>
@@ -76,7 +76,9 @@
                          color="teal lighten-3 teal--text"
             label="Search"
             placeholder="Search Product Name, Customer Name or Price"
-          ></v-text-field>
+            prepend-inner-icon="mdi-magnify"
+          >
+          </v-text-field>
                          </div>
                        </v-col>
                      </v-row>
@@ -129,8 +131,8 @@
         <td class="caption">{{ item.acf.amount }}</td>
         <td class="caption">{{ item.acf.product}}</td>
         <td class="caption">{{ item.acf.fullname }}</td>
-        <td class="caption">{{ item.acf.customer_email }}</td>
         <td class="caption">{{ item.acf.customer_phone}}</td>
+        <td class="caption">{{ item.acf.customer_email }}</td>
         <td class="caption">{{ item.acf.status }}</td>
         <td class="caption">{{ item.acf.message }}</td>
          <td class="caption">{{ item.date }}</td>

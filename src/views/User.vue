@@ -1,5 +1,10 @@
 <template>
-    <div class="userpage products fill-height grey lighten-5 pa-5 page">
+    <div class="userpage products fill-height grey lighten-4 pa-5 page">
+      <v-sheet
+      id="scroll-area-2"
+      class="overflow-y-auto"
+     color="transparent"
+    >
         <v-container>
                 <div class="text-center">
                   
@@ -15,9 +20,9 @@
                         {{name}}
                     </p>
                      <v-divider width=50% class="align-center d-block" style="margin: 0 auto"></v-divider>
-                     <p class="mt-2 mb-0 caption grey--text darken-1 font-weight-light" style="max-width:550px;margin:0 auto"> {{this.userDetails.business_description}}</p>
+                     <p class="mt-2 mb-0 caption grey--text text--darken-3 font-weight-light" style="max-width:550px;margin:0 auto"> {{this.userDetails.business_description}}</p>
                 </div>
-                <v-row justify="center" class="mb-4">
+                <!--<v-row justify="center" class="mb-4">
                     <v-btn small 
                     rounded 
                     class="mt-3 grad-bg2"
@@ -26,7 +31,7 @@
                         <v-icon left>mdi-whatsapp</v-icon>
                        <span class="caption dark-body-text"> chat</span> 
                         </v-btn> 
-                </v-row>
+                </v-row> -->
                 <!--<v-row justify="center" class="mb-4">
                     <v-btn
                     small
@@ -55,19 +60,29 @@
                   </span>
                             </div>
                 <div v-else> 
-        <v-layout row wrap pt-2 mt-1 class="layout-desktop">
+        <v-layout row wrap pt-2 mt-1 class="layout-desktop mx-auto" style="max-width:854px">
                            
                          
                            <v-flex xs6 sm6 md4 lg4 v-for="product in filterHiddenProduct" :key="product.productID">
            <transition name="slide-fade" mode="out-in">
+            
             <v-card flat hover class="text-xs-center ma-2" transition="slide-x-transition">
+              <router-link
+              :to="{
+                   name: 'product',
+                   params: {
+                       id: product.productID,
+                       theproducts:product,
+                   }
+               }"
+              >
               <v-responsive class="pt-0">
                 <v-img
           :src="product.image"
           aspect-ratio="1.15"
-          @click="overlay = !overlay"
          ></v-img>
               </v-responsive>
+              </router-link>
                  
               <!--<v-card-text>
                 <div class="subheading text-truncate">
@@ -96,9 +111,10 @@
                 </Buy>-->
                
                 <v-spacer></v-spacer>
-                <div class="grey--text caption"> ₦{{product.price}}</div>
+                <div class="grey--text text--darken-1 caption"> ₦{{product.price}}</div>
               </v-card-actions>
               </v-card>
+              
               </transition>
               
         </v-flex>
@@ -106,13 +122,42 @@
                        </v-layout>
                         </div>
         </v-container>
-       <v-row justify="center"> 
+        </v-sheet>
+       <v-row justify="center" class="mb-10"> 
            <p class="caption text--grey my-5" style="margin: 0 auto">
              
 powered by <a href="https://mulaa.co/?utm_source=footer&utm_medium=userpage" target="_blank"><img :src="require('../assets/mulaalogo.png')" alt="" style="max-width:70px;margin-left:5px">
          </a>  </p>
         
        </v-row>
+
+       <v-bottom-navigation
+      scroll-target="#scroll-area-2"
+      hide-on-scroll
+      scroll-threshold="50"
+      fixed
+      color="#000028"
+      horizontal
+    >
+      <v-btn
+      :href="bizPhone"
+      >
+        <span>Chat</span>
+        <v-icon>mdi-whatsapp</v-icon>
+      </v-btn>
+
+      <v-btn>
+        <span>Email</span>
+        <v-icon>mdi-email-outline</v-icon>
+      </v-btn>
+
+      <v-btn
+      :href="instagram"
+      >
+        <span>Instagram</span>
+        <v-icon>mdi-instagram</v-icon>
+      </v-btn>
+    </v-bottom-navigation>
     </div>
 </template>
 <script>
@@ -169,6 +214,7 @@ export default {
             products: '',
             bizPhone: '',
             merchantName : '',
+            instagram: 'https://instagram.com/',
             pagePath: 'https://shop.mulaa.co'+ this.$route.path
         }
     },

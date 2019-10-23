@@ -100,10 +100,10 @@
 <template v-slot:append>
         <div class="pa-4 text-higlight">
           <p class="caption">
-            © Mulaa Store, <br>MVPSkool. 2019.
+            © Mulaa.co, <br>MVPSkool. 2019.
           </p>
           <span class="caption">
-            A mobile-first ecommerce-enablement for creators, thought leaders and solo-preneurs - enabling you collect payments and leads with one link - no middleman or website needed 😎👌🏼.
+            A mobile-first sales-enablement for creators, thought leaders and solopreneurs - enabling you monetise your audience and build your leads list with one link - no middleman or website needed 😎👌🏼.
           </span>
         </div>
       </template>

@@ -117,7 +117,7 @@ export default new Vuex.Store({
             state.userEmail = userEmail
             state.userId = userID
             axios.defaults.headers.common['Authorization'] = token
-            //console.log(state.user)
+            console.log('email 2: '+state.userEmail)
     },
     auth_error(state) {
       state.status = 'error'
@@ -174,7 +174,7 @@ export default new Vuex.Store({
        });*/
        //state.userDiscounted = Discounted
        state.theProduct = product.acf
-       console.log(product.acf)
+       //console.log(product.acf)
        state.loading = false
        //console.log('the product: '+JSON.stringify(state.theProduct))
    },
@@ -184,7 +184,7 @@ export default new Vuex.Store({
           return item.show_discount === 1; 
         });
         state.userDiscounted = Discounted
-        state.myproducts = user_product
+        //state.myproducts = user_product
         state.userProducts = user_product
         //console.log(state.userProducts)
         
@@ -197,6 +197,16 @@ export default new Vuex.Store({
     */
         state.loading = false
     },
+    dash_products (state, user_product) {
+       
+       const Discounted = user_product.filter(function(item){
+         return item.show_discount === 1; 
+       });
+       state.userDiscounted = Discounted
+       state.myproducts = user_product
+      
+       state.loading = false
+   },
     user_sales (state, allSales) {
        
       /*const filtered = products.filter(function(item){
@@ -223,7 +233,7 @@ export default new Vuex.Store({
     user_detail(state, value){
       state.userDetails = value
     state.userAcctStatus = ' '
-   state.userEmail = value.email
+   //state.userEmail = value.email
    state.userKey = value.payment_key
    state.userDesc = value.business_description
    state.userBusiness = value.business_name
@@ -246,12 +256,14 @@ export default new Vuex.Store({
         if (data != ''){
           axios({ url: `${STAT_URL}`+data, method: 'GET' })
           .then(resp => { 
-            //const linkData = resp.data.data
+            const linkData = resp.data.data
            // const socialData = resp.data.socialCount
            // console.log(resp.data.data)
             commit('save_stat', linkData)
           })
           .catch(err => {
+            const linkData = 0
+            commit('save_stat', linkData)
             commit('load_error', err)
             //console.log(err)
             //reject(err)
@@ -343,6 +355,36 @@ export default new Vuex.Store({
             const authorID = resp.data.theAuthor
             //$store.dispatch('getUser', authorID)
             commit('user_products', user_products)
+            //console.log('action: '+resp.data)
+          }else {
+            //console.log('Store Empty')
+            commit('showEmpty')
+            return
+          }
+          
+          resolve(resp)
+        })
+        .catch(err => {
+          commit('load_error', err)
+          console.log(err)
+          reject(err)
+        })
+      }else {console.log('An error occured loading product data, try again later')}
+    })
+    },
+    loadDashboardProducts ({commit, state}, userdata){
+      state.loading = true
+      return new Promise((resolve, reject) => {
+    
+      //console.log(data) https://shop.mulaa.co/api/wp-json/mulaa-auth/v1/products
+      if (userdata != ''){ //http://dev.mulaa.africa/admin/wp-json/wp/v2/product?per_page=100
+        axios({ url: `${BASEURL}${Products_ENDPOINT}`+'?author='+userdata, method: 'GET' })
+        .then(resp => { 
+          if(resp.data.length > 0){
+            const user_products = resp.data
+            const authorID = resp.data.theAuthor
+            //$store.dispatch('getUser', authorID)
+            commit('dash_products', user_products)
             //console.log('action: '+resp.data)
           }else {
             //console.log('Store Empty')
@@ -486,6 +528,7 @@ export default new Vuex.Store({
             //const userEmail = resp.data.user_email
             localStorage.setItem('token', token)
             axios.defaults.headers.common['Authorization'] = token
+            console.log('email: '+userEmail)
             commit('auth_success_login', {token, user, userEmail, userID})
             resolve(resp)
             //dispatch('loadAllProducts', 'top')

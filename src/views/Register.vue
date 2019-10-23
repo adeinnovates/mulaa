@@ -51,14 +51,15 @@
       ref="form"
       v-model="valid"
       >
-<v-flex xs12 class="form-wrapper" v-show="!show2">
+<v-flex xs12 class="form-wrapper" v-show="!show2"><!-- :rules="nameRules" -->
             <v-text-field
               filled
               full-width
               single-line
              v-model="userCred.username"
               label="Username"
-              :rules="nameRules"
+              
+              :rules="[nurules.required, nurules.min]"
               hint="a-z no spaces allowed"
               background-color="#f4f8f7"
               class="teal--text form-field"
@@ -142,6 +143,71 @@
           :loading="loading" v-show="show2"><span class="caption px-5">Login</span></v-btn>
     </v-card-actions>
   </v-card>
+
+
+
+<v-overlay 
+:value="confirmation"
+:opacity="0.9"
+>
+<v-layout row wrap mx-auto>
+  <v-flex xs10 sm9 md9 lg9>
+<div class="headline font-weight-light"></div>
+  </v-flex>
+ <v-flex xs2 sm3 md3 lg3 text-right>
+    <v-btn
+icon
+@click="confirmation = false"
+>
+<v-icon right>mdi-close</v-icon>
+</v-btn>
+  </v-flex>
+</v-layout>
+
+<v-layout row wrap mx-auto>
+  <v-flex>
+<v-card
+    class="mx-auto"
+    max-width="344"
+    outlined
+    color="#23d2aa"
+  >
+  <v-card-text class="pa-10 deep-purple--text text--darken-4">
+  <h2 class="title mb-3">
+    Thank You for Signing Up! <br>
+
+Check the confirmation email at {{this.userCred.email}}
+  </h2>
+  <p>
+    <strong> Note:</strong> If you do not receive the email in few minutes:
+  </p>
+  <ul>
+    <li>
+      check spam folder (and move email to inbox)
+    </li>
+    <li>
+      verify if you typed your email correctly
+    </li>
+    <li>
+      if you can't resolve the issue, please contact team@mulaa.co
+    </li>
+  </ul>
+
+  <div class="text-cente">
+<v-btn class="caption my-5" x-large color="#000028" href="/"
+>
+<v-icon small left>mdi-chevron-right</v-icon>
+Continue to Login
+</v-btn>
+</div>
+  </v-card-text>
+</v-card>
+  </v-flex>
+</v-layout>
+
+
+</v-overlay>
+
 <v-row justify="center"> 
            <p class="caption text--grey my-5" style="margin: 0 auto">
 <img :src="require('../assets/mulaalogo-white.png')" alt="" style="max-width:100px;">
@@ -191,9 +257,12 @@ export default {
     },
     mounted(){
       //this.load();
-      this.test();
+      //this.test();
     },
     methods: {
+      confirmed(){
+return this.$router.push({name: 'dashboard', params: { popWelcome: true }})
+      },
       test(){
         console.log(decodeURI('https:\/\/mulaa.me\/u\/randommmmm'))
       },
@@ -245,7 +314,8 @@ export default {
                 () => {
                   this.loading = false
                   axios.get('https://mulaa.me/u/api/?key=P1fjdH02F3y2&url='+priUrl+'&custom='+userUnik)
-                  return this.$router.push({name: 'dashboard'})//{name: 'dashboard', params: { sheet: true }}
+                  this.confirmation = true
+                  //return this.$router.push({name: 'dashboard', params: { popWelcome: true }})//{name: 'dashboard', params: { sheet: true }}
                   }
                 ) //this.$router.push("/")
               .catch(err => {
@@ -262,6 +332,7 @@ export default {
     },
     data() {
       return {
+        confirmation: false,
         usernameraw:'',
         user:{
           username: '',
@@ -289,8 +360,12 @@ export default {
        nameRules: [
         (v)=> /^[a-z0-9]+$/.test(v) || 'lowercase only, no space allowed',
       (v) => !!v || 'Name is required',
-      (v) => v && v.length <= 15 || 'Name must be less than 15 characters'
-    ]
+      (v) => v && v.length <= 20 || 'Name must be less than 20 characters'
+    ],
+    nurules: {
+          required: value => !!value || 'Required.',
+          min: v => v.length >= 6 || 'Min 6 characters'
+        }
       }
     }
 }

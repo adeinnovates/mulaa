@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="dialog" max-width="700px" class="extra-round extra">
+    <v-dialog v-model="dialog" max-width="700px" class="extra-round extra" transition="slide-x-reverse-transition">
         <template v-slot:activator="{ on }">
             <v-responsive style="margin-top:-30px;">
 
@@ -54,6 +54,7 @@
             placeholder = "Drop image here or tap to add one"
             bottom-text="Drop image here or tap to add one"
             @reset = "reset"
+            ref="imgUploader"
             />
              </v-card-text>
         </v-col>
@@ -63,7 +64,7 @@
 <v-form
       ref="uploadForm"
     >
-            <v-card-text class="pt-0">
+            <v-card-text class="py-0">
                 
            <v-text-field
            class="teal--text form-field mt-3"
@@ -72,13 +73,14 @@
             placeholder="product name"
             outlined
             color="teal lighten-3"
+            :rules="[nurules.required, nurules.min]"
           ></v-text-field>
           <v-textarea
-          class="teal--text form-field mt-0"
+          class="teal--text form-field my-0"
           v-model="description"
           outlined
           label="Description"
-          value="Aditional product details and benefits"
+        
           color="teal lighten-3"
         ></v-textarea>
 
@@ -92,6 +94,7 @@
             type="number"
             outlined
             color="teal lighten-3"
+            :rules="[nurules.required, nurules.price]"
           ></v-text-field>
             </v-col>
             <v-col>
@@ -123,7 +126,7 @@
 
   <v-expansion-panels popout>
       <v-expansion-panel>
-        <v-expansion-panel-header class="font-weight-light">Product Variations</v-expansion-panel-header>
+        <v-expansion-panel-header class="caption grey--text">Product Variations</v-expansion-panel-header>
         <v-expansion-panel-content>
           
 <p class="caption grey--text lighten-1">Add options if this product comes in multiple variations, like different sizes or colors.</p>
@@ -200,12 +203,12 @@
                </template>
       <span>Save this product</span>
     </v-tooltip>
-               <v-btn text color="teal lighten-3" @click="dialog = false" v-if="infoBar = false">
-              <v-icon right-3 color="teal lighten-3" class="mr-2">mdi-close-circle</v-icon>
+               <v-btn text color="teal lighten-3" @click="dialog = false" v-if="infoBar = false" class="caption"> 
+              <v-icon right-3 color="teal lighten-3" small class="mr-2">mdi-close-circle</v-icon>
              Cancel
               </v-btn>
-              <v-btn text color="teal lighten-3" @click="dialog = false" v-else>
-              <v-icon right-3 color="teal lighten-3" class="mr-2">mdi-close-circle</v-icon>
+              <v-btn text color="teal lighten-3" @click="dialog = false" class="caption" v-else>
+              <v-icon right-3 small color="teal lighten-3" class="mr-2">mdi-close-circle</v-icon>
              Close
               </v-btn>
             </v-card-actions>
@@ -231,6 +234,11 @@ export default {
             dialog: false,
             loading: false,
             rules: [v => v.length <= 50 || 'Max 50 characters'],
+            nurules: {
+          required: value => !!value || 'Required.',
+          min: v => v.length >= 6 || 'Min 6 characters',
+          price: v => v.length >= 4 || 'Min 1000'
+        },
             imgUrl: '',
             uploadMsg: '',
             infoBar: false,
@@ -269,8 +277,10 @@ export default {
     },
       resetForm () {
         this.$refs.uploadForm.reset()
+        //this.$refs.imgUploader.placeholder = ''
       },
     reset(file, name) {
+      
       console.log("File --> ", file);
       console.log("FileName -->", name);
     },
@@ -279,12 +289,12 @@ export default {
       console.log("FileName -->", name);
     },
     onErr(err, file) {
-      console.log("​onErr -> file", file);
-      console.log("​onErr -> err", err);
+      //console.log("​onErr -> file", file);
+      //console.log("​onErr -> err", err);
     },
      onSuc(res, file) {
-      console.log("​onSuc -> file", file);
-      console.log("​onSuc -> res", res);
+      //console.log("​onSuc -> file", file);
+      //console.log("​onSuc -> res", res);
       this.imgUrl = res.url
       this.uploadMsg = res.message
       

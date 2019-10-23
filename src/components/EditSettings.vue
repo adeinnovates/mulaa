@@ -1,9 +1,18 @@
 <template>
-    <v-dialog v-model="dialog" max-width="454" class="extra-round extra">
+    <v-dialog v-model="dialog" max-width="454" class="extra-round extra" transition="slide-x-reverse-transition">
         <template v-slot:activator="{ on }">
-   <v-btn color="#23d2aa" value="addimage" v-on="on" elevation="0">
+         <span class="ml-2">
+           edit
+         </span>
+          <v-btn icon
+          v-on="on" elevation="3"
+          color="#23d2aa" 
+          >
+            <v-icon color="grey lighten-1">mdi-chevron-right</v-icon>
+          </v-btn>
+   <!--<v-btn color="#23d2aa" value="addimage" v-on="on" elevation="0">
      <span class="caption">edit </span> <v-icon small right>mdi-square-edit-outline</v-icon>
-    </v-btn>
+    </v-btn>-->
         </template>
 
             <v-card
@@ -20,7 +29,7 @@
   <span style="color:#000028">{{infoMsg}}</span>
   <!--<v-btn flat color="white" @click="snackbar = false">close</v-btn>-->
 </v-snackbar>
-            <v-card-title><span class="caption teal--text">Edit your profile</span></v-card-title>
+            <v-card-title><span class="title teal--text">Update your profile</span></v-card-title>
             <v-card-text>
                
           
@@ -95,6 +104,7 @@
            
             </v-form>
              <v-card-actions style=background-color:#000028>
+               
             <v-btn text color="green" @click="updateUser" :loading="loading">
               <v-icon right-3 color="green" class="mr-2">mdi-check</v-icon>
              Save

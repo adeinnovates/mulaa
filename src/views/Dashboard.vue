@@ -15,17 +15,20 @@ your link: {{userURL}}
 
 <v-layout row wrap pt-10>
                        
-                           <v-flex xs12 sm6 md3 lg3>
+                           <v-flex xs6 sm6 md3 lg3>
                                 <v-chip
-                                class="ma-2 teal lighten-4"
+                                class="ma-2 teal lighten-4 caption d-block"
                                 color=""
+                                pill
                                 >
-                                <v-avatar left>
-                                <v-icon class="grey--text text--darken-4">
+                                <!--
+                               <v-avatar left>
+                                <v-icon class="grey--text text--darken-4" small>
                                     mdi-link
                                     </v-icon>  
-                                </v-avatar>
+                                </v-avatar>-->
                                     Total Clicks 
+                                    
                                     <v-avatar right
                                     class="teal darken-1 white--text"
                                     >
@@ -34,16 +37,13 @@ your link: {{userURL}}
                                 </v-chip>
                                
                            </v-flex>
-                           <v-flex xs12 sm6 md3 lg3>
+                           <v-flex xs6 sm6 md3 lg3>
                                 <v-chip
-                                class="ma-2 teal lighten-4"
+                                class="ma-2 teal lighten-4 caption d-block"
                                 color=""
+                                pill
                                 >
-                                <v-avatar left>
-                                <v-icon class="grey--text text--darken-4">
-                                    mdi-link
-                                    </v-icon>  
-                                </v-avatar>
+                                
                                     Unique Clicks 
                                     <v-avatar right
                                     class="teal darken-1 white--text"
@@ -133,7 +133,7 @@ your link: {{userURL}}
                             indeterminate
                             color="green"
                             ></v-progress-linear> -->
-                           <v-flex xs6 sm6 md4 lg4 v-for="product in userProducts.slice(0, 4)" :key="product.productID">
+                           <v-flex xs6 sm6 md4 lg4 v-for="product in myproducts.slice(0, 4)" :key="product.productID">
             <v-card flat hover class="text-xs-center ma-2">
               <div v-if="product.hidden == 1" class="hiddenProd">
             <v-chip
@@ -303,6 +303,7 @@ export default {
   },
     data(){
         return{
+          popWelcome: this.$route.params.popWelcome || false,
           sheet: this.$route.params.sheet || false,
             copySucceeded: null,
             userURL: 'https://mulaa.me/u/'+this.$store.state.user,
@@ -319,7 +320,7 @@ export default {
         }
     },
     created() {
-      //this.fetchUserData()
+      this.fetchUserData()
       //console.log('created')
         return this.fetchData()
         
@@ -357,6 +358,7 @@ return 0;
         //this.$store.dispatch('loadAllProducts', 'top')
          this.$store.dispatch('loadUserSales', this.user)
          this.$store.dispatch('loadUserDetails', this.user)
+         this.$store.dispatch('loadDashboardProducts', this.user)
           this.$store.dispatch('linkStats', this.user)
           
          
@@ -413,10 +415,11 @@ return 0;
     },
     currentUserProd: {
       get(value) {
-        return this.$store.state.userProducts;
+        //return this.$store.state.userProducts;
+        return this.$store.state.myproducts;
       },
       set(value) {
-        this.$store.commit('loadUserProducts', value);
+        this.$store.commit('loadDashboardProducts', value);
       }
     },
      currentUserDetail: {
@@ -428,7 +431,8 @@ return 0;
       }
     },
     counted : function () {
-        return Object.keys(this.userProducts).length;
+        //return Object.keys(this.userProducts).length;
+        return Object.keys(this.myproducts).length;
     },
     countApproved: function () {
         return Object.keys(this.approved).length;
@@ -628,4 +632,10 @@ position: absolute;
   transform: translate(-60%, -50%);
 }
 
+.v-input--selection-controls.v-input .v-label,
+.v-textarea.v-text-field--enclosed.v-text-field--outlined .v-label,
+.theme--light.v-input:not(.v-input--is-disabled) input
+{
+  font-size:12px;
+}
 </style>
