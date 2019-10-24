@@ -15,6 +15,7 @@ const API_URL_USER = 'https://shop.mulaa.co/api/wp-json/wp/v2/users'
 
 const Token_ENDPOINT = '/jwt-auth/v1/token'
 const Products_ENDPOINT = '/mulaa-auth/v1/products'
+const Links_ENDPOINT = '/mulaa-link/v1/links'
 const STAT_URL = 'https://mulaa.me/u/api/details?key=P1fjdH02F3y2&alias='
 
 Vue.use(Vuex)
@@ -70,6 +71,7 @@ export default new Vuex.Store({
     Sales: [],
     userSales: [],
     emptyStore: false,
+    emptyLinks: false,
     userId: '',
     userEmail: '',
     userKey:'',
@@ -80,6 +82,8 @@ export default new Vuex.Store({
     userUrl: 'https://mulaa.me/u/',
     userAcctStatus:'',
     shortUrl: '',
+    filteredLinks:'',
+    userLinks: '',
 
   },
   getters: {
@@ -142,12 +146,19 @@ export default new Vuex.Store({
     loading(state, value){
       state.loading = value
     },
+    userLinks(state, value){
+      state.userLinks = value
+    },
     renderUser1(state, value){
       state.user = value
     },
     showEmpty(state){
       state.emptyStore = true;
       state.userProducts = ''
+      state.loading = false
+    },
+    linksEmpty(state){
+      state.emptyLinks = true;
       state.loading = false
     },
     set_products (state, products) {
@@ -204,6 +215,16 @@ export default new Vuex.Store({
        });
        state.userDiscounted = Discounted
        state.myproducts = user_product
+      
+       state.loading = false
+   },
+   dash_links (state, user_links) {
+       
+       const notHidden = user_links.filter(function(item){
+         return item.hidden === 1; 
+       });
+       state.filteredLinks = notHidden
+       state.userLinks = user_links
       
        state.loading = false
    },
@@ -387,8 +408,38 @@ export default new Vuex.Store({
             commit('dash_products', user_products)
             //console.log('action: '+resp.data)
           }else {
-            //console.log('Store Empty')
-            commit('showEmpty')
+            console.log('Store Empty')
+            //commit('showEmpty')
+            return
+          }
+          
+          resolve(resp)
+        })
+        .catch(err => {
+          commit('load_error', err)
+          console.log(err)
+          reject(err)
+        })
+      }else {console.log('An error occured loading product data, try again later')}
+    })
+    },
+    loadDashboardLinks ({commit, state}, userdata){
+      state.loading = true
+      return new Promise((resolve, reject) => {
+    
+      //console.log(data) https://shop.mulaa.co/api/wp-json/mulaa-auth/v1/products
+      if (userdata != ''){ //http://dev.mulaa.africa/admin/wp-json/wp/v2/product?per_page=100
+        axios({ url: `${BASEURL}${Links_ENDPOINT}`+'?author='+userdata+'&skip_cache=1', method: 'GET' })
+        .then(resp => { 
+          if(resp.data.length > 0){
+            const user_links = resp.data
+            const authorID = resp.data.theAuthor
+            //$store.dispatch('getUser', authorID)
+            commit('dash_links', user_links)
+            //console.log('links action: '+JSON.stringify(resp.data))
+          }else {
+            console.log('No links')
+            commit('linksEmpty')
             return
           }
           
@@ -416,7 +467,7 @@ export default new Vuex.Store({
               //console.log(allSales)
             }else {
               console.log('No Sales Record')
-              commit('showEmpty')
+              //commit('showEmpty')
             }
             
             //resolve(resp)

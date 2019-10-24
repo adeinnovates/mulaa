@@ -16,7 +16,7 @@
                   background-color="#23d2aa"
                   ></avatar>
                 </v-avatar>
-                <p class="title grey--text darken-2 font-weight-black">
+                <p class="title black--text darken-2 font-weight-black">
                         {{name}}
                     </p>
                      <v-divider width=50% class="align-center d-block" style="margin: 0 auto"></v-divider>
@@ -60,7 +60,40 @@
                   </span>
                             </div>
                 <div v-else> 
-        <v-layout row wrap pt-2 mt-1 class="layout-desktop mx-auto" style="max-width:854px">
+
+                  <div v-if="!emptyLinks" id="links" 
+                          class="mb-3 mt-2 pa-3 mx-auto"
+                          style="border:3px dotted rgba(178, 223, 219, 0.3);background-color:rgba(178, 223, 219, 0.2);
+                          border-radius:4px;max-width:854px;"
+                          >
+                         <!-- <v-progress-linear
+                            :active=loadinglist
+                            indeterminate
+                            color="green"
+                            ></v-progress-linear>-->
+                          <v-card
+                          color="#000028"
+                          dark
+                          class="mb-3"
+                          
+                          v-for="link in userLinks.slice(0, 4)" :key="link.linkID"
+                          >
+                              <a :href="link.short_link" target="_blank" class="white--text noline">
+                          <v-card-title
+                          class="mt-0 subtitle-1 py-2"
+                          
+                          >
+                          <span class="d-block text-center" style="width:100%;">
+                            {{link.link_title}}
+                            </span>
+                          <v-spacer></v-spacer>
+                         
+                          </v-card-title>
+                          </a>
+                          </v-card>
+                  </div>
+
+        <v-layout row wrap pt-3 mt-3 class="layout-desktop mx-auto" style="max-width:854px;">
                            
                          
                            <v-flex xs6 sm6 md4 lg4 v-for="product in filterHiddenProduct" :key="product.productID">
@@ -111,7 +144,7 @@
                 </Buy>-->
                
                 <v-spacer></v-spacer>
-                <div class="grey--text text--darken-1 caption"> ₦{{product.price}}</div>
+                <div class="grey--text text--darken-3 caption"> ₦{{product.price}}</div>
               </v-card-actions>
               </v-card>
               
@@ -238,7 +271,9 @@ export default {
       Discounted:'Discounted',
       userUrl:'userUrl',
       userImage:'userImage',
-      userDetails: 'userDetails'
+      userDetails: 'userDetails',
+      userLinks: 'userLinks',
+      emptyLinks:'emptyLinks'
       }),
     snackbar: {
       get() {
@@ -278,6 +313,12 @@ export default {
     // call again the method if the route changes
     getUserPhone(){
 this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone_number
+    },
+    emptyLinks(val){
+      if(val == true){
+        return
+      }
+      return
     }
   },
     methods: {
@@ -285,7 +326,8 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
       //console.log('this user '+this.name)
         this.$store.dispatch('loadUserProducts', this.name)
         this.$store.dispatch('loadUserDetails', this.name)
-        //console.log('biz desc '+this.userDesc)
+        this.$store.dispatch('loadDashboardLinks', this.name)
+        console.log('Name '+this.name)
     },
     getMerchant(){
       return this.userBusiness
@@ -302,6 +344,12 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
 }
 </script>
 <style>
+a.noline{
+  text-decoration: none;
+}
+a.noline:hover{
+  color: #B2DFDB;
+}
     .slide-fade-enter-active {
   transition: all .3s ease;
 }
@@ -315,8 +363,9 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
 }
 /*
 .layout-desktop{
-  max-width:70%;
-  margin: 0 auto;
+  border-radius: 25px 25px 0 0;
+  background-color:#fff;
+  padding: 20px 5px 0px 5px !important;
 }
 */
 </style>

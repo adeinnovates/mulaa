@@ -17,7 +17,7 @@ your link: {{userURL}}
                        
                            <v-flex xs6 sm6 md3 lg3>
                                 <v-chip
-                                class="ma-2 teal lighten-4 caption d-block"
+                                class="ma-2 teal lighten-4 caption"
                                 color=""
                                 pill
                                 >
@@ -39,7 +39,7 @@ your link: {{userURL}}
                            </v-flex>
                            <v-flex xs6 sm6 md3 lg3>
                                 <v-chip
-                                class="ma-2 teal lighten-4 caption d-block"
+                                class="ma-2 teal lighten-4 caption"
                                 color=""
                                 pill
                                 >
@@ -126,7 +126,139 @@ your link: {{userURL}}
                             </v-btn>
                         </div>-->
                         <AddProduct></AddProduct>
-                        <p class="overline mb-0">products</p>
+
+ <p class="overline mb-0">Your Links</p>
+                          <div id="links" 
+                          class="mb-4 mt-2 pa-3"
+                          style="border:3px dotted rgba(178, 223, 219, 0.7);background-color:rgba(178, 223, 219, 0.5);
+                          border-radius:4px;"
+                          >
+                          <v-progress-linear
+                            :active=loadinglist
+                            indeterminate
+                            color="green"
+                            ></v-progress-linear>
+                          <v-card
+                          color="#000028"
+                          dark
+                          class="mb-2"
+                          
+                          v-for="link in userLinks.slice(0, 4)" :key="link.linkID"
+                          >
+                          <v-card-title
+                          class="mt-0 subtitle-2 py-1"
+                          
+                          >
+                          {{link.link_title}}
+                          <v-spacer></v-spacer>
+                          <v-chip 
+                          outlined
+                          color="teal"
+                          small
+                          class=""
+                          >
+                          0
+                          </v-chip>
+<v-icon right small
+@click="editItem(link)"
+>
+mdi-pencil-outline
+</v-icon>
+
+<v-icon right small
+@click="deleteItem(link)"
+>
+mdi-delete-forever-outline
+</v-icon>
+                          </v-card-title>
+
+
+<v-dialog
+v-model="editLink" overlay-color="teal"  class="extra-round extra" transition="slide-x-reverse-transition"
+max-width="390"
+
+>
+<v-card>
+<v-card-title class="subtitle-1 font-weight-light headlineText teal lighten-5" text-truncate>
+  <v-icon left small>
+    mdi-dots-vertical
+  </v-icon>
+  Edit</v-card-title>
+
+<v-card-text>
+             
+        <v-row>
+        <v-col>
+      
+            <p class="mb-3 mt-2 overline">Update link title</p>
+
+            <v-text-field
+            class="teal--text form-field ma-0"
+            v-model="editlinkCont.link_title"
+            label="Link Title"
+            placeholder="Enter title for your link"
+            type="text"
+            outlined
+            color="teal lighten-3"
+            :rules="[nurules.required]"
+            ></v-text-field>
+
+            <v-btn 
+            large ripple
+            class="px-5 mb-5 text teal--text" 
+            color="#23d2aa" 
+            x-small
+            id=""
+            @click="updateLink"
+            :loading="loading"
+            >
+            <span class="caption">
+              <v-icon left small>mdi-check-circle-outline</v-icon>
+              Save</span>
+            </v-btn>
+
+        </v-col>
+        </v-row>
+</v-card-text>
+
+</v-card>
+</v-dialog>
+                          </v-card>
+                         
+<v-overlay 
+:value="deleteLink"
+:opacity="0.8"
+color="red darken-2"
+transition="slide-x-reverse-transition"
+>
+<v-layout row wrap mx-auto>
+  <v-flex xs10 sm9 md9 lg9>
+<div class="caption font-weight-light">Confirm delete</div>
+  </v-flex>
+ <v-flex xs2 sm3 md3 lg3 text-right>
+    <v-btn
+    class="mt-n10"
+icon
+@click="deleteLink = false"
+>
+<v-icon right>mdi-close</v-icon>
+</v-btn>
+  </v-flex>
+</v-layout>
+
+<p class="title">{{deletelinkCont.link_title}}</p>
+
+<v-btn color="#000028" 
+               class="caption"
+               @click="confirmDelete(deletelinkCont)"
+               small
+                >
+                  <v-icon small left>mdi-delete-empty</v-icon>
+                  Delete
+                </v-btn>
+</v-overlay>
+                          </div>
+                        <p class="overline mb-0">Your products</p>
                        <v-layout row wrap pt-2 mt-1>
                             <!--<v-progress-linear
                             :active=loading
@@ -303,6 +435,32 @@ export default {
   },
     data(){
         return{
+          loadinglist: true,
+          updated: false,
+          editlinkCont:{
+            hidden:'',
+            image: '',
+            linkID: '',
+            link_title: '',
+            long_link: '',
+            short_link: '',
+            theAuthor: '',
+            title: ''
+          },
+          deletelinkCont:{
+            hidden:'',
+            image: '',
+            linkID: '',
+            link_title: '',
+            long_link: '',
+            short_link: '',
+            theAuthor: '',
+            title: ''
+          },
+          //editlinkdesc: '',
+          //thepost: this.editlinkCont.linkID || '',
+          editLink:false,
+          deleteLink:false,
           popWelcome: this.$route.params.popWelcome || false,
           sheet: this.$route.params.sheet || false,
             copySucceeded: null,
@@ -316,7 +474,13 @@ export default {
             infoBar: false,
             infoMsg: '', 
             products: '',
-            previewStore: this.userURL
+            previewStore: this.userURL,
+            nurules: {
+          required: value => !!value || 'Required.',
+          min: v => v.length >= 6 || 'Min 6 characters',
+          price: v => v.length >= 4 || 'Min 1000',
+          url: v => /^[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)+$/.test(v)|| 'Valid URL required'
+        }
         }
     },
     created() {
@@ -330,6 +494,76 @@ export default {
     '$route': 'fetchData'
      },*/
     methods: {
+      updateLink(){
+        //console.log(this.editlinkCont.linkID)
+this.loading = true;
+                
+                this.$http.post('/link/'+this.editlinkCont.linkID, {
+                title: this.editlinkCont.link_title,
+                content: this.editlinkCont.link_title,
+                fields : {
+                link_title: this.editlinkCont.link_title,
+                },
+                 status: "publish"
+            }).then(response => {
+                this.loading = false;
+                //this.clear()
+                //this.loadProducts()
+                console.log(response.data)
+                this.editLink = false
+                //this.thelinks = ''
+                this.updated = !this.updated
+                //this.$store.dispatch('loadDashboardLinks', this.user)
+                //this.color = 'green lighten-1'
+               // this.infoBar = true
+              //this.infoMsg = '🤗 Product Successfully updated'
+            
+            })
+            .catch((e) => {
+                this.loading = false;
+                //console.error(e)
+                //this.color = 'red darken-1'
+               // this.infoBar = true
+              //this.infoMsg = 'Error updating your product, try again'
+                //this.infoBar = true
+              //this.infoMsg = 'profile update failed, try again later'
+            })
+            
+      },
+       editItem(item) {
+          //this.editedIndex = this.desserts.indexOf(item)
+          //this.editedItem = Object.assign({}, item)
+          this.editLink = true
+          this.editlinkCont = item
+          console.log(item)
+        },
+        deleteItem(item) {
+          //this.editedIndex = this.desserts.indexOf(item)
+          //this.editedItem = Object.assign({}, item)
+          this.deleteLink = true
+          this.deletelinkCont = item
+          //console.log(item)
+        },
+        confirmDelete(val){
+            console.log(val.linkID)
+             this.$http.delete('/link/'+val.linkID).then(response => {
+                
+                console.log(response.data)
+                //this.$store.dispatch('loadDashboardLinks', this.user)
+                //this.color = 'green lighten-1'
+               // this.infoBar = true
+              //this.infoMsg = '🤗 Product Successfully updated'
+            })
+            .catch((e) => {
+                
+                console.error(e)
+                //this.color = 'red darken-1'
+               // this.infoBar = true
+              //this.infoMsg = 'Error updating your product, try again'
+                //this.infoBar = true
+              //this.infoMsg = 'profile update failed, try again later'
+            })
+        },
       linkData(){
         if(linkStat.length>0){
           console.log(linkStat)
@@ -360,7 +594,7 @@ return 0;
          this.$store.dispatch('loadUserDetails', this.user)
          this.$store.dispatch('loadDashboardProducts', this.user)
           this.$store.dispatch('linkStats', this.user)
-          
+          this.$store.dispatch('loadDashboardLinks', this.user)
          
        // this.$store.dispatch('getUser', this.user)
        //this.reload()
@@ -387,7 +621,9 @@ return 0;
        userDetails: 'userDetails',
        userAcctStatus: 'userAcctStatus',
        userProducts:'userProducts',
-       linkStat: 'linkStat'
+       linkStat: 'linkStat',
+       userLinks: 'userLinks',
+       filteredLinks:'filteredLinks'
       }),
     userSales: {
       get() {
@@ -411,6 +647,14 @@ return 0;
       },
       set(value) {
         this.$store.commit('loading', value);
+      }
+    },
+    thelinks: {
+      get() {
+        return this.$store.state.userLinks;
+      },
+      set(value) {
+        this.$store.commit('userLinks', value);
       }
     },
     currentUserProd: {
@@ -449,6 +693,14 @@ return 0;
       counted(newVal, oldVal){
           if(newVal == 1){
             return this.sheet = true
+          }
+      },
+      updated(val){
+         this.$store.dispatch('loadDashboardLinks', this.user)
+      },
+      userLinks(val){
+          if(val != ''){
+            this.loadinglist = false
           }
       }
     }

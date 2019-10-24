@@ -73,6 +73,7 @@
         label="Enable Discount?" 
         class="mt-0"
         color="#23d2aa"
+        inset
         >
         </v-switch>
           </v-col>
@@ -82,6 +83,7 @@
         label="hide?" 
         class="mt-0"
         color="#23d2aa"
+        inset
         >
         </v-switch>
           </v-col>

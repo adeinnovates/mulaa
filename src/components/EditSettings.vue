@@ -196,7 +196,7 @@ export default {
                 //this.clear()
                 //this.loadProducts()
                 console.log(response)
-                this.$router.push({name: 'settings', params: { infoBar: true, infoMsg: 'Successfully updated' }})
+                this.$router.push({name: 'settings', params: { infoBar: true, infoMsg: 'Successfully updated' }}).catch(err => {})
                 //console.log(response.data.id)
                 //this.profileId = response.data.id
             })

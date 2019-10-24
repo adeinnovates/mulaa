@@ -9,8 +9,9 @@
                                 <v-btn class="mx-2 mt-2" 
                                 fab 
                                 dark 
-                                color="teal lighten-3 teal--text" 
+                                color="white--text" 
                                 v-on="on"
+                                style="background-color:#000028"
                                 >
                                     <v-icon dark>mdi-plus</v-icon>
                                 </v-btn>
@@ -23,19 +24,33 @@
      class="mx-auto teal lighten-5 mb-0"
             >
              <v-snackbar v-model=infoBar :timeout="10000" top right :color="color" :value=infoMsg>
-  <span style="color:#1A227E">{{infoMsg}}</span>
+  <span style="color:#fff">{{infoMsg}}</span>
 </v-snackbar>
 
  <v-card-title>
-     <span class="headline font-weight-light headlineText">
-         Create a product
-         </span>
-         </v-card-title>
+     <div class="headline font-weight-light headlineText">
+         Create a <span v-if="!addlink">product</span><span v-else>Link</span>
+         </div>
+  </v-card-title>
+   <div class="d-block px-7">
+           <v-switch 
+        v-model="addlink" 
+        label="Make a link" 
+        class="mt-0"
+        color="#23d2aa"
+        inset
+        >
+        </v-switch>
+        </div>
          <p class="teal--text mb-5 px-7 caption">
                     Tap the image uploader to select a photo from your phone, enter the product name below
                 </p>
 <v-container class="white lighten-5 mb-0">
 
+<div id="prodform" v-if="!addlink">
+  <v-form
+      ref="uploadForm"
+    >
     <v-row>
         <v-col>
              <v-card-text class="pt-0">
@@ -61,9 +76,7 @@
         
         <v-col class="pt-0">
           
-<v-form
-      ref="uploadForm"
-    >
+
             <v-card-text class="py-0">
                 
            <v-text-field
@@ -73,7 +86,7 @@
             placeholder="product name"
             outlined
             color="teal lighten-3"
-            :rules="[nurules.required, nurules.min]"
+            :rules="[nurules.required]"
           ></v-text-field>
           <v-textarea
           class="teal--text form-field my-0"
@@ -94,7 +107,7 @@
             type="number"
             outlined
             color="teal lighten-3"
-            :rules="[nurules.required, nurules.price]"
+            :rules="[nurules.required]"
           ></v-text-field>
             </v-col>
             <v-col>
@@ -116,10 +129,11 @@
         label="Show Discount?" 
         class="mt-0"
         color="#23d2aa"
+        inset
         >
         </v-switch>
             </v-card-text>
-            </v-form>
+           
         </v-col>
          
     </v-row>
@@ -192,8 +206,107 @@
       </v-expansion-panel>
   </v-expansion-panels>
 
+   </v-form>
+</div>
+<div id="linkform" v-else>
+<v-form
+      ref="linkForm"
+    >
+
+<v-tabs
+      v-model="tab"
+     background-color="transparent"
+     
+  color="teal lighten-2"
+  class="mt-n3"
+      icons-and-text
+    >
+      
+
+      <v-tab 
+      href="#tab-1"
+      class="font-weight-light"
+      >
+        Url
+        <v-icon
+        class="teal--text"
+        small
+        >mdi-link</v-icon>
+      </v-tab>
+
+      <v-tab 
+      href="#tab-2"
+      class="font-weight-light"
+      >
+        Video
+        <v-icon
+        class="teal--text"
+        small
+        >mdi-video</v-icon>
+      </v-tab>
+    </v-tabs>
+ <v-tabs-slider></v-tabs-slider>
+    <v-tabs-items v-model="tab">
+      <v-tab-item id="tab-1"
+      >
+        <v-card flat>
+          <v-card-text>
+            
+<v-row>
+        <v-col>
+             <v-card-text class="pt-0">
+             <p class="mb-3 mt-2 overline">Create a content short link</p>
+
+<v-text-field
+           class="teal--text form-field ma-0"
+            v-model="linkurl"
+            label="content link"
+            placeholder="Type or paste a link (URL)"
+            type="text"
+            outlined
+            color="teal lighten-3"
+            :rules="[nurules.required, nurules.url]"
+          ></v-text-field>
+          <v-text-field
+           class="teal--text form-field ma-0"
+            v-model="linkdesc"
+            label="Link Title"
+            placeholder="Enter title for your link"
+            type="text"
+            outlined
+            color="teal lighten-3"
+            :rules="[nurules.required]"
+          ></v-text-field>
+
+<v-btn 
+             large ripple
+             class="px-5 mb-5 text teal--text" 
+      color="#23d2aa" 
+            id=""
+           @click="postLink"
+          :loading="loading">
+          <span class="caption px-5">Save</span>
+          </v-btn>
+
+             </v-card-text>
+        </v-col>
+</v-row>
+            </v-card-text>
+        </v-card>
+      </v-tab-item>
+       <v-tab-item id="tab-2"
+      >
+        <v-card flat>
+          <v-card-text>
+            Youtube video embed link, coming soon.
+          </v-card-text>
+        </v-card>
+      </v-tab-item>
+    </v-tabs-items>
+</v-form>
+</div>
 </v-container>
-<v-card-actions style=background-color:#000028>
+<v-card-actions v-if="!addlink" style=background-color:#000028>
     <v-tooltip top>
         <template v-slot:activator="{ on }">
             <v-btn text color="white" @click="postProduct" :disabled=disabled :loading="loading" v-on="on">
@@ -218,9 +331,16 @@
 </template>
 <script>
 import { mapState, mapGetters } from 'vuex'
+import axios from 'axios'
+//import EmojiPicker from 'vue-emoji-picker'
+
 export default {
     data(){
         return{
+          tab: 'tab-1',
+          linkdesc:'',
+          linkurl:'',
+          addlink: false,
           inset:'false',
             title: '',
             price: '',
@@ -237,7 +357,8 @@ export default {
             nurules: {
           required: value => !!value || 'Required.',
           min: v => v.length >= 6 || 'Min 6 characters',
-          price: v => v.length >= 4 || 'Min 1000'
+          price: v => v.length >= 4 || 'Min 1000',
+          url: v => /^[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)+$/.test(v)|| 'Valid URL required'
         },
             imgUrl: '',
             uploadMsg: '',
@@ -268,15 +389,16 @@ export default {
             var currentDateWithFormat = new Date().toJSON().slice(0,10).replace(/-/g,'/');
             console.log(currentDateWithFormat);
             return currentDateWithFormat
-     
         },
         fetchData(){
-          this.$store.dispatch('loadUserProducts', this.user)
+          //this.$store.dispatch('loadUserProducts', this.user)
+          this.$store.dispatch('loadDashboardProducts', this.user)
           this.$store.dispatch('loadAllProducts', 'top')
        // this.$store.dispatch('getUser', this.user)
     },
       resetForm () {
         this.$refs.uploadForm.reset()
+       // this.$refs.linkForm.reset()
         //this.$refs.imgUploader.placeholder = ''
       },
     reset(file, name) {
@@ -326,9 +448,9 @@ export default {
                 this.loading = false;
                 //this.clear()
                 //this.loadProducts()
-                console.log(response)
+                //console.log(response)
                 //this.$store.dispatch('loadAllProducts', 'top')
-                this.$store.dispatch('loadUserProducts', this.user)
+                this.$store.dispatch('loadDashboardProducts', this.user)
                 this.color = 'green lighten-1'
                 this.infoBar = true
               this.infoMsg = 'Product Successfully saved'
@@ -346,6 +468,47 @@ export default {
                 //this.infoBar = true
               //this.infoMsg = 'profile update failed, try again later'
             })
+  },
+  postLink:  function() {
+    this.loading = true;
+              axios.get('https://mulaa.me/u/api/?key=P1fjdH02F3y2&url='+this.linkurl)
+                .then(resp => {
+                  //console.log(resp.data)
+                  //this.fname = resp.data.data.account_name
+          console.log(resp.data.short)
+          //this.loading = false;
+          //this.$refs.linkForm.reset()
+          //this.resetForm()
+          
+           this.$http.post('/link', {
+                title: this.linkdesc, // + '-' + this.user,
+                content: this.linkdesc,
+                fields : {
+                  link_title: this.linkdesc,
+                long_link: this.linkurl,
+                short_link: resp.data.short
+                },
+                 status: "publish"
+                })
+this.$refs.linkForm.reset()
+        })
+        .then(response => {
+                this.loading = false;
+                //this.clear()
+                //this.loadProducts()
+                //console.log(response.data.data)
+                //this.$router.push({name: 'dashboard', params: { sheet: false }})
+                this.color= 'green'
+                this.infoBar = true
+              this.infoMsg = 'Link successfully saved'
+            })
+        .catch((e) => {
+                console.error(e)
+                this.errors = "Something went wrong, try again"
+                this.loading = false;
+            })
+                
+               
   }
   },
   computed: {
