@@ -10,6 +10,8 @@ import VueFriendlyIframe from 'vue-friendly-iframe';
 import VueCurrencyFilter from 'vue-currency-filter'
 
 import vueCustomElement from 'vue-custom-element'
+
+
 Vue.use(vueCustomElement)
 
 import VueClipboard from 'vue-clipboard2'

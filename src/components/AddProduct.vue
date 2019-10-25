@@ -70,6 +70,7 @@
             bottom-text="Drop image here or tap to add one"
             @reset = "reset"
             ref="imgUploader"
+            
             />
              </v-card-text>
         </v-col>
@@ -385,9 +386,9 @@ export default {
       dateFunction() {
    
             var currentDate = new Date();
-            console.log(currentDate);
+            //console.log(currentDate);
             var currentDateWithFormat = new Date().toJSON().slice(0,10).replace(/-/g,'/');
-            console.log(currentDateWithFormat);
+            //console.log(currentDateWithFormat);
             return currentDateWithFormat
         },
         fetchData(){
@@ -456,7 +457,8 @@ export default {
               this.infoMsg = 'Product Successfully saved'
               this.fetchData()
             this.resetForm()
-            return
+           // dialog = false
+            //return
             })
             .catch((e) => {
                 this.loading = false;
@@ -498,6 +500,7 @@ this.$refs.linkForm.reset()
                 //this.loadProducts()
                 //console.log(response.data.data)
                 //this.$router.push({name: 'dashboard', params: { sheet: false }})
+                this.updated = !this.updated
                 this.color= 'green'
                 this.infoBar = true
               this.infoMsg = 'Link successfully saved'

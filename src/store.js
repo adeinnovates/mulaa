@@ -121,7 +121,7 @@ export default new Vuex.Store({
             state.userEmail = userEmail
             state.userId = userID
             axios.defaults.headers.common['Authorization'] = token
-            console.log('email 2: '+state.userEmail)
+            //console.log('email 2: '+state.userEmail)
     },
     auth_error(state) {
       state.status = 'error'
@@ -438,7 +438,7 @@ export default new Vuex.Store({
             commit('dash_links', user_links)
             //console.log('links action: '+JSON.stringify(resp.data))
           }else {
-            console.log('No links')
+            //console.log('No links')
             commit('linksEmpty')
             return
           }
@@ -579,7 +579,7 @@ export default new Vuex.Store({
             //const userEmail = resp.data.user_email
             localStorage.setItem('token', token)
             axios.defaults.headers.common['Authorization'] = token
-            console.log('email: '+userEmail)
+            //console.log('email: '+userEmail)
             commit('auth_success_login', {token, user, userEmail, userID})
             resolve(resp)
             //dispatch('loadAllProducts', 'top')

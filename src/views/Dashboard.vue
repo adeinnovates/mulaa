@@ -146,31 +146,72 @@ your link: {{userURL}}
                           v-for="link in userLinks.slice(0, 4)" :key="link.linkID"
                           >
                           <v-card-title
-                          class="mt-0 subtitle-2 py-1"
+                          class="mt-0 subtitle-2 py-3"
                           
                           >
+
                           {{link.link_title}}
                           <v-spacer></v-spacer>
-                          <v-chip 
+                         
+                          </v-card-title>
+                          <v-divider></v-divider>
+                         
+                            <v-row>
+        <v-col
+        cols="3"
+        class="pa-0 pl-5 pt-1"
+        >
+
+                         <!-- <v-chip 
+                          :active=chip
                           outlined
                           color="teal"
                           small
                           class=""
                           >
-                          0
-                          </v-chip>
-<v-icon right small
-@click="editItem(link)"
->
-mdi-pencil-outline
-</v-icon>
+                          10
+                          </v-chip>--><!-- 
+                            @click="getLinkStat(link.short_link, link.linkID)"
+                            -->
+                        
+                           <v-btn text icon 
+                         @click="getLinkStat(link.short_link, link.linkID)"
+                          >
+                          
+ <v-icon right small
+                          >
+                          mdi-finance
+                          </v-icon>
+                           </v-btn>
+                       
+                           
 
-<v-icon right small
-@click="deleteItem(link)"
->
-mdi-delete-forever-outline
-</v-icon>
-                          </v-card-title>
+        </v-col>
+        <v-spacer></v-spacer>
+        <v-col
+        cols=""
+         class="pa-0"
+        >
+                          <v-btn text icon
+                          @click="editItem(link)"
+                          >
+                          <v-icon right small
+                          >
+                          mdi-pencil-outline
+                          </v-icon>
+                          </v-btn>
+                          <v-btn text icon 
+                          @click="deleteItem(link)"
+                          >
+                          <v-icon small right
+
+                          >
+                          mdi-delete-forever-outline
+                          </v-icon>
+                          </v-btn>
+        </v-col>
+                            </v-row>
+                       
 
 
 <v-dialog
@@ -231,7 +272,7 @@ max-width="390"
 color="red darken-2"
 transition="slide-x-reverse-transition"
 >
-<v-layout row wrap mx-auto>
+<v-layout row wrap mx-10>
   <v-flex xs10 sm9 md9 lg9>
 <div class="caption font-weight-light">Confirm delete</div>
   </v-flex>
@@ -245,7 +286,9 @@ icon
 </v-btn>
   </v-flex>
 </v-layout>
-
+<div
+class="mx-10"
+>
 <p class="title">{{deletelinkCont.link_title}}</p>
 
 <v-btn color="#000028" 
@@ -256,8 +299,39 @@ icon
                   <v-icon small left>mdi-delete-empty</v-icon>
                   Delete
                 </v-btn>
+</div>
+
 </v-overlay>
-                          </div>
+
+<v-overlay 
+:value="showStat"
+:opacity="0.8"
+color="teal darken-2"
+transition="scroll-y-reverse-transition"
+>
+<v-layout row wrap mx-10>
+<v-flex xs10 sm9 md9 lg9>
+<div class="caption font-weight-light">Click Count</div>
+</v-flex>
+<v-flex xs2 sm3 md3 lg3 text-right>
+<v-btn
+class="mt-n10"
+icon
+@click="showStat = false; showCount = 0"
+>
+<v-icon right>mdi-close</v-icon>
+</v-btn>
+</v-flex>
+</v-layout>
+<div
+class="mx-10"
+>
+<p class="display-2">{{clickCount}}</p>
+
+</div>
+
+</v-overlay>
+</div>
                         <p class="overline mb-0">Your products</p>
                        <v-layout row wrap pt-2 mt-1>
                             <!--<v-progress-linear
@@ -422,6 +496,8 @@ import EmptyState from '@/components/EmptyProducts'
 import MoreBtn from '@/components/MoreBtn'
 import AddProduct from '@/components/AddProduct'
 import Editor from '@/components/Editor'
+import anime from 'animejs';
+import axios from 'axios'
 
 import { mapState, mapGetters } from 'vuex'
 
@@ -432,9 +508,13 @@ export default {
         MoreBtn,
         AddProduct,
         Editor,
+
   },
     data(){
         return{
+          showStat: false,
+          clickCount: 0,
+          showCount: 0,
           loadinglist: true,
           updated: false,
           editlinkCont:{
@@ -494,6 +574,42 @@ export default {
     '$route': 'fetchData'
      },*/
     methods: {
+      getLinkStat(val, evt){
+        const url = val.substring(val.lastIndexOf('/') + 1)
+        const apiUrl = 'https://mulaa.me/u/api/details?key=P1fjdH02F3y2&alias='+url
+        //this.showCount = 100 //url
+        axios.get(`${apiUrl}`)
+        .then(resp => { 
+          console.log(resp.data.data)
+          this.showStat = true
+          this.showCount = resp.data.data.clicks
+         // return
+          //resolve(resp)
+        })
+        .catch(err => {
+          
+          console.log(err)
+          //reject(err)
+        })
+        //console.log(this.showCount);
+        //this.showStat = true
+        //console.log(evt)
+        //this.chip = true
+       // return this.link
+      },
+      setCount (val) {
+      const obj = { n: this.clickCount }
+      anime({
+        targets: obj,
+        n: val,
+        round: 1,
+        duration: 500,
+        easing: 'linear',
+        update: () => {
+          this.clickCount = obj.n
+        }
+      })
+    },
       updateLink(){
         //console.log(this.editlinkCont.linkID)
 this.loading = true;
@@ -547,8 +663,9 @@ this.loading = true;
         confirmDelete(val){
             console.log(val.linkID)
              this.$http.delete('/link/'+val.linkID).then(response => {
-                
-                console.log(response.data)
+               this.updated = !this.updated
+                this.deleteLink = false
+                //console.log(response.data)
                 //this.$store.dispatch('loadDashboardLinks', this.user)
                 //this.color = 'green lighten-1'
                // this.infoBar = true
@@ -701,8 +818,21 @@ return 0;
       userLinks(val){
           if(val != ''){
             this.loadinglist = false
+          }else if(val = ''){
+            setInterval(() =>{ 
+              this.loadinglist = false
+              console.log('link empty')
+            }, 10000);
           }
-      }
+            
+          
+      },
+      dialog(){
+        this.$store.dispatch('loadDashboardProducts', this.user)
+      },
+      showCount (val) {
+      this.setCount(val)
+    }
     }
 }
 </script>

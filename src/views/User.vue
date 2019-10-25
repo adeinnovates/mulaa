@@ -304,6 +304,7 @@ export default {
     },
     mounted() {
         this.getUserPhone()
+        //this.fetchLinks(this.name)
     },
      created() {
         this.fetchData()
@@ -327,7 +328,7 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
         this.$store.dispatch('loadUserProducts', this.name)
         this.$store.dispatch('loadUserDetails', this.name)
         this.$store.dispatch('loadDashboardLinks', this.name)
-        console.log('Name '+this.name)
+       // console.log('Name '+this.name)
     },
     getMerchant(){
       return this.userBusiness
@@ -337,6 +338,34 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
     },
     getUserPhone(){
 this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone_number
+    },
+    fetchLinks(val){
+      const linkURL = 'https://shop.mulaa.co/api/wp-json/mulaa-link/v1/links'
+        //return new Promise((resolve, reject) => {
+      
+      if (val != ''){
+        this.$http.get(`${linkURL}`+'?author='+val+'&skip_cache=1')
+        .then(resp => { 
+          if(resp.data.length > 0){
+            const user_links = resp.data
+            //const authorID = resp.data.theAuthor
+            
+            console.log('links method: '+JSON.stringify(resp.data))
+          }else {
+            console.log('No links')
+            
+            return
+          }
+          return
+          //resolve(resp)
+        })
+        .catch(err => {
+          
+          console.log(err)
+          //reject(err)
+        })
+      }else {console.log('An error occured loading links data, try again later')}
+    //})
     }
     
   }
