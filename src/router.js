@@ -99,7 +99,7 @@ export default new Router({
       }
     },
     {
-      path: '/u/',
+      path: '*',//'/u/',
       name: 'new user',
       component: Register,
       meta: { 

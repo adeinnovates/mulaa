@@ -17,7 +17,7 @@
                   ></avatar>
                 </v-avatar>
                 <p class="title black--text darken-2 font-weight-black">
-                        {{name}}
+                        {{this.userDetails.business_name}}
                     </p>
                      <v-divider width=50% class="align-center d-block" style="margin: 0 auto"></v-divider>
                      <p class="mt-2 mb-0 caption grey--text text--darken-3 font-weight-light" style="max-width:550px;margin:0 auto"> {{this.userDetails.business_description}}</p>
@@ -53,11 +53,11 @@
                             indeterminate
                             color="green"
                             ></v-progress-linear> 
-                            <div v-if="emptyStore" class="mb-10">
-                                 <v-img :src="require('../assets/unsuccessful.svg')"></v-img>
-                  <span class="title text-center font-weight-light mb-2 pa-5 red">
-                  This store in currently empty
-                  </span>
+                            <div v-if="emptyStore" class="mb-10 mx-auto">
+                                 <v-img :src="require('../assets/unsuccessful.svg')" class="i450img mx-auto"></v-img>
+                  <p class="title text-center font-weight-light mb-2 pa-3 red mx-auto">
+                  This profile is currently empty
+                  </p>
                             </div>
                 <div v-else> 
 
@@ -185,7 +185,8 @@ powered by <a href="https://mulaa.co/?utm_source=footer&utm_medium=userpage" tar
       </v-btn>
 
       <v-btn
-      :href="instagram"
+      :href="`${userInstagram}`"
+      target="_blank"
       >
         <span>Instagram</span>
         <v-icon>mdi-instagram</v-icon>
@@ -300,6 +301,23 @@ export default {
       return this.filteredProducts.filter(function(product) {
 					return product.hidden < 1 || product.hidden == false;
 				});
+    },
+     userInstagram: function(){
+       //console.log(this.userDetails.instagram.includes('@'))
+       if(this.userDetails.instagram.includes('@') == true){
+         
+const IG = this.userDetails.instagram
+      const IGnameSplit = IG.split('@')
+      const use = IGnameSplit[1]
+     // console.log(IGnameSplit)
+      return 'https://instagram.com/'+use
+       }else if(this.userDetails.instagram){
+          return 'https://instagram.com/'+this.userDetails.instagram
+       }
+       return '#'
+      
+
+     // return this.userDetails.instagram
     }
     },
     mounted() {
@@ -352,7 +370,7 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
             
             console.log('links method: '+JSON.stringify(resp.data))
           }else {
-            console.log('No links')
+           // console.log('No links')
             
             return
           }
@@ -397,4 +415,7 @@ a.noline:hover{
   padding: 20px 5px 0px 5px !important;
 }
 */
+.i450img{
+  max-width:450px;
+}
 </style>

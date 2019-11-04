@@ -566,7 +566,7 @@ const salesData = {
             this.price = this.theProduct.price
             this.discounted = this.theProduct.show_discount
             this.newAmount = this.amount
-            this.productOptions = this.theProduct.productOptions
+            this.productOptions = this.theProduct.product_options
             console.log(this.theProduct.productOptions)
              //console.log('refreshed amount '+this.newAmount) 
             }else{
@@ -576,7 +576,7 @@ const salesData = {
             this.hidethis = this.theproducts.hidden
             this.datePosted = this.theproducts.date_posted
             this.delivery = this.theproducts.delivery_locations
-            this.description = this.theProduct.description
+            this.description = this.theproducts.description//this.theProduct.description
             this.discountPrice = this.theproducts.discount_price
             this.image = this.theproducts.image
             this.price = this.theproducts.price

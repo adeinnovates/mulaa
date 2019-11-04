@@ -253,6 +253,7 @@ export default new Vuex.Store({
   },
     user_detail(state, value){
       state.userDetails = value
+      //console.log(value)
     state.userAcctStatus = ' '
    //state.userEmail = value.email
    state.userKey = value.payment_key

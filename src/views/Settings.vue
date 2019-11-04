@@ -12,7 +12,7 @@ Hello, <br> {{user}}
 </v-snackbar>
  <v-container fluid fill-height teal lighten-5>
              <v-layout row wrap equal>
-                <v-flex xs12 sm8 md7 pa-5>
+                <v-flex xs12 sm8 md8 pa-5 mx-auto>
 
 <v-list two-line subheader class="pa-3" style="border-top-left-radius:15px;border-top-right-radius:15px;">
       <v-subheader>Profile Settings  

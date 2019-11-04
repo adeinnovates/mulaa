@@ -269,11 +269,13 @@ width="350"
                     background-color="#f4f8f7"
         color="teal lighten-3"
         v-model="bankaccountNumb"
-    :rules="[nurules.required, nurules.min]"
+    :rules="[nurules.required, nurules.min, nurules.numbs]"
     :error-messages="errors"
         placeholder="Enter your bank account number"
         prepend-inner-icon="mdi-cash"
         class="teal--text form-field mb-0"
+        type="number"
+        :disabled="disabledField"
         ></v-text-field>
 
         </v-col>
@@ -377,6 +379,7 @@ width="350"
       class="px-5 mb-5 text teal--text mr-3" 
       color="#23d2aa" 
       :loading="loading"
+      :disabled="disabledbtn"
         >
           Continue
         </v-btn>
@@ -627,6 +630,8 @@ export default {
           is_verified: 'false',
           bank: null,
           entryDate:null,
+          disabledbtn: false,
+          disabledField: true,
            rules: [
              v => !!v || 'This is required',
         value => !value || value.size < 3000000 || 'File size should be less than 3 MB!',
@@ -637,6 +642,7 @@ export default {
       (v) => v && v.length <= 20 || 'Name must be less than 20 characters'
     ],
     nurules: {
+      numbs: value => /^[0-9]+$/.test(value) || 'numbers only',
           required: value => !!value || 'Required.',
           min: v => v.length >= 10 || 'Min 10 characters',
           emailMatch: () => ('The email and password you entered don\'t match'),
@@ -724,7 +730,7 @@ const headers2 = {
                 title: '',
                 content: '',
                 fields : {
-                
+                referral: this.referral,
                 business_name: this.businessName,
                 instagram: this.Instagram,
                 email: this.userEmail,
@@ -853,10 +859,17 @@ const headers2 = {
        }
   },
    watch: {
+     bank(val){
+       if(val!=null){
+         this.disabledField = false
+       }
+     },
       bankaccountNumb (val) {
-        
+        this.loading = true
+        //this.overlay = true
         //console.log(val + '/'+ this.bank.value)
         if(val.length == 10){
+          this.overlay = true
           //console.log(PaystackOptions)
         let config = {
   headers: {'Authorization': 'Bearer sk_live_01952d79b3b14815af91d560256959358299e123'},
@@ -869,11 +882,15 @@ const headers2 = {
                 .then(resp => {
                   //console.log(resp.data)
                   this.fname = resp.data.data.account_name
+                  this.loading = false
+                  this.overlay = false
           //this.errors = valid ? [] : ['async error']
         })
         .catch((e) => {
                 //console.error(e)
                 this.errors = "Please enter a valid account number"
+                 this.loading = false
+                  this.overlay = false
             })
         }
         /*axios.get('/check?value=' + val).then(valid => {
