@@ -118,7 +118,7 @@
               prepend-inner-icon="mdi-lock-outline"
               @click:append="show1 = !show1"
             ></v-text-field>
-           
+        
           </v-flex>
 
         </v-form>
@@ -134,6 +134,7 @@
       <span class="caption px-5">Sign Up</span>
       </v-btn>
 
+
        <v-btn 
              large ripple
              class="px-5 mb-5 text teal--text" 
@@ -141,7 +142,20 @@
             id="sign-in"
             @click="login(user)"
           :loading="loading" v-show="show2"><span class="caption px-5">Login</span></v-btn>
+
     </v-card-actions>
+    <v-card-actions v-show="show2">
+ <p
+ style="font-size: 0.875rem;
+    line-height: 1.375rem;
+    letter-spacing: 0.0071428571em;
+    color: rgba(0, 0, 0, 0.54);
+    "
+ >
+            
+              Forgot password? <a href="https://shop.mulaa.co/api/forgot-password/" target="_blank"><span style="cursor: pointer;text-decoration:underline">Reset password</span></a></p>
+    </v-card-actions>
+
   </v-card>
 
 
