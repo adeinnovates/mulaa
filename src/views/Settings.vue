@@ -1,8 +1,8 @@
 <template>
     <div class="dashboard fill-height teal lighten-5 page pa-3 mt-10">
-
 <div
-class="headline lighten-4 pa-4 font-weight-light teal--text mb-n6"
+class="headline lighten-4 pa-4 font-weight-light teal--text mb-n6 mt-5 mx-auto"
+style="max-width:950px"
 >
 Hello, <br> {{user}}
 </div>
@@ -11,10 +11,17 @@ Hello, <br> {{user}}
   <!--<v-btn flat color="white" @click="snackbar = false">close</v-btn>-->
 </v-snackbar>
  <v-container fluid fill-height teal lighten-5>
-             <v-layout row wrap equal>
-                <v-flex xs12 sm8 md8 pa-5 mx-auto>
-
-<v-list two-line subheader class="pa-3" style="border-top-left-radius:15px;border-top-right-radius:15px;">
+    <v-layout row wrap equal center mx-auto style="max-width:950px;">
+                <v-flex xs12 sm8 md7 pa-5>
+<v-card
+style="border-top-left-radius:15px;border-top-right-radius:15px;"
+class="my-5"
+outlined
+>
+<v-card-title>
+      <span class="grey--text overline">Business Profile</span>
+    </v-card-title>
+<v-list two-line subheader class="pa-3">
       <v-subheader>Profile Settings  
         <div class="flex-grow-1"></div>
         <EditSettings :theuser="userDetails" :user="user" :userImg="this.userProfile.profileImg"></EditSettings>
@@ -62,13 +69,17 @@ Hello, <br> {{user}}
         </v-list-item-action>
       </v-list-item>
     </v-list>
-
-    
-
-    <v-divider></v-divider>
+</v-card>
 
 
-    <v-list two-line subheader class="pa-5">
+  <v-card 
+  outlined
+  class="my-5"
+  >
+  <v-card-title>
+      <span class="font-weight-light grey--text overline">Sales Profile</span>
+    </v-card-title>
+  <v-list two-line subheader class="pa-5">
 
       <v-list-item>
         <v-list-item-content>
@@ -127,8 +138,45 @@ dark
       </v-list-item>
 
     </v-list>
+  </v-card>
+ 
                 </v-flex>
-             </v-layout>
+                <!-- right column-->
+                <v-flex flex xs12 md5 pa-5>
+<v-card
+style="border-top-left-radius:15px;border-top-right-radius:15px;"
+ outlined
+  class="my-5"
+>
+<v-card-title>
+      <span class="font-weight-light grey--text overline">Mulaa Profile</span>
+    </v-card-title>
+<v-list two-line subheader class="pa-5">
+
+<v-list-item>
+<v-list-item-content>
+<v-list-item-title class="grey--text caption text--darken-2">
+<v-icon small color="grey">
+mdi-cash
+</v-icon>
+Payment Key</v-list-item-title>
+<v-list-item-subtitle class="caption grey lighten-4 pa-3 mt-2">{{userDetails.payment_key}}</v-list-item-subtitle>
+</v-list-item-content>
+
+</v-list-item>
+
+<v-list-item>
+<v-list-item-content>
+<v-list-item-title class="grey--text caption text--darken-2">Facebook Pixel</v-list-item-title>
+<v-list-item-subtitle class="caption grey lighten-4 pa-3 mt-2">{{userDetails.facebook_pixel}}</v-list-item-subtitle>
+</v-list-item-content>
+</v-list-item>
+
+</v-list>
+</v-card>
+                </v-flex>
+    </v-layout>
+         
  </v-container>
     </div>
 </template>
@@ -204,7 +252,7 @@ const headers2 = {
   },
 fetchUserData(){
         this.$store.dispatch('loadUserDetails', this.user)
-        //console.log(userDetails)
+        console.log(this.userDetails)
     }
      },
   computed: {
