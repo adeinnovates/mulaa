@@ -4,11 +4,11 @@
          <span class="ml-2">
            edit
          </span>
-          <v-btn icon
+          <v-btn fab
           v-on="on" elevation="3"
-          color="#23d2aa" 
+          color="teal" 
           >
-            <v-icon color="grey lighten-1">mdi-chevron-right</v-icon>
+            <v-icon color="white lighten-1">mdi-chevron-right</v-icon>
           </v-btn>
    <!--<v-btn color="#23d2aa" value="addimage" v-on="on" elevation="0">
      <span class="caption">edit </span> <v-icon small right>mdi-square-edit-outline</v-icon>
@@ -195,7 +195,10 @@ export default {
                 this.loading = false;
                 //this.clear()
                 //this.loadProducts()
-                console.log(response)
+                this.infoBar = true
+                this.infoMsg = 'Successfully updated'
+                this.color = 'green'
+                //console.log(response)
                 this.$router.push({name: 'settings', params: { infoBar: true, infoMsg: 'Successfully updated' }}).catch(err => {})
                 //console.log(response.data.id)
                 //this.profileId = response.data.id

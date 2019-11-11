@@ -29,8 +29,8 @@ outlined
 
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title class="grey--text caption text--darken-2">
-            <v-icon small color="grey">mdi-account-card-details-outline</v-icon>
+          <v-list-item-title class="teal--text subtitle-1 text--darken-2">
+            <v-icon small color="teal">mdi-account-card-details-outline</v-icon>
             Business Name</v-list-item-title>
           <v-list-item-subtitle class="caption">{{userDetails.business_name}}</v-list-item-subtitle>
         </v-list-item-content>
@@ -41,8 +41,8 @@ outlined
 <v-divider inset></v-divider>
       <v-list-item three-line>
         <v-list-item-content>
-          <v-list-item-title class="grey--text caption text--darken-2">
-            <v-icon small color="grey">
+          <v-list-item-title class="teal--text subtitle-1 text--darken-2">
+            <v-icon small color="teal">
               mdi-domain
               </v-icon>
             Business Description</v-list-item-title>
@@ -56,8 +56,8 @@ outlined
 
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title class="grey--text caption text--darken-2">
-             <v-icon small color="grey">
+          <v-list-item-title class="teal--text subtitle-1 text--darken-2">
+             <v-icon small color="teal">
               mdi-map-marker
               </v-icon>
             Business Address
@@ -83,8 +83,8 @@ outlined
 
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title class="grey--text caption text--darken-2">
-            <v-icon small color="grey">
+          <v-list-item-title class="teal--text subtitle-1 text--darken-2">
+            <v-icon small color="teal">
               mdi-cash
               </v-icon>
             Payment Key</v-list-item-title>
@@ -95,7 +95,7 @@ outlined
 
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title class="grey--text caption text--darken-2">Facebook Pixel</v-list-item-title>
+          <v-list-item-title class="teal--text subtitle-1 text--darken-2">Facebook Pixel</v-list-item-title>
           <v-list-item-subtitle class="caption grey lighten-4 pa-3 mt-2">{{userDetails.facebook_pixel}}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
@@ -104,7 +104,7 @@ outlined
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title
-          class="grey--text caption text--darken-2"
+          class="teal--text subtitle-1 text--darken-2"
           >Profile Photo</v-list-item-title>
           <v-list-item-subtitle>
           
@@ -146,33 +146,112 @@ dark
 <v-card
 style="border-top-left-radius:15px;border-top-right-radius:15px;"
  outlined
-  class="my-5"
+ max-width="344"
+  class="my-5 mx-auto"
 >
 <v-card-title>
       <span class="font-weight-light grey--text overline">Mulaa Profile</span>
     </v-card-title>
-<v-list two-line subheader class="pa-5">
 
-<v-list-item>
-<v-list-item-content>
-<v-list-item-title class="grey--text caption text--darken-2">
-<v-icon small color="grey">
-mdi-cash
-</v-icon>
-Payment Key</v-list-item-title>
-<v-list-item-subtitle class="caption grey lighten-4 pa-3 mt-2">{{userDetails.payment_key}}</v-list-item-subtitle>
-</v-list-item-content>
+    <v-card-text>
+        <v-sheet 
+        class="pa-5"
+        color="orange lighten-5"
+        style="border:3px dotted rgba(178, 223, 219, 0.3);
+                          border-radius:4px;"
+        >
+        <p class="title text--grey">
+        No Subscription
+      </p>
+     
+      <div class="text--primary">
+        Limited products are displayed on your mulaa link. To display all your products and access all mulaa premium benefits, upgrade to one of our subscription plans below.
+      </div>
+       
+        </v-sheet>
 
-</v-list-item>
+        <div>
+          <h3 
+          class="title text--accent-3 font-weight-light my-3">
+            Choose a plan that works for you
+            </h3>
+          <v-sheet 
+        class="pa-5"
+        color="teal lighten-5"
+        style="border:2px dotted rgba(178, 223, 219, 0.3) !important;border-radius:0px;"
+        >
+        <span class="teal--text subtitle-1 text--darken-1">
+          Annual Mogul: N54,000 <v-btn small color="success"
+          :disabled=true
+          >Subscribe</v-btn>
+        </span>
+      <div class="grey--text text--darken-2 mt-2">
+        Unlimited products,
+Unlimited content links,
+0% transaction charge,
+12 months subscription (3 months free)
+      </div>
+       
+        </v-sheet>
+        <v-divider inset></v-divider>
+        <v-sheet 
+        class="pa-5"
+        color="teal lighten-5"
+        style="border:2px dotted rgba(178, 223, 219, 0.3) !important;border-radius:0px;"
+        >
+        <span class="teal--text subtitle-1 text--darken-1">
+          Quarterly Sprinter: N15,000 <v-btn small color="success"
+          :disabled=true
+          >Subscribe</v-btn>
+        </span>
+      <div class="text--darken-2 grey--text mt-2">
+        Unlimited products,
+Unlimited content links,
+0% transaction charge,
+3 months subscription (pay Quarterly)
+      </div>
+       
+        </v-sheet>
+<v-divider inset></v-divider>
+        <v-sheet 
+        class="pa-5"
+        color="teal lighten-5"
+        style="border:2px dotted rgba(178, 223, 219, 0.3) !important;border-radius:0px;"
+        >
+        <span class="teal--text subtitle-1 text--darken-1">
+          Monthly Starter: N6,000 <v-btn small color="success"
+          :disabled=true
+          >Subscribe</v-btn>
+        </span>
+      <div class="text--darken-2 grey--text mt-2">
+        Unlimited products,
+Unlimited content links,
+0% transaction charge,
+1 months subscription
+      </div>
+       
+        </v-sheet>
+<v-divider inset></v-divider>
+        <v-sheet 
+        class="pa-5"
+        color="teal lighten-5"
+        style="border:2px dotted rgba(178, 223, 219, 0.3) !important;border-radius:0px;"
+        >
+        <span class="teal--text subtitle-1 text--darken-1">
+          Base Plan: N1,000 (x6) 
+        </span><v-btn small color="success"
+        :disabled=true
+        >Subscribe</v-btn>
+      <div class="text--darken-2 grey--text mt-2">
+        Maximum 3 products
+ content links
+1% transaction charge
+x6 (Six months subscription)
+      </div>
+        </v-sheet>
+        </div>
+    </v-card-text>
 
-<v-list-item>
-<v-list-item-content>
-<v-list-item-title class="grey--text caption text--darken-2">Facebook Pixel</v-list-item-title>
-<v-list-item-subtitle class="caption grey lighten-4 pa-3 mt-2">{{userDetails.facebook_pixel}}</v-list-item-subtitle>
-</v-list-item-content>
-</v-list-item>
-
-</v-list>
 </v-card>
                 </v-flex>
     </v-layout>
@@ -194,7 +273,7 @@ export default {
   },
     data() {
       return {
-         infoMsg: '', 
+        infoMsg: '', 
         infoBar: false,
  valid:'',
   overlay: false,
@@ -235,7 +314,7 @@ const headers2 = {
     }
   })
     .then(resp => {
-           console.log(resp.data.url)
+           //console.log(resp.data.url)
            this.userProfile.profileImg = resp.data.url
             this.overlay = false
             this.infoBar = true
@@ -252,7 +331,7 @@ const headers2 = {
   },
 fetchUserData(){
         this.$store.dispatch('loadUserDetails', this.user)
-        console.log(this.userDetails)
+        //console.log(this.userDetails)
     }
      },
   computed: {

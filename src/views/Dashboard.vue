@@ -565,6 +565,12 @@ export default {
     },
     created() {
       this.fetchUserData()
+
+      /*
+        const script = document.createElement('script')
+        script.src = 'https://shop.mulaa.co/Initonesignal.js'
+        document.getElementsByTagName('head')[0].appendChild(script)
+        */
       //console.log('created')
         return this.fetchData()
         
@@ -580,7 +586,7 @@ export default {
         //this.showCount = 100 //url
         axios.get(`${apiUrl}`)
         .then(resp => { 
-          console.log(resp.data.data)
+          //console.log(resp.data.data)
           this.showStat = true
           this.showCount = resp.data.data.clicks
          // return
@@ -625,7 +631,7 @@ this.loading = true;
                 this.loading = false;
                 //this.clear()
                 //this.loadProducts()
-                console.log(response.data)
+                //console.log(response.data)
                 this.editLink = false
                 //this.thelinks = ''
                 this.updated = !this.updated
@@ -651,7 +657,7 @@ this.loading = true;
           //this.editedItem = Object.assign({}, item)
           this.editLink = true
           this.editlinkCont = item
-          console.log(item)
+          //console.log(item)
         },
         deleteItem(item) {
           //this.editedIndex = this.desserts.indexOf(item)
@@ -661,7 +667,7 @@ this.loading = true;
           //console.log(item)
         },
         confirmDelete(val){
-            console.log(val.linkID)
+            //console.log(val.linkID)
              this.$http.delete('/link/'+val.linkID).then(response => {
                this.updated = !this.updated
                 this.deleteLink = false
@@ -683,7 +689,7 @@ this.loading = true;
         },
       linkData(){
         if(linkStat.length>0){
-          console.log(linkStat)
+          //console.log(linkStat)
 return linkStat;
         }
 return 0;

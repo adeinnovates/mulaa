@@ -533,6 +533,7 @@ const salesData = {
             transaction: response.transaction,
             merchant: this.$route.params.name,
             delivery: this.buyerAddress,
+            merchant_email: this.userDetails.email,
             others: this.Options
                 },
                  status: "publish"

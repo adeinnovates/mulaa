@@ -52,19 +52,29 @@
       v-model="valid"
       >
 <v-flex xs12 class="form-wrapper" v-show="!show2"><!-- :rules="nameRules" -->
+
+<v-tooltip v-model="usertip" top>
+            <template v-slot:activator="{ on }">
             <v-text-field
               filled
               full-width
               single-line
              v-model="userCred.username"
               label="Username"
-              
               :rules="[nurules.required, nurules.min]"
-              hint="a-z no spaces allowed"
+              hint="This will be your store link (mulaa.me/u/USERNAME) a-z no spaces allowed"
+            persistent-hint
               background-color="#f4f8f7"
-              class="teal--text form-field"
-              prepend-inner-icon="mdi-account-outline" mb-0
+              class="teal--text form-field mb-5"
+              prepend-inner-icon="mdi-account-outline"
+              :append-icon="usertip ? 'mdi-alert-circle-check' : 'mdi-alert-circle'"
+              @click:append="usertip = !usertip"
+
             ></v-text-field>
+ </template>
+            <span>choose preferred username, only letters no space</span>
+          </v-tooltip>
+
             <v-text-field
               filled
               full-width
@@ -127,13 +137,12 @@
     <v-card-actions class="pa-2 align-center">
       <v-btn 
       large ripple
-       class="px-5 mb-5 text teal--text" 
+       class="ml-10 px-5 mb-5 text teal--text" 
       color="#23d2aa" 
       @click="register(userCred)"
       :loading="loading" v-show="!show2">
       <span class="caption px-5">Sign Up</span>
       </v-btn>
-
 
        <v-btn 
              large ripple
@@ -144,6 +153,20 @@
           :loading="loading" v-show="show2"><span class="caption px-5">Login</span></v-btn>
 
     </v-card-actions>
+
+<v-card-actions v-show="!show2">
+<p
+class="caption d-block"
+style="font-size: 0.875rem;
+line-height: 1.375rem;
+letter-spacing: 0.0071428571em;
+color: rgba(0, 0, 0, 0.54);
+"
+>
+By using mulaa.co, you agree to our  <a href="https://mulaa.co/go/terms-of-service" target="_blank"><span style="cursor: pointer;text-decoration:underline">terms</span></a> and you're not selling something on our prohibited list.
+</p>
+</v-card-actions>
+
     <v-card-actions v-show="show2">
  <p
  style="font-size: 0.875rem;
@@ -346,6 +369,7 @@ return this.$router.push({name: 'dashboard', params: { popWelcome: true }})
     },
     data() {
       return {
+        usertip: false,
         confirmation: false,
         usernameraw:'',
         user:{
