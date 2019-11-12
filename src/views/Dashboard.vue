@@ -807,9 +807,9 @@ return 0;
     salesCount: function(){
       return Object.keys(this.userSales).length;
     },
-    hiddenProd: function(){
-     
-    }
+    /*hiddenProd: function(){
+      return
+    }*/
     },
     watch: {
       '$route': 'fetchData',
@@ -824,7 +824,7 @@ return 0;
       userLinks(val){
           if(val != ''){
             this.loadinglist = false
-          }else if(val = ''){
+          }else if(val == ''){
             setInterval(() =>{ 
               this.loadinglist = false
               console.log('link empty')

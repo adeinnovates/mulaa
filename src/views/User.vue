@@ -183,9 +183,9 @@ powered by <a href="https://mulaa.co/?utm_source=footer&utm_medium=userpage" tar
         <span>Email</span>
         <v-icon>mdi-email-outline</v-icon>
       </v-btn>
-
+<!-- :href="`${userInstagram}`" -->
       <v-btn
-      :href="`${userInstagram}`"
+      :href="`${instagram}`"
       target="_blank"
       >
         <span>Instagram</span>
@@ -292,7 +292,9 @@ export default {
         this.$store.commit('loading', value);
       }
     },
+   
     filteredProducts: function(){
+      
       return this.userProducts.filter((userproduct) => {
         return userproduct.title.match(this.search) || userproduct.price.match(this.search)
       })
@@ -302,7 +304,7 @@ export default {
 					return product.hidden < 1 || product.hidden == false;
 				});
     },
-     userInstagram: function(){
+    /* userInstagram: function(){
        //console.log(this.userDetails.instagram.includes('@'))
        if(this.userDetails.instagram.includes('@') == true){
          
@@ -318,7 +320,7 @@ const IG = this.userDetails.instagram
       
 
      // return this.userDetails.instagram
-    }
+     }*/
     },
     mounted() {
         this.getUserPhone()
