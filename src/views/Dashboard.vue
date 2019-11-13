@@ -571,7 +571,7 @@ export default {
         script.src = 'https://shop.mulaa.co/Initonesignal.js'
         document.getElementsByTagName('head')[0].appendChild(script)
         */
-      //console.log('created')
+      
         return this.fetchData()
         
     },
@@ -719,6 +719,7 @@ return 0;
           this.$store.dispatch('linkStats', this.user)
           this.$store.dispatch('loadDashboardLinks', this.user)
          
+         //console.log(JSON.stringify(this.userDetails))
        // this.$store.dispatch('getUser', this.user)
        //this.reload()
     }
@@ -802,7 +803,7 @@ return 0;
         return Object.keys(this.myproducts).length;
     },
     countApproved: function () {
-        return Object.keys(this.approved).length;
+        //return Object.keys(this.approved).length;
     },
     salesCount: function(){
       return Object.keys(this.userSales).length;

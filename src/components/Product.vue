@@ -209,10 +209,12 @@ type="number"
 <v-row>
                 <v-col>
                 <v-text-field
-                class="teal--text form-field ma-0 pa-0"
+                class="teal--text form-field ma-0 pa-0 mb-5"
                 v-model="buyerAddress"
                 label="Delivery Address"
                 placeholder="Your Location"
+                hint="Enter your delivery address in full with closest landmark"
+            persistent-hint
                 color="teal lighten-3"
                 ></v-text-field>
                 </v-col>

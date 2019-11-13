@@ -139,6 +139,18 @@
          
     </v-row>
 
+    
+ <v-card
+    class="mx-auto mb-5"
+    max-width="90%"
+    outlined
+  >
+     <v-card-title class="overline">Delivery [+] charges</v-card-title>
+<v-card-text>
+
+</v-card-text>
+  </v-card>
+
   <v-expansion-panels popout>
       <v-expansion-panel>
         <v-expansion-panel-header class="caption grey--text">Product Variations</v-expansion-panel-header>

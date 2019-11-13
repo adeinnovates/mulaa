@@ -138,7 +138,13 @@ export default {
     },
     currentUserProd: {
       get() {
-        return this.$store.state.userProducts;
+        let theUserProducts = this.$store.state.userProducts;
+        if (theUserProducts.length > 0){
+          return theUserProducts
+        }else{
+console.log('No products yet')
+return null
+        }
       },
       set(value) {
         this.$store.commit('loadUserProducts', value);
@@ -151,9 +157,13 @@ export default {
         return Object.keys(this.approved).length;
     },
     filteredProducts: function(){
+        if(this.currentUserProd != null){
       return this.currentUserProd.filter((myproduct) => {
         return myproduct.title.match(this.search) || myproduct.price.match(this.search)
       })
+    }else{
+      return null
+    }
     }
     }
 }

@@ -19,8 +19,8 @@
                 <p class="title black--text darken-2 font-weight-black">
                         {{this.userDetails.business_name}}
                     </p>
-                     <v-divider width=50% class="align-center d-block" style="margin: 0 auto"></v-divider>
-                     <p class="mt-2 mb-0 caption grey--text text--darken-3 font-weight-light" style="max-width:550px;margin:0 auto"> {{this.userDetails.business_description}}</p>
+                     <v-divider width=40% class="align-center d-block" style="margin: 0 auto"></v-divider>
+                     <p class="mt-3 mb-3 caption grey--text text--darken-3" style="max-width:350px;margin:0 auto"> {{this.userDetails.business_description}}</p>
                 </div>
                 <!--<v-row justify="center" class="mb-4">
                     <v-btn small 
@@ -113,7 +113,18 @@
                 <v-img
           :src="product.image"
           aspect-ratio="1.15"
-         ></v-img>
+          lazy-src="https://picsum.photos/id/1002/10/6"
+         >
+            <template v-slot:placeholder>
+            <v-row
+            class="fill-height ma-0"
+            align="center"
+            justify="center"
+            >
+            <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+            </v-row>
+            </template>
+         </v-img>
               </v-responsive>
               </router-link>
                  
@@ -185,7 +196,7 @@ powered by <a href="https://mulaa.co/?utm_source=footer&utm_medium=userpage" tar
       </v-btn>
 <!-- :href="`${userInstagram}`" -->
       <v-btn
-      :href="`${instagram}`"
+      :href="`${userInstagram}`"
       target="_blank"
       >
         <span>Instagram</span>
@@ -294,21 +305,35 @@ export default {
     },
    
     filteredProducts: function(){
-      
+
+      if(this.userProducts != ''){
+        //console.log('reddd')
       return this.userProducts.filter((userproduct) => {
-        return userproduct.title.match(this.search) || userproduct.price.match(this.search)
+      return userproduct.title.match(this.search) || userproduct.price.match(this.search)
       })
+      }else{
+        console.log('No products yet')
+        return null
+      }
+    
     },
     filterHiddenProduct: function(){
-      return this.filteredProducts.filter(function(product) {
+      if(this.filteredProducts != null){
+ return this.filteredProducts.filter(function(product) {
 					return product.hidden < 1 || product.hidden == false;
 				});
-    },
-    /* userInstagram: function(){
-       //console.log(this.userDetails.instagram.includes('@'))
+      }else{
+        return null
+      }
+     
+    }, 
+     userInstagram: function(){
+       
+       if(this.userDetails.instagram != undefined){
+         //console.log('reddd ig')
        if(this.userDetails.instagram.includes('@') == true){
          
-const IG = this.userDetails.instagram
+      const IG = this.userDetails.instagram
       const IGnameSplit = IG.split('@')
       const use = IGnameSplit[1]
      // console.log(IGnameSplit)
@@ -316,11 +341,14 @@ const IG = this.userDetails.instagram
        }else if(this.userDetails.instagram){
           return 'https://instagram.com/'+this.userDetails.instagram
        }
-       return '#'
+       }else{
+    return '#'
+       }
+   
       
 
      // return this.userDetails.instagram
-     }*/
+     }
     },
     mounted() {
         this.getUserPhone()

@@ -409,7 +409,7 @@ export default new Vuex.Store({
             commit('dash_products', user_products)
             //console.log('action: '+resp.data)
           }else {
-            console.log('Store Empty')
+           // console.log('Store Empty')
             //commit('showEmpty')
             return
           }
@@ -526,7 +526,7 @@ export default new Vuex.Store({
             resolve(resp)
           }else{
             commit('user_detail_blank', 'Your store account is not activated yet')
-            console.log('user acct not activated')
+           // console.log('user acct not activated')
           }
             
         }

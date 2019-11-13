@@ -175,6 +175,31 @@ style="border-top-left-radius:15px;border-top-right-radius:15px;"
           class="title text--accent-3 font-weight-light my-3">
             Choose a plan that works for you
             </h3>
+<v-overlay :value="subOverlay">
+      <v-progress-circular indeterminate size="84"></v-progress-circular>
+    </v-overlay>
+              <v-sheet 
+        class="pa-5"
+        color="teal lighten-5"
+        style="border:2px dotted rgba(178, 223, 219, 0.3) !important;border-radius:0px;"
+        >
+        <span class="teal--text subtitle-1 text--darken-1">
+          Hourly Express: N100 <v-btn small 
+          @click="doSubscription('PLN_vuxlonot3gy9bmg')"
+          color="success"
+          :disabled=false
+          >Subscribe</v-btn>
+          <!--<UserSubscribe :amount="10000" planID="PLN_vuxlonot3gy9bmg" :userEmail="this.userDetails.email"></UserSubscribe>-->
+        </span>
+      <div class="grey--text text--darken-2 mt-2">
+        Unlimited products,
+Unlimited content links,
+1% transaction charge,
+1 Day subscription (paid hourly)
+      </div>
+       
+        </v-sheet>
+
           <v-sheet 
         class="pa-5"
         color="teal lighten-5"
@@ -264,15 +289,19 @@ x6 (Six months subscription)
 import { mapState, mapGetters } from 'vuex'
 import Avatar from 'vue-avatar'
 import EditSettings from '@/components/EditSettings'
+import UserSubscribe from '@/components/Subscribe'
+
 import axios from 'axios'
 
 export default {
   components: {
     Avatar,
      EditSettings,
+     UserSubscribe
   },
     data() {
       return {
+        subOverlay:false,
         infoMsg: '', 
         infoBar: false,
  valid:'',
@@ -291,6 +320,50 @@ export default {
         return this.fetchUserData()
     },
      methods: {
+       doSubscription(level){
+         console.log(level)
+         this.subOverlay = !this.subOverlay
+         let skey = 'sk_live_01952d79b3b14815af91d560256959358299e123'
+let subData = {
+email: this.userDetails.email,
+amount: "500",
+currency: "NGN",
+callback_url: "http://shop.mulaa.co",
+plan:level
+}
+console.log(subData)
+const options = {
+  headers: {'Authorization': 'Bearer '+skey}
+}
+         axios.post(`https://api.paystack.co/transaction/initialize`,
+           subData, options
+).then(resp => {
+            //console.log(resp.data)
+            if(resp.data.status == true){
+
+this.$http.post('/subscription',
+{
+  title: resp.data.data.reference,
+  fields : {
+    trans_ref: resp.data.data.reference,
+    user: this.userDetails.email
+  },
+     status: "publish"
+}
+).then(response => {
+console.log('sub post: '+response.data)
+this.loading = false
+})
+              this.subOverlay = false
+              console.log('response: ' + JSON.stringify(resp.data.data))
+            window.location = resp.data.data.authorization_url
+            }
+            
+            }).catch(err => {
+              console.log(err)   
+          })
+
+       },
         onFileChanged (event) {
     this.userProfile.profileImg = event.target.files[0]
     this.overlay = true
@@ -331,7 +404,7 @@ const headers2 = {
   },
 fetchUserData(){
         this.$store.dispatch('loadUserDetails', this.user)
-        //console.log(this.userDetails)
+       // console.log(this.userDetails)
     }
      },
   computed: {
