@@ -32,7 +32,7 @@
 <v-row class="fill-height d-flex wrap justify-space-between" style="flex-direction: column;height:100%">
 <v-card-title class="ml-5">
 
-             <social-sharing :url=pageurl
+            <!-- <social-sharing :url=pageurl
                 :title=title
                 :description=description
                 :quote=description
@@ -54,7 +54,7 @@
                     </network>
                   
                      </div>
-                </social-sharing>
+                </social-sharing>-->
 </v-card-title>
 <v-card-text class="white--text ml-5">
 <div class="headline font-weight-light pt-12 otto">{{this.title}}</div>
@@ -88,18 +88,48 @@ lazy-src="https://picsum.photos/id/11/10/6"
 height='300'
 width="300"
 class="grey lighten-2 mb-3"
-
+style="border-radius:10px;"
 @click="overlay = !overlay"
 >
 </v-img>
 
-<v-btn text color="#23d2aa" 
-               class="caption"
-               @click="overlay = false"
-                >
-                  <v-icon small left>mdi-cart</v-icon>
-                  Buy Now
-                </v-btn>
+<v-layout row wrap mx-auto>
+  <v-flex xs3 sm3 md4 lg4>
+        <v-btn text color="#23d2aa" 
+        class="caption"
+        @click="overlay = false"
+        >
+        <v-icon small left>mdi-cart</v-icon>
+        Buy Now
+        </v-btn>
+  </v-flex>
+ <v-flex xs9 sm9 md8 lg8 text-right>
+          <social-sharing :url=pageurl
+          :title=title
+          :description=description
+          :quote=description
+          hashtags="mulaa,buy,shop,share,deal"
+          inline-template>
+          <div class="caption grey--text text--darken-2 px-3 mt-1">
+
+          <network network="facebook" class="px-3 blue--text text--darken-2">
+          <i class="fa fa-facebook fa-lg"></i> 
+          </network>
+          <network network="sms" class="px-3 blue--text">
+          <i class="fa fa-commenting-o fa-lg"></i>
+          </network>
+          <network network="twitter" class="px-3 blue--text text--lighten-2">
+          <i class="fa fa-twitter fa-lg"></i>
+          </network>
+          <network network="whatsapp" class="px-3 green--text">
+          <i class="fa fa-whatsapp fa-lg"></i>
+          </network>
+
+          </div>
+          </social-sharing>
+  </v-flex>
+</v-layout>
+
 </v-overlay>
 </v-row>
 

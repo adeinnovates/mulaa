@@ -9,6 +9,7 @@ import Product from './components/Product.vue'
 import Sales from './views/Sales.vue'
 import User from './views/User.vue'
 import Settings from './views/Settings.vue'
+import ConfirmSub from './views/ConfirmSub.vue'
 import store from './store'
 import { userInfo } from 'os';
 
@@ -64,6 +65,15 @@ export default new Router({
       path: '/settings',
       name: 'settings',
       component: Settings,
+      meta: { 
+        hideNavigation: false,
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/settings/confirm',
+      name: 'confirmation',
+      component: ConfirmSub,
       meta: { 
         hideNavigation: false,
         requiresAuth: true

@@ -154,8 +154,26 @@ style="border-top-left-radius:15px;border-top-right-radius:15px;"
     </v-card-title>
 
     <v-card-text>
+       <v-sheet 
+        class="pa-5"
+        v-show="paid"
+        color="blue lighten-5"
+        style="border:3px dotted rgba(178, 223, 219, 0.3);
+                          border-radius:4px;"
+        >
+        <p class="title text--grey">
+        Active Subscription 
+      </p>
+     
+      <div class="blue--text">
+        You are subscribed to <strong>{{subName}}</strong>
+      </div>
+       
+        </v-sheet>
+
         <v-sheet 
         class="pa-5"
+        v-show="!paid"
         color="orange lighten-5"
         style="border:3px dotted rgba(178, 223, 219, 0.3);
                           border-radius:4px;"
@@ -170,7 +188,9 @@ style="border-top-left-radius:15px;border-top-right-radius:15px;"
        
         </v-sheet>
 
-        <div>
+        <div
+        v-show="!paid"
+        >
           <h3 
           class="title text--accent-3 font-weight-light my-3">
             Choose a plan that works for you
@@ -178,27 +198,6 @@ style="border-top-left-radius:15px;border-top-right-radius:15px;"
 <v-overlay :value="subOverlay">
       <v-progress-circular indeterminate size="84"></v-progress-circular>
     </v-overlay>
-              <v-sheet 
-        class="pa-5"
-        color="teal lighten-5"
-        style="border:2px dotted rgba(178, 223, 219, 0.3) !important;border-radius:0px;"
-        >
-        <span class="teal--text subtitle-1 text--darken-1">
-          Hourly Express: N100 <v-btn small 
-          @click="doSubscription('PLN_vuxlonot3gy9bmg')"
-          color="success"
-          :disabled=false
-          >Subscribe</v-btn>
-          <!--<UserSubscribe :amount="10000" planID="PLN_vuxlonot3gy9bmg" :userEmail="this.userDetails.email"></UserSubscribe>-->
-        </span>
-      <div class="grey--text text--darken-2 mt-2">
-        Unlimited products,
-Unlimited content links,
-1% transaction charge,
-1 Day subscription (paid hourly)
-      </div>
-       
-        </v-sheet>
 
           <v-sheet 
         class="pa-5"
@@ -207,7 +206,8 @@ Unlimited content links,
         >
         <span class="teal--text subtitle-1 text--darken-1">
           Annual Mogul: N54,000 <v-btn small color="success"
-          :disabled=true
+          :disabled=false
+          @click="doSubscription('PLN_g4m3pjhpsgb3u14')"
           >Subscribe</v-btn>
         </span>
       <div class="grey--text text--darken-2 mt-2">
@@ -226,7 +226,8 @@ Unlimited content links,
         >
         <span class="teal--text subtitle-1 text--darken-1">
           Quarterly Sprinter: N15,000 <v-btn small color="success"
-          :disabled=true
+          :disabled=false
+          @click="doSubscription('PLN_xbwopoov59jncbi')"
           >Subscribe</v-btn>
         </span>
       <div class="text--darken-2 grey--text mt-2">
@@ -245,7 +246,8 @@ Unlimited content links,
         >
         <span class="teal--text subtitle-1 text--darken-1">
           Monthly Starter: N6,000 <v-btn small color="success"
-          :disabled=true
+          :disabled=false
+          @click="doSubscription('PLN_pzvz7tl3qnrwbdh')"
           >Subscribe</v-btn>
         </span>
       <div class="text--darken-2 grey--text mt-2">
@@ -265,13 +267,14 @@ Unlimited content links,
         <span class="teal--text subtitle-1 text--darken-1">
           Base Plan: N1,000 (x6) 
         </span><v-btn small color="success"
-        :disabled=true
+        :disabled=false
+        @click="doSubscription('PLN_n4bg3qza5v3va6r')"
         >Subscribe</v-btn>
       <div class="text--darken-2 grey--text mt-2">
         Maximum 3 products
  content links
 1% transaction charge
-x6 (Six months subscription)
+x6 <strong>(Six months subscription = NGN6,000)</strong>
       </div>
         </v-sheet>
         </div>
@@ -301,12 +304,21 @@ export default {
   },
     data() {
       return {
+        paid: false,
+        subName: '',
+        skk: process.env.VUE_APP_SECRET_KEY,
         subOverlay:false,
         infoMsg: '', 
         infoBar: false,
  valid:'',
   overlay: false,
    progressValue:'',
+   plans: {
+     starter: 'PLN_pzvz7tl3qnrwbdh',
+     Active: 'PLN_xbwopoov59jncbi',
+     Leading: 'PLN_g4m3pjhpsgb3u14',
+     Base: 'PLN_n4bg3qza5v3va6r',
+   },
   userProfile: 
             {
                 city:'',
@@ -321,26 +333,26 @@ export default {
     },
      methods: {
        doSubscription(level){
-         console.log(level)
+         //console.log(level)
          this.subOverlay = !this.subOverlay
-         let skey = 'sk_live_01952d79b3b14815af91d560256959358299e123'
+         //let skey = 'sk_live_01952d79b3b14815af91d560256959358299e123'
 let subData = {
 email: this.userDetails.email,
 amount: "500",
 currency: "NGN",
-callback_url: "http://shop.mulaa.co",
+callback_url: "http://shop.mulaa.co/settings/confirm",
 plan:level
 }
 console.log(subData)
 const options = {
-  headers: {'Authorization': 'Bearer '+skey}
+  headers: {'Authorization': 'Bearer '+this.skk}
 }
          axios.post(`https://api.paystack.co/transaction/initialize`,
            subData, options
 ).then(resp => {
             //console.log(resp.data)
             if(resp.data.status == true){
-
+/*
 this.$http.post('/subscription',
 {
   title: resp.data.data.reference,
@@ -354,8 +366,9 @@ this.$http.post('/subscription',
 console.log('sub post: '+response.data)
 this.loading = false
 })
+*/
               this.subOverlay = false
-              console.log('response: ' + JSON.stringify(resp.data.data))
+              //console.log('response: ' + JSON.stringify(resp.data.data))
             window.location = resp.data.data.authorization_url
             }
             
@@ -406,6 +419,12 @@ fetchUserData(){
         this.$store.dispatch('loadUserDetails', this.user)
        // console.log(this.userDetails)
     }
+     },
+     watch: {
+       userDetails(){
+         this.paid = true
+         this.subName = this.userDetails.subscription
+       }
      },
   computed: {
         ...mapGetters([

@@ -99,7 +99,9 @@
                            <v-flex xs6 sm6 md4 lg4 v-for="product in filterHiddenProduct" :key="product.productID">
            <transition name="slide-fade" mode="out-in">
             
-            <v-card flat hover class="text-xs-center ma-2" transition="slide-x-transition">
+            <v-card flat hover class="text-xs-center ma-2" transition="slide-x-transition"
+            style="border-radius:10px;"
+            >
               <router-link
               :to="{
                    name: 'product',
@@ -109,7 +111,7 @@
                    }
                }"
               >
-              <v-responsive class="pt-0">
+              <v-responsive class="pt-0" style="border-radius:10px;">
                 <v-img
           :src="product.image"
           aspect-ratio="1.15"
@@ -133,7 +135,10 @@
                   {{product.title.rendered}}
                 </div>
                 <div class="grey--text text-truncate"> {{product.acf.description}}</div>
-              </v-card-text>-->
+              </v-card-text>-->  <!--<Buy :theproducts="product">
+
+                </Buy>-->
+               
               <v-card-actions>
                   
                <v-btn text color="#23d2aa" 
@@ -150,13 +155,12 @@
                   Buy
                 </v-btn>
                 
-                <!--<Buy :theproducts="product">
-
-                </Buy>-->
+               
                
                 <v-spacer></v-spacer>
                 <div class="grey--text text--darken-3 caption"> ₦{{product.price}}</div>
               </v-card-actions>
+              
               </v-card>
               
               </transition>
