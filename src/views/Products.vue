@@ -94,7 +94,8 @@ export default {
     },
     methods: {
     fetchData(){
-        this.$store.dispatch('loadAllProducts', 'top')
+        //this.$store.dispatch('loadAllProducts', 'top')
+        this.$store.dispatch('loadDashboardProducts', this.user)
        // this.$store.dispatch('getUser', this.user)
        //this.reload()
     },

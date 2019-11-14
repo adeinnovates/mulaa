@@ -395,7 +395,7 @@ export default {
             hide:false,
 progress: 10,
 dialog: false,
-pageurl: 'https://shop.mulaa.co/'+this.$route.path,
+pageurl: 'https://shop.mulaa.co'+this.$route.path,
            infoBar: false,
             /*title: this.theProduct.title,
             hidethis: this.theProduct.hidden, 
