@@ -649,7 +649,7 @@ export default {
           is_verified: 'false',
           bank: null,
           entryDate:null,
-          disabledbtn: false,
+          disabledbtn: true,
           disabledField: true,
            rules: [
              v => !!v || 'This is required',
@@ -934,6 +934,7 @@ const headers2 = {
       fname(val){
         if(this.fname !=''){
           console.log(val)
+          this.disabledbtn = false
         }
         return 
       },
