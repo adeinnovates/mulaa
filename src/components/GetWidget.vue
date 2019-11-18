@@ -3,13 +3,15 @@
         <template v-slot:activator="{ on }">
             <v-responsive>
 
-                 <v-icon small color="teal"
-                 v-on="on"
+                <span
+                v-on="on"
+                > <v-icon small color="teal"
+                 
                  >
               mdi-settings
               </v-icon>
-              Widget
-
+              Get Widget </span><br>
+<span class="small text-lowercase teal--text">only you can see this option</span>
             </v-responsive>
         </template>
 
@@ -74,7 +76,7 @@
 <v-row>
         <v-col>
              <v-card-text class="pt-0">
-             <p class="mb-3 mt-2 overline">Embed your mulaa store on your own website/Wordpress</p>
+             <p class="mb-3 mt-2">Add your mulaa store to any website/wordpress by simply pasting this mulaa widget code into any page on the website</p>
 
   <v-textarea
           filled

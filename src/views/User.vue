@@ -8,6 +8,7 @@
         <v-container>
           <div 
           class="text-right small text-uppercase"
+          v-show="showWidget"
           >
         
           <Widget
@@ -266,6 +267,7 @@ export default {
     }*/,
      data(){
         return{
+          showWidget: false,
           inputs: [
             {
                 name: ''
@@ -372,12 +374,11 @@ export default {
 
      // return this.userDetails.instagram
      },
-     isPageOwner: function(){
-       
-     }
+    
     },
     mounted() {
         this.getUserPhone()
+        this.isPageOwner()
         //this.fetchLinks(this.name)
     },
      created() {
@@ -397,6 +398,18 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
     }
   },
     methods: {
+       isPageOwner: function(){
+       if (this.$store.getters.isLoggedIn != true){
+           return console.log('not logged in')
+       }else{
+         //console.log('render user: '+ this.$store.getters.renderUser)
+         //console.log(this.name)
+         if(this.name == this.$store.getters.renderUser){
+            return this.showWidget = true
+         }
+         //return console.log('loggedin user: '+ this.$store.getters.isLoggedIn)
+       }
+     },
     fetchData(){
       //console.log('this user '+this.name)
         this.$store.dispatch('loadUserProducts', this.name)

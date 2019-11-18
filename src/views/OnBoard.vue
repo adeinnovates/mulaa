@@ -6,7 +6,7 @@
  <v-layout row wrap align-center="align-center" justify-center="justify-center" class="pa-4 mt-5">
     <v-sheet 
         class="pa-5"
-        v-show="banked"
+        v-show="!banked"
         color="blue lighten-5"
         style="border:3px dotted rgba(178, 223, 219, 0.3);
                           border-radius:4px;"
@@ -24,7 +24,7 @@
       ref="oform"
       v-model="valid"
       color=transparent
-      v-show="!banked"
+      v-show="banked"
       >
 <v-img :src="require('../assets/winner.svg')"
 width="350"
