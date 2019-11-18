@@ -29,7 +29,7 @@ outlined
 
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title class="teal--text subtitle-1 text--darken-2">
+          <v-list-item-title class="teal--text subtitle-1 text--darken-2 text-uppercase">
             <v-icon small color="teal">mdi-account-card-details-outline</v-icon>
             Business Name</v-list-item-title>
           <v-list-item-subtitle class="caption">{{userDetails.business_name}}</v-list-item-subtitle>
@@ -41,7 +41,7 @@ outlined
 <v-divider inset></v-divider>
       <v-list-item three-line>
         <v-list-item-content>
-          <v-list-item-title class="teal--text subtitle-1 text--darken-2">
+          <v-list-item-title class="teal--text subtitle-1 text--darken-2 text-uppercase">
             <v-icon small color="teal">
               mdi-domain
               </v-icon>
@@ -56,7 +56,7 @@ outlined
 
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title class="teal--text subtitle-1 text--darken-2">
+          <v-list-item-title class="teal--text subtitle-1 text--darken-2 text-uppercase">
              <v-icon small color="teal">
               mdi-map-marker
               </v-icon>
@@ -83,7 +83,7 @@ outlined
 
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title class="teal--text subtitle-1 text--darken-2">
+          <v-list-item-title class="teal--text subtitle-1 text--darken-2 text-uppercase">
             <v-icon small color="teal">
               mdi-cash
               </v-icon>
@@ -95,7 +95,7 @@ outlined
 
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title class="teal--text subtitle-1 text--darken-2">Facebook Pixel</v-list-item-title>
+          <v-list-item-title class="teal--text subtitle-1 text--darken-2 text-uppercase">Facebook Pixel</v-list-item-title>
           <v-list-item-subtitle class="caption grey lighten-4 pa-3 mt-2">{{userDetails.facebook_pixel}}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
@@ -136,7 +136,39 @@ dark
   </div>
       </v-list-item-avatar>
       </v-list-item>
+<v-divider inset></v-divider>
+<v-list-item>
+   <v-list-item-content>
+     <v-list-item-title
+          class="teal--text subtitle-1 text--darken-2 mb-1 text-uppercase"
+          >
+          <v-icon small color="teal">
+              mdi-settings
+              </v-icon>
+          Mulaa Widget
+          </v-list-item-title>
+          <v-list-item-subtitle class="caption mb-3">
+            Embed your mulaa store on your own website/Wordpress
+            </v-list-item-subtitle>
+  <v-textarea
+          filled
+          name="input-7-4"
+          :readonly=true
+          color="teal"
+          label="Copy the code below"
+          id="embed-code"
+          class="small teal lighten-5"
+          :value="embedcode"
+        ></v-textarea>
+        <div class="my-1">
+        <v-btn depressed small
+        class="white--text"
+        color="#000028"
+         @click.stop.prevent="copyEmbedCode">Copy Code</v-btn>
+      </div>
 
+         </v-list-item-content>
+</v-list-item>
     </v-list>
   </v-card>
  
@@ -304,6 +336,8 @@ export default {
   },
     data() {
       return {
+        embedcode: `<div class="mulaa_embed" data-src="https://mulaa.me/u/`+ this.$store.state.user +`" style="height:400px;width:680px;margin: 10px auto" data-responsive="true" data-img="https://shop.mulaa.co/shop_cover.png" data-css="background:url('//shop.mulaa.co/loading.gif') white center center no-repeat;border:0px;float:middle;" data-Id="mulaa-sdk" data-Class="mulaa-sdk" data-name="mulaa.co"></div>
+        `+'<script src="https://shop.mulaa.co/async-iframe.js"',
         paid: false,
         subName: '',
         skk: process.env.VUE_APP_SECRET_KEY,
@@ -326,12 +360,30 @@ export default {
                 validid: [],
                 profileImg: this.myProfileImg
             },
+            userURL: 'https://mulaa.me/u/'+this.$store.state.user,
       }
     },
      created() {
         return this.fetchUserData()
     },
      methods: {
+       copyEmbedCode () {
+          let testingCodeToCopy = document.querySelector('#embed-code')
+          testingCodeToCopy.setAttribute('type', 'text')   
+          testingCodeToCopy.select()
+
+          try {
+            var successful = document.execCommand('copy');
+            var msg = successful ? 'successful' : 'unsuccessful';
+            alert('Embed code was copied ' + msg);
+          } catch (err) {
+            alert('Oops, unable to copy');
+          }
+
+          /* unselect the range */
+          testingCodeToCopy.setAttribute('type', 'hidden')
+          window.getSelection().removeAllRanges()
+        },
        doSubscription(level){
          //console.log(level)
          this.subOverlay = !this.subOverlay

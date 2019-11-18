@@ -4,10 +4,27 @@
       Complete your busienss details below to activate your store and begin selling
     </v-alert>-->
  <v-layout row wrap align-center="align-center" justify-center="justify-center" class="pa-4 mt-5">
+    <v-sheet 
+        class="pa-5"
+        v-show="banked"
+        color="blue lighten-5"
+        style="border:3px dotted rgba(178, 223, 219, 0.3);
+                          border-radius:4px;"
+        >
+     
+      <div class="blue--text">
+        Your onboarding is complete, please go to settings to edit your mulaa details or choose a subscription.
+        <p class="mt-2">To update Banking info, please reachout to team@mulaa.co
+          </p>
+      </div>
+       
+        </v-sheet>
+   
     <v-form 
       ref="oform"
       v-model="valid"
       color=transparent
+      v-show="!banked"
       >
 <v-img :src="require('../assets/winner.svg')"
 width="350"
@@ -527,6 +544,7 @@ export default {
     },
     mounted() {
   this.dateFunction;
+  this.confirmUpdate();
   
   },
     computed: {
@@ -587,6 +605,7 @@ export default {
     },
     data() {
       return {
+        banked: false,
         show1: false,
         show2: true,
         errors: [],
@@ -650,7 +669,15 @@ export default {
       }
     },
      methods: {
-      
+      confirmUpdate(){
+        if(this.userDetails.customer_code != ''){
+          console.log('updated')
+          this.banked = true
+        }else{
+          console.log('undefined user')
+          this.banked = false
+        }
+      },
       listOfBanks(){
  this.$http.get('https://api.paystack.co/bank',PaystackOptions)
                 .then(resp => {
@@ -808,6 +835,7 @@ const headers2 = {
   },
   fetchUserData(){
         this.$store.dispatch('loadUserDetails', this.user)
+        //console.log(this.userDetails)
        // console.log('account email: '+this.accountEmail)
         //console.log(userDetails)
         

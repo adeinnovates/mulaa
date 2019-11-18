@@ -6,6 +6,20 @@
      color="transparent"
     >
         <v-container>
+          <div 
+          class="text-right small text-uppercase"
+          >
+        
+          <Widget
+          :thisUser="userDetails"
+          >
+
+          </Widget>
+         <!-- <v-icon small color="teal">
+              mdi-settings
+              </v-icon>
+              Widget -->
+          </div>
                 <div class="text-center">
                   
               <v-avatar class="my-2" size="80">
@@ -83,7 +97,10 @@
                           class="mt-0 subtitle-1 py-2"
                           
                           >
-                          <span class="d-block text-center" style="width:100%;">
+                          <v-icon small left class="teal--text lighten-1">
+              mdi-vector-link
+              </v-icon>
+                          <span class="title text-center" style="width:80%;">
                             {{link.link_title}}
                             </span>
                           <v-spacer></v-spacer>
@@ -212,6 +229,7 @@ powered by <a href="https://mulaa.co/?utm_source=footer&utm_medium=userpage" tar
 <script>
 import { mapState, mapGetters } from 'vuex'
 import Buy from '@/components/BuyProduct'
+import Widget from '@/components/GetWidget'
 import Avatar from 'vue-avatar'
 export default {
   metaInfo() {
@@ -234,7 +252,8 @@ export default {
     }
     },
     components: {
-       Avatar
+       Avatar,
+       Widget
        // Buy
   },
   props: ['name','theproducts']
@@ -352,6 +371,9 @@ export default {
       
 
      // return this.userDetails.instagram
+     },
+     isPageOwner: function(){
+       
      }
     },
     mounted() {
@@ -425,6 +447,29 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
 }
 </script>
 <style>
+[style*="--aspect-ratio"] > :first-child {
+  width: 100%;
+}
+[style*="--aspect-ratio"] > img {  
+  height: auto;
+} 
+@supports (--custom:property) {
+  [style*="--aspect-ratio"] {
+    position: relative;
+  }
+  [style*="--aspect-ratio"]::before {
+    content: "";
+    display: block;
+    padding-bottom: calc(100% / (var(--aspect-ratio)));
+  }  
+  [style*="--aspect-ratio"] > :first-child {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+  }  
+}
+
 a.noline{
   text-decoration: none;
 }
@@ -451,5 +496,13 @@ a.noline:hover{
 */
 .i450img{
   max-width:450px;
+}
+
+@media (max-width: 360px) {
+
+  .v-application .pa-5.userpage{
+    padding: 1px !important;
+  }
+  
 }
 </style>

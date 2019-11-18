@@ -26,6 +26,9 @@
       <v-icon>mdi-magnify</v-icon>
     </v-btn> 
     -->
+    <div class="white--text mr-4">
+      Updates <span class="announcekit-widget ml-1"></span>
+      </div> 
     <v-btn
         text
         rounded ripple

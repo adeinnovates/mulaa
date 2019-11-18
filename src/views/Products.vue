@@ -119,7 +119,7 @@ export default {
       'allProducts',
       'myproducts',
       'Discounted',
-      'userUrl'
+      'userUrl',
     ]),
     snackbar: {
       get() {
@@ -139,7 +139,8 @@ export default {
     },
     currentUserProd: {
       get() {
-        let theUserProducts = this.$store.state.userProducts;
+        //let theUserProducts = this.$store.state.userProducts;
+        let theUserProducts = this.$store.state.myproducts;
         if (theUserProducts.length > 0){
           return theUserProducts
         }else{

@@ -16,6 +16,7 @@ your link: {{userURL}}
 <v-layout row wrap pt-10>
                        
                            <v-flex xs6 sm6 md3 lg3>
+                             
                                 <v-chip
                                 class="ma-2 teal lighten-4 caption"
                                 color=""
@@ -814,6 +815,9 @@ return 0;
     },
     watch: {
       '$route': 'fetchData',
+      currentUserProd(){
+        return this.currentUserProd
+      },
       counted(newVal, oldVal){
           if(newVal == 1){
             return this.sheet = true
