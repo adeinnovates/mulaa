@@ -871,7 +871,7 @@ const headers2 = {
             })
              .catch((e) => {
                this.loading = false
-               console.error(e)
+               //console.error(e)
              })
 
          }else{
@@ -933,7 +933,7 @@ const headers2 = {
       },
       fname(val){
         if(this.fname !=''){
-          console.log(val)
+          //console.log(val)
           this.disabledbtn = false
         }
         return 
