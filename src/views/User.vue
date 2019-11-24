@@ -250,7 +250,7 @@ export default {
      {property: 'og:title', content: storeName },
      {property: 'og:type', content: 'profile:'+window.location.host.split('.')[0]},
      {property: 'og:url', content: 'https://'+window.location.host},
-     {property: 'og:image', content: 'https://shop.mulaa.co/imgapi/uploads/avatar/'+storeName+'.jpg'}, //this.getMerchantInfo.brand_image
+     {property: 'og:image', content: 'https://mulaa.store/mulaa_pf.gif'}, //this.getMerchantInfo.brand_image
      {property: 'og:description', content: this.getMerchantInfo.business_description},
       ]
     }
