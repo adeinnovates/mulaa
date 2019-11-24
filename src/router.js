@@ -25,6 +25,7 @@ export default new Router({
     mode: 'history',
     base: process.env.BASE_URL,
   routes: [
+    /*
     {
       path: '/',
       name: 'dashboard',
@@ -89,7 +90,7 @@ export default new Router({
       }
     },
     {
-      path: '/u/:name',
+      path: '/:name',
       name: 'merchant',
       component: User,
       props: true,
@@ -97,9 +98,9 @@ export default new Router({
         hideNavigation: true,
         requiresAuth: false
       }
-    },
+    },*/
     {
-      path: '/u/:name/:id',
+      path: '/:id',
       name: 'product',
       component: Product,
       props: true,
@@ -109,9 +110,10 @@ export default new Router({
       }
     },
     {
-      path: '*',//'/u/',
-      name: 'new user',
+      path: '*', // /user
+      name: 'user',
       component: Register,
+      props: true,
       meta: { 
         hideNavigation: true,
         requiresAuth: false
@@ -126,9 +128,10 @@ export default new Router({
         //requiresAuth: true
       }
     },*/
+    /*
     { path: '*', 
     component: Dashboard
-   },
+    },*/
     {
       path: '/about',
       name: 'about',
@@ -136,21 +139,65 @@ export default new Router({
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+    },
+    {
+      path: '/',
+      name: 'merchant',
+      component: User,
+      props: true,
+      meta: { 
+        hideNavigation: true,
+        requiresAuth: false
+      }
     }
   ]
 })
 
 router.beforeEach((to, from, next) => {
+  /*
+  const subdom = window.location.host.split('.')[0]
+  const domain = 'mulaa.store'
+  const pageToLoad = 'merchant'
+*/
+const host = window.location.host;
+const parts = host.split('.');
+const domain = 'mulaa'
+const domainLength = 3; // route1.example.com => domain length = 3
+const pageToLoad = 'merchant'
+
+/*if(parts[0] !== domain && to.name !== pageToLoad){
+
+}*/
+
+if(to.name !== pageToLoad){
+  //return next({name: pageToLoad, params:{name:parts[0]}})
+  return next()
+}else{
+  //console.log(parts[0])
+  return next()
+}
+
+/*
   if (to.meta.requiresAuth) {
     if (store.getters.isLoggedIn != true) {
-      //console.log('/userr')
-      return next('/user')
-      //return
+      console.log('/userr')
+    
+      //return next('/user')
+      return
     }
+   // console.log(subdom)
     return next()
-  } else {
-    return next()
+  } else if(parts[0] !== domain && to.name !== pageToLoad){
+    //console.log('page to load else '+pageToLoad)
+    //return next({name: pageToLoad, params:{user:parts[0]}})
+    
+      console.log('else: '+parts[0])
+return next({params:{name:parts[0]}})
+
+  }else{
+    return next({params:{name:parts[0]}})
   }
+  */
 })
 
 router.afterEach((to, from) => {

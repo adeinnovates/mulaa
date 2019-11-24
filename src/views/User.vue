@@ -232,9 +232,12 @@ import { mapState, mapGetters } from 'vuex'
 import Buy from '@/components/BuyProduct'
 import Widget from '@/components/GetWidget'
 import Avatar from 'vue-avatar'
+
+const storeName = window.location.host.split('.')[0];
+
 export default {
   metaInfo() {
-    let pageTitle = this.name
+    let pageTitle = this.nname
     return {
       title: pageTitle ? pageTitle : this.getMerchant,
       titleTemplate: '%s - mulaa.co',
@@ -244,10 +247,10 @@ export default {
       },
       
       meta: [
-     {property: 'og:title', content: this.getMerchant},
-     {property: 'og:type', content: this.getMerchantInfo.business_name},
-     {property: 'og:url', content: this.pagePath},
-     {property: 'og:image', content: this.getMerchantInfo.brand_image},
+     {property: 'og:title', content: storeName },
+     {property: 'og:type', content: 'profile:'+window.location.host.split('.')[0]},
+     {property: 'og:url', content: 'https://'+window.location.host},
+     {property: 'og:image', content: 'https://shop.mulaa.co/imgapi/uploads/avatar/'+storeName+'.jpg'}, //this.getMerchantInfo.brand_image
      {property: 'og:description', content: this.getMerchantInfo.business_description},
       ]
     }
@@ -267,6 +270,7 @@ export default {
     }*/,
      data(){
         return{
+          nname: '',
           showWidget: false,
           inputs: [
             {
@@ -377,12 +381,18 @@ export default {
     
     },
     mounted() {
+      console.log('name mounted: '+this.nname)
         this.getUserPhone()
         this.isPageOwner()
         //this.fetchLinks(this.name)
     },
      created() {
-        this.fetchData()
+       const host = window.location.host;
+const parts = host.split('.');
+const domain = 'mulaa'
+this.nname = parts[0]
+       console.log('name created: '+parts[0])
+        this.fetchData(parts[0])
        // console.log('name: '+ this.name)
     },
      watch: {
@@ -395,6 +405,9 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
         return
       }
       return
+    },
+    getMerchantInfo(){
+      return
     }
   },
     methods: {
@@ -404,17 +417,17 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
        }else{
          //console.log('render user: '+ this.$store.getters.renderUser)
          //console.log(this.name)
-         if(this.name == this.$store.getters.renderUser){
+         if(this.nname == this.$store.getters.renderUser){
             return this.showWidget = true
          }
          //return console.log('loggedin user: '+ this.$store.getters.isLoggedIn)
        }
      },
-    fetchData(){
+    fetchData(nname){
       //console.log('this user '+this.name)
-        this.$store.dispatch('loadUserProducts', this.name)
-        this.$store.dispatch('loadUserDetails', this.name)
-        this.$store.dispatch('loadDashboardLinks', this.name)
+        this.$store.dispatch('loadUserProducts', nname)
+        this.$store.dispatch('loadUserDetails', nname)
+        this.$store.dispatch('loadDashboardLinks', nname)
        // console.log('Name '+this.name)
     },
     getMerchant(){

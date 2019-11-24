@@ -376,6 +376,25 @@ import axios from 'axios'
 import Callback from '@/components/Callback'
 const mulaa_key = 'pk_live_d2ea70959fc4383baf5844b947709e17db19b1d0'
 export default {
+  metaInfo() {
+    let pageTitle = this.title
+    return {
+      title: pageTitle ? pageTitle : this.getMerchant,
+      titleTemplate: '%s - mulaa.co',
+      htmlAttrs: {
+        lang: 'en',
+        amp: true
+      },
+      
+      meta: [
+     {property: 'og:title', content: this.getMerchant},
+     {property: 'og:type', content: this.getMerchantInfo.business_name},
+     {property: 'og:url', content: this.pagePath},
+     {property: 'og:image', content: this.getMerchantInfo.brand_image},
+     {property: 'og:description', content: this.getMerchantInfo.business_description},
+      ]
+    }
+    },
     props: ['name','theproducts'],
      components: {
         //paystack
@@ -441,6 +460,7 @@ pageurl: 'https://shop.mulaa.co'+this.$route.path,
       loading:'loading',
       userKey:'userKey',
       theProduct:'theProduct',
+      userBusiness:'userBusiness',
       userDetails:'userDetails'
       }),
       loading: {
@@ -519,6 +539,12 @@ pageurl: 'https://shop.mulaa.co'+this.$route.path,
 //console.log(this.theProduct)
     },
     methods: {
+       getMerchant(){
+      return this.userBusiness
+    },
+    getMerchantInfo(){
+      return this.userDetails
+    },
       addOption(index,name,price) {
         console.log(name)
         this.loader = 'btnloading'
