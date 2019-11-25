@@ -11,10 +11,26 @@ import VueCurrencyFilter from 'vue-currency-filter'
 
 import vueCustomElement from 'vue-custom-element'
 
+import VueAnalytics from 'vue-analytics'
+
+Vue.use(VueAnalytics, {
+  id: 'UA-146883420-1',
+  router,
+  autoTracking: {
+    screenview: true,
+    pageviewTemplate (route) {
+      return {
+        page: route.path,
+        title: document.title,
+        location: window.location.href
+      }
+    }
+  }
+})
 
 Vue.use(vueCustomElement)
 
-import VueClipboard from 'vue-clipboard2'
+//import VueClipboard from 'vue-clipboard2'
 import ImgInputer from 'vue-img-inputer'
 import 'vue-img-inputer/dist/index.css'
 //import VueGlide from 'vue-glide-js'
@@ -32,7 +48,7 @@ Vue.use(VueMeta, {
 })
 
 //Vue.use(VueCurrencyFilter)
-Vue.use(VueClipboard);
+//Vue.use(VueClipboard);
 //Vue.use(VueGlide)
 Vue.component('ImgInputer', ImgInputer)
 Vue.use(SocialSharing)

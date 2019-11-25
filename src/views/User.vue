@@ -6,7 +6,8 @@
      color="transparent"
     >
         <v-container>
-          <div 
+          <!--
+            <div 
           class="text-right small text-uppercase"
           v-show="showWidget"
           >
@@ -16,11 +17,8 @@
           >
 
           </Widget>
-         <!-- <v-icon small color="teal">
-              mdi-settings
-              </v-icon>
-              Widget -->
           </div>
+          -->
                 <div class="text-center">
                   
               <v-avatar class="my-2" size="80">

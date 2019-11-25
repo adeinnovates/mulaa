@@ -11,7 +11,7 @@
               mdi-settings
               </v-icon>
               Get Widget </span><br>
-<span class="small text-lowercase teal--text">only you can see this option</span>
+<span class="small text-lowercase teal--text">display your mulaa store anywhere</span>
             </v-responsive>
         </template>
 

@@ -51,7 +51,7 @@
       ref="form"
       v-model="valid"
       >
-<v-flex xs12 class="form-wrapper" v-show="!show2"><!-- :rules="nameRules" -->
+<v-flex xs12 class="form-wrapper" v-show="!show2"><!-- :rules="nameRules" [nurules.required, nurules.min]-->
 
 <v-tooltip v-model="usertip" top>
             <template v-slot:activator="{ on }">
@@ -61,8 +61,8 @@
               single-line
              v-model="userCred.username"
               label="Username"
-              :rules="[nurules.required, nurules.min]"
-              hint="This will be your store link (mulaa.me/u/USERNAME) a-z no spaces allowed"
+              :rules="nameRules"
+              hint="This will be your store link (USERNAME.mulaa.store) a-z no spaces allowed"
             persistent-hint
               background-color="#f4f8f7"
               class="teal--text form-field mb-5"
@@ -315,6 +315,10 @@ return this.$router.push({name: 'dashboard', params: { popWelcome: true }})
                 );
           },
           register (userdets) {
+
+            if (this.$refs.form.validate() == true){
+            //console.log(this.$refs.form.validate())
+            
             this.loading = true; 
             this.$store
               .dispatch("register", userdets).then(() => {
@@ -325,7 +329,8 @@ return this.$router.push({name: 'dashboard', params: { popWelcome: true }})
               .catch(err => {
                 this.loading = false
                 console.log(err)
-              });
+              });   
+          }
           },
           newlogin (user) {
         this.loading = true;
@@ -378,7 +383,7 @@ return this.$router.push({name: 'dashboard', params: { popWelcome: true }})
         },
         userCred:
             {
-                username: '',
+                username: this.$route.query.storename || '',
                 email:'',
                 password:'',
                 /*"roles": [

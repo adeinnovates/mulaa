@@ -12,11 +12,23 @@ your link: {{userURL}}
 </v-sheet>
 </div>
 -->
+<div 
+class="text-uppercase pt-8"
+v-show="showWidget"
+>
 
-<v-layout row wrap pt-10>
+<Widget
+:thisUser="userDetails"
+>
+
+</Widget>
+
+</div>
+
+<v-layout row wrap pt-0>
                        
                            <v-flex xs6 sm6 md3 lg3>
-                             
+
                                 <v-chip
                                 class="ma-2 teal lighten-4 caption"
                                 color=""
@@ -499,6 +511,7 @@ import AddProduct from '@/components/AddProduct'
 import Editor from '@/components/Editor'
 import anime from 'animejs';
 import axios from 'axios'
+import Widget from '@/components/GetWidget'
 
 import { mapState, mapGetters } from 'vuex'
 
@@ -509,10 +522,13 @@ export default {
         MoreBtn,
         AddProduct,
         Editor,
+        Widget
 
   },
     data(){
         return{
+          showWidget: true,
+          mounted:'',
           showStat: false,
           clickCount: 0,
           showCount: 0,
@@ -545,7 +561,7 @@ export default {
           popWelcome: this.$route.params.popWelcome || false,
           sheet: this.$route.params.sheet || false,
             copySucceeded: null,
-            userURL: 'https://mulaa.me/u/'+this.$store.state.user,
+            userURL: 'https://'+this.$store.state.user+'.mulaa.store',
             previewUrl:'https://shop.mulaa.co/u/'+this.$store.state.user,
             slides: 5,
     active: 1,
@@ -565,7 +581,7 @@ export default {
         }
     },
     created() {
-      this.fetchUserData()
+      //this.fetchUserData()
 
       /*
         const script = document.createElement('script')
@@ -573,7 +589,7 @@ export default {
         document.getElementsByTagName('head')[0].appendChild(script)
         */
       
-        return this.fetchData()
+       // return this.fetchData()
         
     },
     /* watch: {
@@ -727,6 +743,8 @@ return 0;
     
   },
   mounted(){
+    this.mounted='yes'
+    //this.fetchData()
       //this.$store.dispatch('loadUserProducts', this.user)
     },
   computed: {
@@ -843,6 +861,12 @@ return 0;
       },
       showCount (val) {
       this.setCount(val)
+    },
+    mounted(){
+      /*if (this.$store.getters.isLoggedIn == true){
+       this.fetchData()
+      }*/
+      this.fetchData()
     }
     }
 }
