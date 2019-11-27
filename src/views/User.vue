@@ -341,7 +341,7 @@ export default {
       return userproduct.title.match(this.search) || userproduct.price.match(this.search)
       })
       }else{
-        console.log('No products yet')
+        //console.log('No products yet')
         return null
       }
     
@@ -381,7 +381,7 @@ export default {
     
     },
     mounted() {
-      console.log('name mounted: '+this.nname)
+      //console.log('name mounted: '+this.nname)
         this.getUserPhone()
         this.isPageOwner()
         //this.fetchLinks(this.name)
@@ -391,7 +391,7 @@ export default {
 const parts = host.split('.');
 const domain = 'mulaa'
 this.nname = parts[0]
-       console.log('name created: '+parts[0])
+       //console.log('name created: '+parts[0])
         this.fetchData(parts[0])
        // console.log('name: '+ this.name)
     },
@@ -413,7 +413,7 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
     methods: {
        isPageOwner: function(){
        if (this.$store.getters.isLoggedIn != true){
-           return console.log('not logged in')
+           //return console.log('not logged in')
        }else{
          //console.log('render user: '+ this.$store.getters.renderUser)
          //console.log(this.name)

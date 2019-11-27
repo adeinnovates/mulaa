@@ -169,9 +169,12 @@ const pageToLoad = 'merchant'
 
 }*/
 
-if(to.name !== pageToLoad){
+if(to.name !== pageToLoad || parts[0] == domain){ //|| parts[0] == domain
   //return next({name: pageToLoad, params:{name:parts[0]}})
-  return next()
+  
+    return window.location.replace("https://mulaa.co");
+  
+  //return next()
 }else{
   //console.log(parts[0])
   return next()
