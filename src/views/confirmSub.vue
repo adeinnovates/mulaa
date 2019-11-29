@@ -88,7 +88,7 @@ export default {
          },
 chkUrlData(){
     if(this.$route.query.trxref != undefined){
-        console.log(this.$route.query.trxref)
+        //console.log(this.$route.query.trxref)
         this.subOverlay = true
         let tranx = this.$route.query.trxref
         this.infoMsg = this.$route.query.trxref
@@ -121,7 +121,7 @@ chkUrlData(){
 
                     this.$http.post('/subscription',
                     {
-                    title: this.user+'_'+trxData.reference,
+                    title: this.user, //+'_'+trxData.reference,
                     fields : {
                         date_created: nts,
                     trans_ref: resp.data.data.reference,

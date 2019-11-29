@@ -309,6 +309,26 @@ Unlimited content links,
 x6 <strong>(Six months subscription = NGN6,000)</strong>
       </div>
         </v-sheet>
+
+        <v-divider inset></v-divider>
+        <v-sheet 
+        class="pa-5"
+        color="teal lighten-5"
+        style="border:2px dotted rgba(178, 223, 219, 0.3) !important;border-radius:0px;"
+        >
+        <span class="teal--text subtitle-1 text--darken-1">
+          Test Plan: N50 
+        </span><v-btn small color="success"
+        :disabled=false
+        @click="doSubscription('PLN_vuxlonot3gy9bmg')"
+        >Subscribe</v-btn>
+      <div class="text--darken-2 grey--text mt-2">
+        Maximum 3 products
+ content links
+1% transaction charge
+x6 <strong>(Six months subscription = NGN6,000)</strong>
+      </div>
+        </v-sheet>
         </div>
     </v-card-text>
 
@@ -336,6 +356,7 @@ export default {
   },
     data() {
       return {
+        nextPlanDate:'',
         embedcode: `<div class="mulaa_embed" data-src="https://mulaa.me/u/`+ this.$store.state.user +`" style="height:400px;width:680px;margin: 10px auto" data-responsive="true" data-img="https://shop.mulaa.co/shop_cover.png" data-css="background:url('//shop.mulaa.co/loading.gif') white center center no-repeat;border:0px;float:middle;" data-Id="mulaa-sdk" data-Class="mulaa-sdk" data-name="mulaa.co"></div>
         `+'<script src="https://shop.mulaa.co/async-iframe.js"',
         paid: false,
@@ -385,48 +406,48 @@ export default {
           window.getSelection().removeAllRanges()
         },
        doSubscription(level){
-         //console.log(level)
-         this.subOverlay = !this.subOverlay
-         //let skey = 'sk_live_01952d79b3b14815af91d560256959358299e123'
-let subData = {
-email: this.userDetails.email,
-amount: "500",
-currency: "NGN",
-callback_url: "http://shop.mulaa.co/settings/confirm",
-plan:level
-}
-console.log(subData)
-const options = {
-  headers: {'Authorization': 'Bearer '+this.skk}
-}
-         axios.post(`https://api.paystack.co/transaction/initialize`,
-           subData, options
-).then(resp => {
+            //console.log(level)
+            this.subOverlay = !this.subOverlay
+            //let skey = 'sk_live_01952d79b3b14815af91d560256959358299e123'
+            let subData = {
+            email: this.userDetails.email,
+            amount: "500",
+            currency: "NGN",
+            callback_url: "http://shop.mulaa.co/settings/confirm",
+            plan:level
+            }
+            console.log(subData)
+            const options = {
+            headers: {'Authorization': 'Bearer '+this.skk}
+            }
+            axios.post(`https://api.paystack.co/transaction/initialize`,
+            subData, options
+            ).then(resp => {
             //console.log(resp.data)
             if(resp.data.status == true){
-/*
-this.$http.post('/subscription',
-{
-  title: resp.data.data.reference,
-  fields : {
-    trans_ref: resp.data.data.reference,
-    user: this.userDetails.email
-  },
-     status: "publish"
-}
-).then(response => {
-console.log('sub post: '+response.data)
-this.loading = false
-})
-*/
-              this.subOverlay = false
-              //console.log('response: ' + JSON.stringify(resp.data.data))
+            /*
+            this.$http.post('/subscription',
+            {
+            title: resp.data.data.reference,
+            fields : {
+            trans_ref: resp.data.data.reference,
+            user: this.userDetails.email
+            },
+            status: "publish"
+            }
+            ).then(response => {
+            console.log('sub post: '+response.data)
+            this.loading = false
+            })
+            */
+            this.subOverlay = false
+            //console.log('response: ' + JSON.stringify(resp.data.data))
             window.location = resp.data.data.authorization_url
             }
-            
+
             }).catch(err => {
-              console.log(err)   
-          })
+            console.log(err)   
+            })
 
        },
         onFileChanged (event) {
@@ -470,11 +491,42 @@ const headers2 = {
 fetchUserData(){
         this.$store.dispatch('loadUserDetails', this.user)
        // console.log(this.userDetails)
+    },
+    confirmSub(tranx){
+      const config = {
+            headers: {'Authorization': 'Bearer '+this.skk}
+            }
+            axios.get('https://api.paystack.co/customer/'+tranx, config)
+        .then(resp => { 
+            const trxData = resp.data.data.subscriptions
+            //console.log(trxData[0])
+            if(trxData[0].status == 'active'){
+              this.paid = true
+              this.nextPlanDate = trxData[0].next_payment_date//.toDateString()
+
+              //console.log('date: '+ this.nextPlanDate)
+            }else{
+               this.paid = false
+              return
+            }
+            //console.log(trxData)
+        }).catch(err => {
+            //const linkData = 0
+            console.log(err)
+            //reject(err)
+          })
     }
      },
      watch: {
        userDetails(){
-         this.paid = true
+         //this.paid = true
+         //console.log(this.userDetails.email)
+         console.log(this.userDetails.last_payment_date)
+         if(this.userDetails.paid_user == true){
+           //this.paid = true
+           //console.log(this.userDetails.customer_code)
+           this.confirmSub(this.userDetails.customer_code)
+         }
          this.subName = this.userDetails.subscription
        }
      },

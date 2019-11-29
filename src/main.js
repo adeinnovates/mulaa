@@ -13,6 +13,8 @@ import vueCustomElement from 'vue-custom-element'
 
 import VueAnalytics from 'vue-analytics'
 
+//Vue.use(require('vue-moment'));
+
 Vue.use(VueAnalytics, {
   id: 'UA-146883420-1',
   router,

@@ -12,6 +12,7 @@ your link: {{userURL}}
 </v-sheet>
 </div>
 -->
+
 <div 
 class="text-uppercase pt-8"
 v-show="showWidget"
@@ -139,7 +140,16 @@ v-show="showWidget"
                             </v-btn>
                         </div>-->
                         <AddProduct></AddProduct>
+<v-sheet class="mb-3 pa-3 rounded body-1" color="orange lighten-4" style="color:#000028" elevation="1" :v-show="showNotice">
+You don't have an active mulaa subscription plan. 
+<v-btn 
+text
+small
+color="error"
+:to="{ path: 'settings' }"
 
+>Click here</v-btn> to choose a plan and upgrade
+</v-sheet>
  <p class="overline mb-0">Your Links</p>
                           <div id="links" 
                           class="mb-4 mt-2 pa-3"
@@ -572,6 +582,7 @@ export default {
             infoMsg: '', 
             products: '',
             previewStore: this.userURL,
+            showNotice: false,
             nurules: {
           required: value => !!value || 'Required.',
           min: v => v.length >= 6 || 'Min 6 characters',
@@ -597,6 +608,32 @@ export default {
     '$route': 'fetchData'
      },*/
     methods: {
+      userLimit(){
+       
+const config = {
+            headers: {'Authorization': 'Bearer '+this.skk}
+            }
+            let cus_code = this.userDetails.customer_code
+            
+         if(this.userDetails.paid_user != true){
+            this.showNotice = true
+           // console.log('base: '+this.userDetails.subscription)
+          }else {
+            axios.get('https://api.paystack.co/customer/'+cus_code, config)
+        .then(resp => { 
+            const trxData = resp.data.data//.subscriptions
+            if(trxData.subscriptions[0] != undefined){
+              this.showNotice = false
+            }else{
+              this.showNotice = true
+            } 
+            return
+        }).catch(err => {
+            console.log(err)   
+            })
+          }
+return
+    },
       getLinkStat(val, evt){
         const url = val.substring(val.lastIndexOf('/') + 1)
         const apiUrl = 'https://mulaa.me/u/api/details?key=P1fjdH02F3y2&alias='+url

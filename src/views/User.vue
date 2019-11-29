@@ -112,7 +112,7 @@
         <v-layout row wrap pt-3 mt-3 class="layout-desktop mx-auto" style="max-width:854px;">
                            
                          
-                           <v-flex xs6 sm6 md4 lg4 v-for="product in filterHiddenProduct" :key="product.productID">
+                           <v-flex xs6 sm6 md4 lg4 v-for="product in filterHiddenProduct.slice(0, limitVal)" :key="product.productID">
            <transition name="slide-fade" mode="out-in">
             
             <v-card flat hover class="text-xs-center ma-2" transition="slide-x-transition"
@@ -230,6 +230,9 @@ import { mapState, mapGetters } from 'vuex'
 import Buy from '@/components/BuyProduct'
 import Widget from '@/components/GetWidget'
 import Avatar from 'vue-avatar'
+
+import axios from 'axios'
+
 export default {
   metaInfo() {
     let pageTitle = this.name
@@ -265,6 +268,7 @@ export default {
     }*/,
      data(){
         return{
+          limitVal: 1,
           showWidget: false,
           inputs: [
             {
@@ -283,7 +287,8 @@ export default {
             bizPhone: '',
             merchantName : '',
             instagram: 'https://instagram.com/',
-            pagePath: 'https://shop.mulaa.co'+ this.$route.path
+            pagePath: 'https://shop.mulaa.co'+ this.$route.path,
+            skk: process.env.VUE_APP_SECRET_KEY
         }
     },
     computed: {
@@ -326,7 +331,16 @@ export default {
         this.$store.commit('loading', value);
       }
     },
-   
+    merchantData: {
+    get: function() {
+      //concat using template literal
+      //return `https://mulaa.me/u/${this.$route.params.name}`
+      return this.$store.state.userDetails;
+    },
+      set(value) {
+        this.$store.commit('userDetails', value);
+      }
+  },
     filteredProducts: function(){
 
       if(this.userProducts != ''){
@@ -349,7 +363,7 @@ export default {
         return null
       }
      
-    }, 
+    },
      userInstagram: function(){
        
        if(this.userDetails.instagram != undefined){
@@ -377,6 +391,7 @@ export default {
     mounted() {
         this.getUserPhone()
         this.isPageOwner()
+        
         //this.fetchLinks(this.name)
     },
      created() {
@@ -393,9 +408,61 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
         return
       }
       return
+    },
+    userDetails(){
+      //console.log('details updated')
+      return this.userLimit()
+      //return
     }
   },
     methods: {
+       userLimit(){
+       /*
+       let subcheck = this.userDetails.subscription
+        let payment_date = this.userDetails.payment_date
+         
+let yesterday = new Date("11-13-2019")
+            let st = new Date();
+            console.log(new Date(payment_date))
+           let diff =  Math.ceil(
+  (st - new Date(payment_date)) / 1000 / 60 / 60 / 24
+);
+console.log('days left: '+ diff)
+*/
+const config = {
+            headers: {'Authorization': 'Bearer '+this.skk}
+            }
+            let cus_code = this.userDetails.customer_code
+            let exclude_transactions = true
+         if(this.userDetails.paid_user != true){
+            this.limitVal = 1
+            console.log('base: '+this.userDetails.subscription)
+          }else {
+            axios.get('https://api.paystack.co/customer/'+cus_code, config)
+        .then(resp => { 
+            const trxData = resp.data.data//.subscriptions
+            if(trxData.subscriptions[0] != undefined){
+              this.limitVal = 65
+              //console.log(trxData.subscriptions[0])
+            }else{
+              this.limitVal = 3
+              console.log(trxData.subscriptions[0])
+            }
+            //console.log(trxData)
+             /*
+             if(trxData[0].status == 'active'){
+                this.limitVal = 65
+             }
+             else {
+               this.limitVal = 3
+             }
+             */
+        }).catch(err => {
+            console.log(err)   
+            })
+          }
+return
+    },
        isPageOwner: function(){
        if (this.$store.getters.isLoggedIn != true){
            return console.log('not logged in')
