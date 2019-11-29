@@ -79,6 +79,7 @@
                           style="border:3px dotted rgba(178, 223, 219, 0.3);background-color:rgba(178, 223, 219, 0.2);
                           border-radius:4px;max-width:854px;"
                           >
+                          <p class="overline mb-2"><v-icon small left>mdi-cursor-default-click-outline</v-icon> My links</p>
                          <!-- <v-progress-linear
                             :active=loadinglist
                             indeterminate
@@ -108,8 +109,8 @@
                           </a>
                           </v-card>
                   </div>
-
-        <v-layout row wrap pt-3 mt-3 class="layout-desktop mx-auto" style="max-width:854px;">
+<p class="overline mb-0 mt-6"><v-icon small left>mdi-shopping-outline</v-icon> My products</p>
+        <v-layout row wrap pt-2 class="layout-desktop mx-auto" style="max-width:854px;">
                            
                          
                            <v-flex xs6 sm6 md4 lg4 v-for="product in filterHiddenProduct.slice(0, limitVal)" :key="product.productID">

@@ -44,7 +44,7 @@
         </div>
          <p class="teal--text mb-5 px-7 caption">
                     Tap the image uploader to select a photo from your phone, enter the product name below
-                </p>
+          </p>
 <v-container class="white lighten-5 mb-0">
 
 <div id="prodform" v-if="!addlink">
@@ -106,6 +106,7 @@
             label="price"
             placeholder="base price"
             type="number"
+            prepend-inner-icon="mdi-currency-ngn"
             outlined
             color="teal lighten-3"
             :rules="[nurules.required]"
@@ -118,9 +119,37 @@
             label="discount"
             type="number"
             placeholder="discount price"
+            prepend-inner-icon="mdi-currency-ngn"
             outlined
             color="teal lighten-3"
           ></v-text-field>
+            </v-col>
+
+        </v-row>
+         <v-row>
+            <v-col>
+<v-text-field
+           class="teal--text form-field ma-0"
+            v-model="stock"
+            label="Available in Stock"
+            placeholder="Total Stock"
+            type="number"
+            prepend-inner-icon="mdi-counter"
+            outlined
+            color="teal lighten-3"
+            :disabled=disableStock
+            :rules="[nurules.required]"
+          ></v-text-field>
+            </v-col>
+            <v-col>
+                <v-switch 
+                v-model="madetoorder" 
+                label="custom-made ?" 
+                class="mt-5"
+                color="#23d2aa"
+                inset
+                >
+                </v-switch>
             </v-col>
 
         </v-row>
@@ -351,6 +380,9 @@ import axios from 'axios'
 export default {
     data(){
         return{
+          disableStock: false,
+          madetoorder: false,
+          stock:1,
           tab: 'tab-1',
           linkdesc:'',
           linkurl:'',
@@ -454,8 +486,9 @@ export default {
                 image: this.imgUrl,
                 owner : this.owner,
                 date_posted: this.date,
-                product_options: JSON.stringify(this.options)
-
+                product_options: JSON.stringify(this.options),
+                stock: this.stock,
+                madetoorder: this.madetoorder
                 },
                  status: "publish"
                 }).then((response) => {
@@ -548,7 +581,15 @@ this.$refs.linkForm.reset()
             return currentDateWithFormat
      
     }*/
-    } 
+    },
+     watch: {
+       madetoorder(val){
+         if(val == true){
+           this.stock = 0
+           this.disableStock = !this.disableStock
+         }
+       }
+     }
 }
 </script>
 <style>
