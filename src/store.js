@@ -163,7 +163,7 @@ export default new Vuex.Store({
     },
     set_products (state, products) {
         //state.allBooms = booms
-        //console.log(booms)
+        //console.log(products)
         const filtered = products.filter(function(item){
          // console.log(item.authorName)
           return item.authorName == state.user; 
@@ -209,6 +209,7 @@ export default new Vuex.Store({
         state.loading = false
     },
     dash_products (state, user_product) {
+      //console.log(user_product)
        
        const Discounted = user_product.filter(function(item){
          return item.show_discount === 1; 

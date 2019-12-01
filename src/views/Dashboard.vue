@@ -273,7 +273,7 @@ max-width="390"
             color="#23d2aa" 
             x-small
             id=""
-            @click="updateLink"
+            @click.stop="updateLink"
             :loading="loading"
             >
             <span class="caption">

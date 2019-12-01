@@ -109,13 +109,23 @@
       </v-card-text>
   </v-card>
     
-    </div>      
+    </div>   
+
+<v-btn text color="#23d2aa" 
+class="caption"
+@click="processJson()"
+>
+<v-icon small left>mdi-download</v-icon>
+Download
+<!--Buy-->
+</v-btn>
 
    <v-simple-table fixed-header height="300px" class="pa-4" elevation="3">
     <thead>
       <tr>
         <th class="text-left">Ref Id</th>
         <th class="text-left">Amount</th>
+         <th class="text-left">SKU</th>
          <th class="text-left">Product Purchased</th>
         <th class="text-left">Fullname</th>
         <th class="text-left">Phone</th>
@@ -124,14 +134,15 @@
         <th class="text-left">Message</th>
         <th class="text-left">Delivery</th>
         <th class="text-left">Date</th>
-         <th class="text-left">Product ID</th>
+        
          <th class="text-left">Others</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="item in filteredSales" :key="item.refid">
         <td class="caption">{{ item.refID }}</td>
-        <td class="caption">{{ item.acf.amount }}</td>
+        <td class="caption">{{ item.acf.amount | currency }}</td>
+        <td class="caption">{{ item.acf.product_id }}</td>
         <td class="caption">{{ item.acf.product}}</td>
         <td class="caption">{{ item.acf.fullname }}</td>
         <td class="caption">{{ item.acf.customer_phone}}</td>
@@ -140,7 +151,6 @@
         <td class="caption">{{ item.acf.message }}</td>
          <td class="caption">{{ item.acf.location }}</td>
          <td class="caption">{{ item.date }}</td>
-         <td class="caption">{{ item.acf.product_id }}</td>
           <td class="caption">{{ item.acf.others }}</td>
       </tr>
     </tbody>
@@ -161,6 +171,7 @@ const gradients = [
     ['#00c6ff', '#F0F', '#FF0'],
     ['#f72047', '#ffd200', '#1feaea'],
   ]
+
   
 export default {
     data () {
@@ -221,7 +232,7 @@ export default {
     },
     filteredSales: function(){
       return this.userSales.filter((mysale) => {
-        return mysale.acf.product.match(this.search) || mysale.acf.fullname.match(this.search) || mysale.acf.amount.match(this.search) || mysale.acf.ref_id.match(this.search)
+        return mysale.acf.product.match(this.search) || mysale.acf.fullname.match(this.search) || mysale.acf.amount.match(this.search) || mysale.acf.ref_id.match(this.search) || mysale.acf.product_id.match(this.search)
       })
     },
     totalValue: function(){
@@ -247,6 +258,100 @@ export default {
         //console.log('user: '+ this.name)
     },
 methods: {
+  processJson(){
+    const itemsFormatted = [];
+
+    const headers = {
+    id: 'id'.replace(/,/g, ''), // remove commas to avoid errors
+    title: "Title",
+    description: "Description",
+    availability: "Availability",
+    condition: "Condition",
+    price: "Price".replace(/,/g, ''),
+};
+
+// format the data
+
+this.userSales.forEach((item) => {
+    itemsFormatted.push({
+    id: item.id,
+    title: item.acf.transaction,
+    description: item.acf.product,
+    availability: item.acf.customer_phone,
+    condition: item.acf.fullname,
+    price: item.acf.amount.replace(/,/g, ''),
+        
+    });
+});
+console.log(itemsFormatted)
+const fileTitle = 'orders'; // or 'my-unique-title'
+
+return this.exportCSVFile(headers, itemsFormatted, fileTitle);
+  },
+  convertToCSV(objArray) {
+    var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+    var str = '';
+
+    for (var i = 0; i < array.length; i++) {
+        var line = '';
+        for (var index in array[i]) {
+            if (line != '') line += ','
+
+            line += array[i][index];
+        }
+
+        str += line + '\r\n';
+    }
+
+    return str;
+},
+  exportCSVFile(headers, items, fileTitle) {
+    if (headers) {
+        items.unshift(headers);
+    }
+
+    // Convert Object to JSON
+    var jsonObject = JSON.stringify(items);
+
+    var csv = this.convertToCSV(jsonObject);
+
+    var exportedFilenmae = fileTitle + '.csv' || 'export.csv';
+
+    var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    if (navigator.msSaveBlob) { // IE 10+
+        navigator.msSaveBlob(blob, exportedFilenmae);
+    } else {
+        var link = document.createElement("a");
+        if (link.download !== undefined) { // feature detection
+            // Browsers that support HTML5 download attribute
+            var url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", exportedFilenmae);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    }
+},
+  csvExport(arrData) {
+    console.log(arrData)
+      /*
+      let csvContent = "data:text/csv;charset=utf-8,";
+      csvContent += [
+        Object.keys(arrData[0]).join(";"),
+        ...arrData.map(item => Object.values(item).join(";"))
+      ]
+        .join("\n")
+        .replace(/(^\[)|(\]$)/gm, "");
+
+      const data = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", data);
+      link.setAttribute("download", "mulaa-"+this.user+"-sheet.csv");
+      link.click();
+      */
+    },
   fetchData(){
         this.$store.dispatch('loadUserSales', this.user)
         //console.log(this.user)

@@ -119,6 +119,7 @@
             <v-card flat hover class="text-xs-center ma-2" transition="slide-x-transition"
             style="border-radius:10px;"
             >
+            
               <router-link
               :to="{
                    name: 'product',
@@ -128,12 +129,27 @@
                    }
                }"
               >
+              
+            
               <v-responsive class="pt-0" style="border-radius:10px;">
+
                 <v-img
           :src="product.image"
           aspect-ratio="1.15"
           lazy-src="https://picsum.photos/id/1002/10/6"
          >
+              <div v-show="product.stock == 0" class="outofstock">
+              <v-chip
+              class="ma-2 point text-uppercase font-weight-black"
+              color="red"
+              label
+              small
+              text-color="white"
+              >
+              <v-icon small left>mdi-cart-off</v-icon>
+              sold out
+              </v-chip>
+              </div><!-- hidden / out of stock-->
             <template v-slot:placeholder>
             <v-row
             class="fill-height ma-0"
@@ -145,6 +161,7 @@
             </template>
          </v-img>
               </v-responsive>
+             
               </router-link>
                  
               <!--<v-card-text>
@@ -169,15 +186,21 @@
                }"
                 >
                   <v-icon small left>mdi-cart</v-icon>
-                  Buy
+                  ₦{{product.price}}
+                  <!--Buy-->
                 </v-btn>
                 
                
                
                 <v-spacer></v-spacer>
-                <div class="grey--text text--darken-3 caption"> ₦{{product.price}}</div>
+                <div class="grey--text text--darken-3 overline"> 
+                  <!--sku {{product.productID}}-->
+                  <v-chip outlined x-small>
+                  #{{product.productID}}
+                  </v-chip>
+                  </div>
               </v-card-actions>
-              
+             
               </v-card>
               
               </transition>
@@ -269,6 +292,7 @@ export default {
     }*/,
      data(){
         return{
+          teststock: 1,
           limitVal: 1,
           showWidget: false,
           inputs: [
@@ -410,7 +434,7 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
       }
       return
     },
-    userDetails(){
+    userDetails(val){
       //console.log('details updated')
       return this.userLimit()
       //return
@@ -447,7 +471,7 @@ const config = {
               //console.log(trxData.subscriptions[0])
             }else{
               this.limitVal = 3
-              console.log(trxData.subscriptions[0])
+              //console.log(trxData.subscriptions[0])
             }
             //console.log(trxData)
              /*
@@ -526,6 +550,27 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
 }
 </script>
 <style>
+.outofstock{
+  
+   filter: alpha(opacity=80);
+  /* Modern Browsers */
+  opacity: 0.8;
+}
+.outofstock::before {   /* Added */
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color:transparent;
+  transition: 0.5s;
+}
+.outofstock.point{
+  position: absolute;
+  z-index:9999;
+}
+
 [style*="--aspect-ratio"] > :first-child {
   width: 100%;
 }

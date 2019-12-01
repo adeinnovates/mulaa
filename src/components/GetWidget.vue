@@ -59,7 +59,7 @@
       href="#tab-2"
       class="font-weight-light"
       >
-        referral Link
+        Facebook Store Feed
         <v-icon
         class="teal--text"
         small
@@ -94,7 +94,7 @@
              class="px-5 mb-5 text teal--text" 
       color="#23d2aa" 
             id=""
-           @click.stop.prevent="copyEmbedCode"
+           @click.stop.prevent="copyEmbedCode('embed-code')"
           :loading="loading">
           <span class="caption px-5">Copy Code</span>
           </v-btn>
@@ -109,9 +109,51 @@
       >
         <v-card flat>
           <v-card-text>
-            <p>
+            <!--<p>
                 As a mulaa user, you can invite your friends to use mulaa and earn a commision and rewards for every friend that subscribes to use mulaa
+            </p>-->
+            <p>
+              Mulaa makes your products ready for Facebook product advertising or Instagram shop tag. Easily generate a Facebook product catalog feed here
+              <v-btn text color="#23d2aa" 
+class="caption"
+@click="processJson()"
+:loading="loading"
+>
+<v-icon small left>mdi-download</v-icon>
+Generate feed
+<!--Buy-->
+</v-btn>
             </p>
+            <div
+            v-show="showfeedurl"
+            class="pa-4"
+            >
+           
+             <v-textarea
+          filled
+          name="input-7-4"
+          :readonly=true
+          color="teal"
+          label="Copy the feed URL below"
+          id="feedcode"
+          class="small teal lighten-5"
+          :value="feedurl"
+        ></v-textarea>
+               <v-btn 
+             large ripple
+             class="px-5 mb-5 text teal--text" 
+      color="#23d2aa" 
+            id=""
+           @click.stop.prevent="copyEmbedCode('feedcode')"
+          :loading="loading">
+          <span class="caption px-5">Copy Feed</span>
+          </v-btn>
+<br>
+          <small>
+            keep in mind that Instagram will only allow you to tag real, physical products in your posts.
+          </small>
+          </div>
+
           </v-card-text>
         </v-card>
       </v-tab-item>
@@ -136,13 +178,15 @@
 </template>
 <script>
 import { mapState, mapGetters } from 'vuex'
-//import axios from 'axios'
+import { log } from 'util';
+import axios from 'axios'
 
 
 export default {
      props: ['thisUser'],
     data(){
         return{
+          showfeedurl: false,
             embedcode: `<div class="mulaa_embed" data-src="https://mulaa.me/u/`+ this.$store.state.user +`" style="height:400px;width:680px;margin: 10px auto;position:relative" data-responsive="true" data-img="https://shop.mulaa.co/shop_cover.png" data-css="background:url('//shop.mulaa.co/loading.gif') white center center no-repeat;border:0px;float:middle;" data-Id="mulaa-sdk" data-Class="mulaa-sdk" data-name="mulaa.co"></div>
         `+'<script src="https://shop.mulaa.co/async-iframe.js"',
           tab: 'tab-1',
@@ -174,11 +218,147 @@ export default {
         date: this.dateFunction(),
         owner: this.$store.state.userId,
         userURL: 'https://mulaa.me/u/'+this.$store.state.user,
+        shopfeed:'',
+        feedurl:''
         }
     },
     methods: {
-     copyEmbedCode () {
-          let testingCodeToCopy = document.querySelector('#embed-code')
+
+  processJson(){
+    const itemsFormatted = [];
+this.loading = true
+    const headers = {
+    id: 'id'.replace(/,/g, ''), // remove commas to avoid errors
+    title: "Title",
+    description: "Description",
+    availability: "Availability",
+    condition: "Condition",
+    price: "Price".replace(/,/g, ''),
+     image_link: "Image_link",
+    brand: "brand",
+    link: "Link"
+   
+};
+
+// format the data
+//console.log(this.currentUserProd)
+
+this.currentUserProd.forEach((item) => {
+    itemsFormatted.push({
+    id: item.productID,
+    title: item.title.replace(/,/g, ''),
+    description: item.description.replace(/,/g, ''),
+    availability: 'in stock',
+    condition: 'New',
+    price: 'NGN '+item.price.replace(/,/g, ''),
+    image_link: item.image,
+    brand: this.$store.state.user,
+    link: "https://"+this.$store.state.user+".mulaa.store/"+item.productID
+    
+    });
+});
+//console.log(itemsFormatted)
+const fileTitle = this.owner+'-mulaa-feed-'+this.$store.state.user // or 'my-unique-title'
+
+return this.exportCSVFile(headers, itemsFormatted, fileTitle);
+
+  },
+  convertToCSV(objArray) {
+    var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+    var str = '';
+
+    for (var i = 0; i < array.length; i++) {
+        var line = '';
+        for (var index in array[i]) {
+            if (line != '') line += ','
+
+            line += array[i][index];
+        }
+
+        str += line + '\r\n';
+    }
+
+    return str;
+},
+  exportCSVFile(headers, items, fileTitle) {
+    if (headers) {
+        items.unshift(headers);
+    }
+
+    // Convert Object to JSON
+    var jsonObject = JSON.stringify(items);
+
+    var csv = this.convertToCSV(jsonObject);
+
+    var exportedFilenmae = fileTitle + '.csv' || 'mulaa-export.csv';
+
+    var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    if (navigator.msSaveBlob) { // IE 10+
+        navigator.msSaveBlob(blob, exportedFilenmae);
+    } else {
+        var link = document.createElement("a");
+        if (link.download !== undefined) { // feature detection
+            // Browsers that support HTML5 download attribute
+            var url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", exportedFilenmae);
+            link.style.visibility = 'hidden';
+            /*document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            */
+           this.shopfeed = blob
+           this.onUpload(exportedFilenmae, blob) 
+           //this.loading = false
+        }
+    }
+},
+onUpload(thefilename,url) {
+    // upload file
+    const formData = new FormData()
+    formData.append('shopfeeds', url, thefilename)
+    //formData.append('username', this.user);
+//console.log(formData)
+/*
+for (var key of formData.entries()) {
+			console.log(key[0] + ', ' + key[1])
+}*/
+const headers2 = {
+  'Content-Type': 'multipart/form-data'
+}
+   
+       axios.post(`https://shop.mulaa.co/imgapi/feed.php`, formData, {
+    headers: headers2,
+    onUploadProgress: progressEvent => {
+       this.progressValue = Math.round(progressEvent.loaded / progressEvent.total *100)
+      console.log(Math.round(progressEvent.loaded / progressEvent.total *100) + '%')
+    }
+  })
+    .then(resp => {
+           //console.log(resp.data.url)
+           if(resp.data.status == "success"){
+             this.showfeedurl = true
+              this.feedurl = resp.data.url
+           }else{
+             this.feedurl = "error geenrating data, please email team@mulaa.co for support assistance"
+           }
+           
+           //console.log(resp.data)
+
+           this.loading = false
+            //resolve(resp)
+          })
+          .catch(err => {
+              console.log(err)
+              //this.overlay = false
+              //this.infoBar = true
+              //this.infoMsg = 'profile image failed, try again'
+            //reject(err)
+          })
+  },
+     copyEmbedCode (val) {
+       console.log(val)
+          let testingCodeToCopy = document.querySelector('#'+val)
           testingCodeToCopy.setAttribute('type', 'text')   
           testingCodeToCopy.select()
 
@@ -227,7 +407,27 @@ export default {
        return false
         //return this.imageFile.length < 1; // or === 0   
     },
-    } 
+     currentUserProd: {
+      get() {
+        //let theUserProducts = this.$store.state.userProducts;
+        let theUserProducts = this.$store.state.myproducts;
+        if (theUserProducts.length > 0){
+          return theUserProducts
+        }else{
+console.log('No products yet')
+return null
+        }
+      },
+      set(value) {
+        this.$store.commit('loadUserProducts', value);
+      }
+    }
+    },
+    watch: {
+       /*feedurl(){
+         
+       }*/
+    }
 }
 </script>
 <style>

@@ -138,7 +138,7 @@
             outlined
             color="teal lighten-3"
             :disabled=disableStock
-            :rules="[nurules.required]"
+            
           ></v-text-field>
             </v-col>
             <v-col>

@@ -91,6 +91,18 @@ class="grey lighten-2 mb-3"
 style="border-radius:10px;"
 @click="overlay = !overlay"
 >
+<div v-show="this.stock == 0" class="outofstock">
+              <v-chip
+              class="ma-2 point text-uppercase font-weight-black"
+              color="red"
+              label
+              small
+              text-color="white"
+              >
+              <v-icon small left>mdi-cart-off</v-icon>
+              sold out
+              </v-chip>
+              </div><!-- hidden / out of stock-->
 </v-img>
 
 <v-layout row wrap mx-auto>
@@ -98,6 +110,7 @@ style="border-radius:10px;"
         <v-btn text color="#23d2aa" 
         class="caption"
         @click="overlay = false"
+        v-show="this.stock > 0"
         >
         <v-icon small left>mdi-cart</v-icon>
         Buy Now
@@ -179,10 +192,18 @@ style="border-radius:10px;"
              color="#23d2aa" 
              class="ml-10"
              :disabled=disabled :loading="loading"
+             v-show="this.stock > 0"
              >
               <v-icon small left>mdi-cash</v-icon>
                 pay now
              </v-btn>
+             <v-chip outlined 
+             color='red'
+             class="ml-10"
+             v-show="this.stock == 0"
+             >
+                  Sold Out
+              </v-chip>
              <!--
                <v-btn text color="grey" 
                class="caption grey--text"
@@ -413,6 +434,7 @@ pageurl: 'https://shop.mulaa.co'+this.$route.path,
             description:'',
             discountPrice:'',
             productOptions: '',
+            stock:'',
             Options: [
            
             ],
@@ -599,6 +621,7 @@ const salesData = {
             this.price = this.theProduct.price
             this.discounted = this.theProduct.show_discount
             this.newAmount = this.amount
+            this.stock = this.theProduct.stock
             this.productOptions = this.theProduct.product_options
             console.log(this.theProduct.productOptions)
              //console.log('refreshed amount '+this.newAmount) 
@@ -616,6 +639,7 @@ const salesData = {
             this.discounted = this.theproducts.show_discount
             this.productOptions = this.theproducts.productOptions
             this.newAmount = this.amount
+            this.stock = this.theproducts.stock
             //console.log(this.newAmount)
             }
         },

@@ -460,6 +460,7 @@ export default {
     const formData = new FormData()
     formData.append('avatar', this.userProfile.profileImg, this.userProfile.profileImg.name)
     formData.append('username', this.user);
+    
 
 const headers2 = {
   'Content-Type': 'multipart/form-data'
