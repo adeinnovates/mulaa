@@ -155,7 +155,7 @@ chkUrlData(){
                 this.ErrorMsg = trxData.status
                 this.subOverlay = false
                 //console.log(this.skk)
-                console.log('trnx abandonned')
+                //console.log('trnx abandonned')
             }
            
             

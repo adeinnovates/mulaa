@@ -112,8 +112,20 @@
                           </v-card>
                   </div>
                 <div class="layout-desktop mx-auto" style="max-width:854px;">
-<p class="overline mb-0 mt-6"><v-icon small left>mdi-shopping-outline</v-icon> My products</p>
-</div>
+                <v-layout row wrap mx-auto>
+                <v-flex xs10 sm9 md9 lg9>
+                <p class="overline mb-0 mt-6"><v-icon small left>mdi-shopping-outline</v-icon> My products</p>
+                </v-flex>
+                <v-flex xs2 sm3 md3 lg3 text-right>
+               <!-- <v-btn
+                icon
+                >
+                <v-icon right>mdi-magnify</v-icon>
+                </v-btn> -->
+                </v-flex>
+                </v-layout>
+
+                </div>
         <v-layout row wrap pt-2 class="layout-desktop mx-auto" style="max-width:854px;">
                            
                          
@@ -465,7 +477,7 @@ const config = {
             let exclude_transactions = true
          if(this.userDetails.paid_user != true){
             this.limitVal = 1
-            console.log('base: '+this.userDetails.subscription)
+            //console.log('base: '+this.userDetails.subscription)
           }else {
             axios.get('https://api.paystack.co/customer/'+cus_code, config)
         .then(resp => { 
