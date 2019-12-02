@@ -109,7 +109,9 @@
                           </a>
                           </v-card>
                   </div>
+                <div class="layout-desktop mx-auto" style="max-width:854px;">
 <p class="overline mb-0 mt-6"><v-icon small left>mdi-shopping-outline</v-icon> My products</p>
+</div>
         <v-layout row wrap pt-2 class="layout-desktop mx-auto" style="max-width:854px;">
                            
                          
@@ -152,7 +154,7 @@
               </div><!-- hidden / out of stock-->
             <template v-slot:placeholder>
             <v-row
-            class="fill-height ma-0"
+            class="fill-height ma-0" 
             align="center"
             justify="center"
             >
