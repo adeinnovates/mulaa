@@ -453,6 +453,7 @@ pageurl: 'https://shop.mulaa.co'+this.$route.path,
             description:'',
             discountPrice:'',
             productOptions: '',
+            stock:'',
             Options: [
            
             ],
@@ -646,6 +647,7 @@ const salesData = {
             this.price = this.theProduct.price
             this.discounted = this.theProduct.show_discount
             this.newAmount = this.amount
+            this.stock = this.theProduct.stock
             this.productOptions = this.theProduct.product_options
             console.log(this.theProduct.productOptions)
              //console.log('refreshed amount '+this.newAmount) 
@@ -663,6 +665,7 @@ const salesData = {
             this.discounted = this.theproducts.show_discount
             this.productOptions = this.theproducts.productOptions
             this.newAmount = this.amount
+            this.stock = this.theproducts.stock
             //console.log(this.newAmount)
             }
         },
