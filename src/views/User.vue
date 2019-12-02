@@ -81,6 +81,7 @@
                           style="border:3px dotted rgba(178, 223, 219, 0.3);background-color:rgba(178, 223, 219, 0.2);
                           border-radius:4px;max-width:854px;"
                           >
+                          <p class="overline mb-2"><v-icon small left>mdi-cursor-default-click-outline</v-icon> My links</p>
                          <!-- <v-progress-linear
                             :active=loadinglist
                             indeterminate
@@ -110,11 +111,14 @@
                           </a>
                           </v-card>
                   </div>
-
+<div class="layout-desktop mx-auto" style="max-width:854px;">
+  <p class="overline mb-0 mt-6"><v-icon small left>mdi-shopping-outline</v-icon> My products</p>
+</div>
         <v-layout row wrap pt-3 mt-3 class="layout-desktop mx-auto" style="max-width:854px;">
                            
                          
-                           <v-flex xs6 sm6 md4 lg4 v-for="product in filterHiddenProduct" :key="product.productID">
+                           <v-flex xs6 sm6 md4 lg4 v-for="product in filterHiddenProduct.slice(0, limitVal)" :key="product.productID">
+           
            <transition name="slide-fade" mode="out-in">
             
             <v-card flat hover class="text-xs-center ma-2" transition="slide-x-transition"
@@ -154,7 +158,6 @@
                 </div>
                 <div class="grey--text text-truncate"> {{product.acf.description}}</div>
               </v-card-text>-->  <!--<Buy :theproducts="product">
-
                 </Buy>-->
                
               <v-card-actions>
@@ -233,6 +236,8 @@ import Buy from '@/components/BuyProduct'
 import Widget from '@/components/GetWidget'
 import Avatar from 'vue-avatar'
 
+import axios from 'axios'
+
 const storeName = window.location.host.split('.')[0];
 
 export default {
@@ -270,6 +275,7 @@ export default {
     }*/,
      data(){
         return{
+          limitVal: 1,
           nname: '',
           showWidget: false,
           inputs: [
@@ -289,7 +295,8 @@ export default {
             bizPhone: '',
             merchantName : '',
             instagram: 'https://instagram.com/',
-            pagePath: 'https://shop.mulaa.co'+ this.$route.path
+            pagePath: 'https://shop.mulaa.co'+ this.$route.path,
+            skk: process.env.VUE_APP_SECRET_KEY
         }
     },
     computed: {
@@ -332,6 +339,16 @@ export default {
         this.$store.commit('loading', value);
       }
     },
+    merchantData: {
+    get: function() {
+      //concat using template literal
+      //return `https://mulaa.me/u/${this.$route.params.name}`
+      return this.$store.state.userDetails;
+    },
+      set(value) {
+        this.$store.commit('userDetails', value);
+      }
+  },
    
     filteredProducts: function(){
 
@@ -411,6 +428,42 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
     }
   },
     methods: {
+      userLimit(){
+       
+const config = {
+            headers: {'Authorization': 'Bearer '+this.skk}
+            }
+            let cus_code = this.userDetails.customer_code
+            let exclude_transactions = true
+         if(this.userDetails.paid_user != true){
+            this.limitVal = 1
+            console.log('base: '+this.userDetails.subscription)
+          }else {
+            axios.get('https://api.paystack.co/customer/'+cus_code, config)
+        .then(resp => { 
+            const trxData = resp.data.data//.subscriptions
+            if(trxData.subscriptions[0] != undefined){
+              this.limitVal = 65
+              //console.log(trxData.subscriptions[0])
+            }else{
+              this.limitVal = 3
+              console.log(trxData.subscriptions[0])
+            }
+            //console.log(trxData)
+             /*
+             if(trxData[0].status == 'active'){
+                this.limitVal = 65
+             }
+             else {
+               this.limitVal = 3
+             }
+             */
+        }).catch(err => {
+            console.log(err)   
+            })
+          }
+return
+    },
        isPageOwner: function(){
        if (this.$store.getters.isLoggedIn != true){
            //return console.log('not logged in')

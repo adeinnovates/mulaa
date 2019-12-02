@@ -88,11 +88,10 @@ export default {
          },
 chkUrlData(){
     if(this.$route.query.trxref != undefined){
-        console.log(this.$route.query.trxref)
+        //console.log(this.$route.query.trxref)
         this.subOverlay = true
         let tranx = this.$route.query.trxref
         this.infoMsg = this.$route.query.trxref
-
         //let skey = 'sk_live_01952d79b3b14815af91d560256959358299e123'
         const config = {
         headers: {'Authorization': 'Bearer '+this.skk}
@@ -102,7 +101,6 @@ chkUrlData(){
             const trxData = resp.data.data
            // const socialData = resp.data.socialCount
             //console.log(resp.data.data)
-
             if(trxData.status == 'success'){
                 this.paySuccess = true
             let amount = trxData.plan_object.amount/100
@@ -112,16 +110,13 @@ chkUrlData(){
             let paidDate = trxData.paid_at
             let cust_email = trxData.customer.email
             let authorization = trxData.authorization.authorization_code
-
             //console.log('data: '+amount+' / '+plan+' / '+cust_email+' / '+this.user)
             let ts = new Date();
             let nts = ts.toDateString()
-
 //console.log(ts.toDateString());
-
                     this.$http.post('/subscription',
                     {
-                    title: this.user+'_'+trxData.reference,
+                    title: this.user, //+'_'+trxData.reference,
                     fields : {
                         date_created: nts,
                     trans_ref: resp.data.data.reference,
@@ -134,7 +129,6 @@ chkUrlData(){
                     status: "publish"
                     }
                     ).then(response => {
-
                         return this.$http.post('/users/'+this.userId, {
                 title: '',
                 content: '',
@@ -150,11 +144,9 @@ chkUrlData(){
             }).then(response2 => {
                     this.subOverlay = false
             })
-
                     /*console.log('sub post: '+JSON.stringify(response.data))
                     this.subOverlay = false
                     */
-
                     })
                     
            // console.log('this trnx was successful')
@@ -174,7 +166,6 @@ chkUrlData(){
             //reject(err)
           })
             
-
     //return this.confirmPayment()
     }else{
         console.log('empty string')
