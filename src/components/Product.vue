@@ -587,7 +587,7 @@ this.title2 = productName
 //axios.post(`//dev.mulaa.africa/admin/wp-json/jwt-auth/v1/token`, {
   axios.post(`https://shop.mulaa.co/api/wp-json/jwt-auth/v1/token`, {
     username: 'system',
-    password: 'letmein2020()'
+    password: 'letmein2020()' 
   }
 ).then(resp => {
            //console.log(resp.data.token)
