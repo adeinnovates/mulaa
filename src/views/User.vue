@@ -549,6 +549,26 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
 }
 </script>
 <style>
+.outofstock{
+  
+   filter: alpha(opacity=80);
+  /* Modern Browsers */
+  opacity: 0.8;
+}
+.outofstock::before {   /* Added */
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color:transparent;
+  transition: 0.5s;
+}
+.outofstock.point{
+  position: absolute;
+  z-index:9999;
+}
 [style*="--aspect-ratio"] > :first-child {
   width: 100%;
 }
