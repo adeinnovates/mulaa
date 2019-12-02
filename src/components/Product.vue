@@ -186,16 +186,24 @@ style="border-radius:10px;"
     <p v-else class="headline font-weight-light mb-0 teal--text pl-3">
        {{newAmount | currency}}
         </p>
-             <v-btn
+              <v-btn
              text
              @click="sheet = true"
              color="#23d2aa" 
              class="ml-10"
              :disabled=disabled :loading="loading"
+             v-show="this.stock > 0"
              >
               <v-icon small left>mdi-cash</v-icon>
                 pay now
              </v-btn>
+             <v-chip outlined 
+             color='red'
+             class="ml-10"
+             v-show="this.stock == 0"
+             >
+                  Sold Out
+              </v-chip>
              <!--
                <v-btn text color="grey" 
                class="caption grey--text"
