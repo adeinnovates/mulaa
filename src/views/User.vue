@@ -448,6 +448,11 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
     },
     getMerchantInfo(){
       return
+    },
+    userDetails(val){
+      //console.log('details updated')
+      return this.userLimit()
+      //return
     }
   },
     methods: {
