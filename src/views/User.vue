@@ -100,7 +100,7 @@
                           <v-icon small left class="teal--text lighten-1">
               mdi-vector-link
               </v-icon>
-                          <span class="title text-center" style="width:80%;">
+                          <span class=" text-center" style="width:80%;">
                             {{link.link_title}}
                             </span>
                           <v-spacer></v-spacer>
@@ -129,6 +129,7 @@
             v-model="search" :clearable=true
             color= teal
             placeholder="Search Product Code"
+            v-show=showSearch
           ></v-text-field>
                 </p>
                 </v-flex>
@@ -201,7 +202,7 @@
               <v-card-actions>
                   
                <v-btn text color="#23d2aa" 
-               class="caption"
+               class="caption pl-0"
                :to="{
                    name: 'product',
                    params: {
@@ -334,6 +335,7 @@ export default {
             }
         ],
             search:'',
+            showSearch: false,
             overlay:false,
             userdata: this.$route.params.name,
             dialog: false,
@@ -504,10 +506,16 @@ const config = {
             if(trxData.subscriptions[0] != undefined){
               this.contentloaded = false
               this.limitVal = 65
+              this.showSearch = true
               //console.log(trxData.subscriptions[0])
             }else{
               this.contentloaded = false
               this.limitVal = 3
+              console.log(this.name)
+              if(this.name = 'foodfashionplug'){
+                this.limitVal = 65
+                //this.showSearch = true
+              }
               //console.log(trxData.subscriptions[0])
             }
             //console.log(trxData)
