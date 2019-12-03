@@ -483,7 +483,7 @@ const config = {
             }
             let cus_code = this.userDetails.customer_code
             let exclude_transactions = true
-         if(this.userDetails.paid_user != true){
+         if(this.userDetails.paid_user != true){ 
             this.limitVal = 1
             this.contentloaded = false
             //console.log('base: '+this.userDetails.subscription)
