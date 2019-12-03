@@ -27,7 +27,7 @@
     "vue-ravepayment": "^2.0.2",
     "vue-router": "^3.0.3",
     "vue-social-sharing": "^2.4.6",
-    "vuetify": "^2.0.0",
+    "vuetify": "^2.1.12",
     "vuex": "^3.0.1",
     "vuex-persist": "^2.0.1"
   },
