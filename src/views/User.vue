@@ -113,10 +113,10 @@
                   </div>
                 <div class="layout-desktop mx-auto" style="max-width:854px;">
                 <v-layout row wrap mx-auto>
-                <v-flex xs10 sm9 md9 lg9>
+                <v-flex xs7 sm7 md8 lg9>
                 <p class="overline mb-0 mt-6"><v-icon small left>mdi-shopping-outline</v-icon> My products</p>
                 </v-flex>
-                <v-flex xs2 sm3 md3 lg3 text-right>
+                <v-flex xs5 sm5 md4 lg3 text-right>
                <!-- <v-btn
                 icon
                 >
@@ -128,7 +128,7 @@
             class=""
             v-model="search" :clearable=true
             color= teal
-            placeholder="Search Product Code"
+            placeholder="Product No."
             v-show="showSearch"
           ></v-text-field>
                 </v-flex>
