@@ -122,6 +122,15 @@
                 >
                 <v-icon right>mdi-magnify</v-icon>
                 </v-btn> -->
+                <v-text-field
+            
+            append-icon="mdi-magnify"
+            class=""
+            v-model="search" :clearable=true
+            color= teal
+            placeholder="Search Product Code"
+            v-show="showSearch"
+          ></v-text-field>
                 </v-flex>
                 </v-layout>
 
@@ -327,6 +336,7 @@ export default {
             }
         ],
             search:'',
+            showSearch: false,
             overlay:false,
             userdata: this.$route.params.name,
             dialog: false,
@@ -398,7 +408,8 @@ export default {
       if(this.userProducts != ''){
         //console.log('reddd')
       return this.userProducts.filter((userproduct) => {
-      return userproduct.title.match(this.search) || userproduct.price.match(this.search)
+      //return userproduct.title.match(this.search) || userproduct.price.match(this.search)
+      return userproduct.productID.toString().match(this.search)
       })
       }else{
         //console.log('No products yet')
@@ -494,10 +505,16 @@ const config = {
             if(trxData.subscriptions[0] != undefined){
               this.contentloaded = false
               this.limitVal = 65
+              this.showSearch = true
               //console.log(trxData.subscriptions[0])
             }else{
               this.contentloaded = false
               this.limitVal = 3
+              console.log(this.name)
+              if(this.name = 'foodfashionplug'){
+                this.limitVal = 65
+                this.showSearch = true
+              }
               //console.log(trxData.subscriptions[0])
             }
             //console.log(trxData)
