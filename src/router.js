@@ -36,7 +36,7 @@ export default new Router({
     },
     {
       path: '/products',
-      name: '',
+      name: 'products',
       component: Products,
       meta: { 
         hideNavigation: false,
@@ -45,7 +45,7 @@ export default new Router({
     },
     {
       path: '/sales',
-      name: '',
+      name: 'sales',
       component: Sales,
       meta: { 
         hideNavigation: false,
