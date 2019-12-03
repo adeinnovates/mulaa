@@ -110,8 +110,31 @@
                           </v-card>
                   </div>
                 <div class="layout-desktop mx-auto" style="max-width:854px;">
-<p class="overline mb-0 mt-6"><v-icon small left>mdi-shopping-outline</v-icon> My products</p>
-</div>
+                <v-layout row wrap mx-auto>
+                <v-flex xs7 sm7 md8 lg9>
+                <p class="overline mb-0 mt-6"><v-icon small left>mdi-shopping-outline</v-icon> My products</p>
+                </v-flex>
+                <v-flex xs5 sm5 md4 lg3 text-right>
+                  <p class="text-uppercase caption mb-0 mt-0" style="font-size:10px !important">
+                    <!--<v-btn
+                    small
+                    icon
+                    >
+                    <v-icon right>mdi-magnify</v-icon>
+                    </v-btn>-->
+                    <v-text-field
+            
+            append-icon="mdi-magnify"
+            class=""
+            v-model="search" :clearable=true
+            color= teal
+            placeholder="Search Product Code"
+          ></v-text-field>
+                </p>
+                </v-flex>
+                </v-layout>
+
+                </div>
         <v-layout row wrap pt-2 class="layout-desktop mx-auto" style="max-width:854px;">
                            
                          
@@ -381,7 +404,8 @@ export default {
       if(this.userProducts != ''){
         //console.log('reddd')
       return this.userProducts.filter((userproduct) => {
-      return userproduct.title.match(this.search) || userproduct.price.match(this.search)
+      //return userproduct.title.match(this.search) || userproduct.price.match(this.search)
+      return userproduct.productID.toString().match(this.search)
       })
       }else{
         console.log('No products yet')
