@@ -309,7 +309,7 @@ Unlimited content links,
 x6 <strong>(Six months subscription = NGN6,000)</strong>
       </div>
         </v-sheet>
-
+<!--
         <v-divider inset></v-divider>
         <v-sheet 
         class="pa-5"
@@ -329,6 +329,7 @@ x6 <strong>(Six months subscription = NGN6,000)</strong>
 x6 <strong>(Six months subscription = NGN6,000)</strong>
       </div>
         </v-sheet>
+        -->
         </div>
     </v-card-text>
 
