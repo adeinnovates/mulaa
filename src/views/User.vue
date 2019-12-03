@@ -209,6 +209,13 @@
               
         </v-flex>
        
+       <v-flex xs6 sm6 md4 lg4 v-for="product in filterHiddenProduct" :key="product.productID">
+        <v-skeleton-loader
+      class="mx-auto"
+      max-width="300"
+      type="card"
+    ></v-skeleton-loader>
+        </v-flex>
                        </v-layout>
                         </div>
         </v-container>

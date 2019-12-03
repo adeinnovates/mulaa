@@ -1,5 +1,6 @@
 <template>
     <div class="single-product page">
+     
         <v-card
             max-width="454"
             class="mx-auto"
@@ -392,10 +393,12 @@ class="my-0 d-inline green lighten-5 font-weight-light ml-n2"
 <script>
 import { mapState, mapGetters } from 'vuex'
 import axios from 'axios'
-//import Rave from 'vue-ravepayment';
+
 //import paystack from 'vue-paystack';
 import Callback from '@/components/Callback'
 const mulaa_key = 'pk_live_d2ea70959fc4383baf5844b947709e17db19b1d0'
+
+
 export default {
     props: ['name','theproducts'],
      components: {
@@ -405,7 +408,6 @@ export default {
     },
  data(){
         return {
-          //raveKey: "FLWPUBK-xxxxxxxxxxxxxxxxxx-X",
           overlay:true,
           checkOption: false,
           optionColor: 'green',
@@ -629,6 +631,7 @@ const salesData = {
                 //console.log('valid click')
                 //console.log(this.theproducts)
                 this.title = this.theproducts.title
+                this.jsonld.name = this.theproducts.title
             this.hidethis = this.theproducts.hidden
             this.datePosted = this.theproducts.date_posted
             this.delivery = this.theproducts.delivery_locations
