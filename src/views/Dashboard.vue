@@ -216,7 +216,7 @@ color="error"
          class="pa-0"
         >
                           <v-btn text icon
-                          @click="editItem(link)"
+                          @click.stop="editItem(link)"
                           >
                           <v-icon right small
                           >
@@ -224,7 +224,7 @@ color="error"
                           </v-icon>
                           </v-btn>
                           <v-btn text icon 
-                          @click="deleteItem(link)"
+                          @click.stop="deleteItem(link)"
                           >
                           <v-icon small right
 
@@ -238,7 +238,7 @@ color="error"
 
 
 <v-dialog
-v-model="editLink" overlay-color="teal"  class="extra-round extra" transition="slide-x-reverse-transition"
+v-model="editLink" :retain-focus="false" overlay-color="teal"  class="extra-round extra" transition="slide-x-reverse-transition"
 max-width="390"
 
 >

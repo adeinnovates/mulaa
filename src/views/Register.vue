@@ -69,6 +69,7 @@
               prepend-inner-icon="mdi-account-outline"
               :append-icon="usertip ? 'mdi-alert-circle-check' : 'mdi-alert-circle'"
               @click:append="usertip = !usertip"
+              
 
             ></v-text-field>
  </template>
