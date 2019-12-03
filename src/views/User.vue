@@ -129,7 +129,7 @@
             v-model="search" :clearable=true
             color= teal
             placeholder="Search Product Code"
-            v-show=showSearch
+            v-show="showSearch"
           ></v-text-field>
                 </p>
                 </v-flex>
@@ -514,7 +514,7 @@ const config = {
               console.log(this.name)
               if(this.name = 'foodfashionplug'){
                 this.limitVal = 65
-                //this.showSearch = true
+                this.showSearch = true
               }
               //console.log(trxData.subscriptions[0])
             }
