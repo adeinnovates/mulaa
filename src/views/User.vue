@@ -223,6 +223,13 @@
               
         </v-flex>
        
+       <v-flex xs6 sm6 md4 lg4 v-for="(product, index) in filterHiddenProduct" :key="`product-${index}`" v-show="contentloaded">
+        <v-skeleton-loader
+      class="mx-auto"
+      max-width="300"
+      type="card"
+    ></v-skeleton-loader>
+        </v-flex>
                        </v-layout>
                         </div>
         </v-container>
@@ -310,6 +317,7 @@ export default {
     }*/,
      data(){
         return{
+          contentloaded:true,
           limitVal: 1,
           nname: '',
           showWidget: false,
@@ -477,17 +485,20 @@ const config = {
             let exclude_transactions = true
          if(this.userDetails.paid_user != true){
             this.limitVal = 1
+            this.contentloaded = false
             //console.log('base: '+this.userDetails.subscription)
           }else {
             axios.get('https://api.paystack.co/customer/'+cus_code, config)
         .then(resp => { 
             const trxData = resp.data.data//.subscriptions
             if(trxData.subscriptions[0] != undefined){
+              this.contentloaded = false
               this.limitVal = 65
               //console.log(trxData.subscriptions[0])
             }else{
+              this.contentloaded = false
               this.limitVal = 3
-              console.log(trxData.subscriptions[0])
+              //console.log(trxData.subscriptions[0])
             }
             //console.log(trxData)
              /*
@@ -499,6 +510,7 @@ const config = {
              }
              */
         }).catch(err => {
+          this.contentloaded = false
             console.log(err)   
             })
           }
