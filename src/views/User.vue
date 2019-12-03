@@ -513,7 +513,7 @@ const config = {
               console.log(this.name)
               if(this.name = 'foodfashionplug'){
                 this.limitVal = 65
-                this.showSearch = true
+                this.showSearch = true 
               }
               //console.log(trxData.subscriptions[0])
             }
