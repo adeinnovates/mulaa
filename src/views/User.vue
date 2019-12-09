@@ -511,7 +511,8 @@ const config = {
               this.contentloaded = false
               this.limitVal = 3
               console.log(this.name)
-              if(this.name = 'foodfashionplug'){
+              //if(this.name = 'foodfashionplug'){
+                if(this.userDetails.trial == true){
                 this.limitVal = 65
                 this.showSearch = true 
               }
