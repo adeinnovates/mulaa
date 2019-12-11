@@ -497,6 +497,12 @@ const config = {
          if(this.userDetails.paid_user != true){ 
             this.limitVal = 1
             this.contentloaded = false
+
+             if(this.userDetails.trial == true){
+                this.limitVal = 65
+                this.showSearch = true 
+                return
+              }
             //console.log('base: '+this.userDetails.subscription)
           }else {
             axios.get('https://api.paystack.co/customer/'+cus_code, config)
