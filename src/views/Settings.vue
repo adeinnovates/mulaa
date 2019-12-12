@@ -231,6 +231,51 @@ style="border-top-left-radius:15px;border-top-right-radius:15px;"
       <v-progress-circular indeterminate size="84"></v-progress-circular>
     </v-overlay>
 
+    <div>
+
+ <v-sheet 
+        class="pa-5"
+        color="teal lighten-5"
+        style="border:2px dotted rgba(178, 223, 219, 0.3) !important;border-radius:0px;"
+        >
+        <span class="teal--text subtitle-1 text--darken-1">
+          (Discounted) Annual Mogul: N52,500 <v-btn small color="success"
+          :disabled=false
+          @click="doSubscription('PLN_eoildbokktq5sle')"
+          >Subscribe</v-btn>
+        </span>
+      <div class="grey--text text--darken-2 mt-2">
+        Unlimited products,
+Unlimited content links,
+0% transaction charge,
+12 months subscription (3 months free)
+      </div>
+       
+        </v-sheet>
+        <v-divider inset></v-divider>
+        <v-sheet 
+        class="pa-5"
+        color="teal lighten-5"
+        style="border:2px dotted rgba(178, 223, 219, 0.3) !important;border-radius:0px;"
+        >
+        <span class="teal--text subtitle-1 text--darken-1">
+          (Discounted) Quarterly Sprinter: N13,500 <v-btn small color="success"
+          :disabled=false
+          @click="doSubscription('PLN_c7p40gbev53tons')"
+          >Subscribe</v-btn>
+        </span>
+      <div class="text--darken-2 grey--text mt-2">
+        Unlimited products,
+Unlimited content links,
+0% transaction charge,
+3 months subscription (pay Quarterly)
+      </div>
+       
+        </v-sheet>
+
+    </div>
+
+
           <v-sheet 
         class="pa-5"
         color="teal lighten-5"
@@ -361,6 +406,7 @@ export default {
         embedcode: `<div class="mulaa_embed" data-src="https://mulaa.me/u/`+ this.$store.state.user +`" style="height:400px;width:680px;margin: 10px auto" data-responsive="true" data-img="https://shop.mulaa.co/shop_cover.png" data-css="background:url('//shop.mulaa.co/loading.gif') white center center no-repeat;border:0px;float:middle;" data-Id="mulaa-sdk" data-Class="mulaa-sdk" data-name="mulaa.co"></div>
         `+'<script src="https://shop.mulaa.co/async-iframe.js"',
         paid: false,
+        referred:false,
         subName: '',
         skk: process.env.VUE_APP_SECRET_KEY,
         subOverlay:false,
@@ -528,6 +574,9 @@ fetchUserData(){
            //this.paid = true
            //console.log(this.userDetails.customer_code)
            this.confirmSub(this.userDetails.customer_code)
+         }
+         if(this.userDetails.referal !=''){
+           this.referred = true
          }
          this.subName = this.userDetails.subscription
        }

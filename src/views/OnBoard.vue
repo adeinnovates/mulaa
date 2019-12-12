@@ -775,7 +775,7 @@ const headers2 = {
                 customer_id: cust_id,
                 first_name: this.fname,
                 last_name: this.lname,
-                referral: this.referral,
+                referal: this.referral,
                 legalid:this.legalID,
                 subaccount: this.subaccount,
                 subaccount_code: this.subaccount_code,

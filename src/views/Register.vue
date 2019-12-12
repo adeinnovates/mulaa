@@ -354,9 +354,36 @@ return this.$router.push({name: 'dashboard', params: { popWelcome: true }})
               .dispatch("login", user)
               .then(
                 () => {
-                  this.loading = false
+                  //this.loading = false
                   axios.get('https://mulaa.me/u/api/?key=P1fjdH02F3y2&url='+priUrl+'&custom='+userUnik)
-                  this.confirmation = true
+                  //this.confirmation = true
+                  const useridVal = this.$store.state.userId
+                  //console.log(localStorage.getItem('token'))
+//console.log(useridVal)
+//console.log('referred by :'+this.referralName)
+
+const options = {
+            headers: {'Authorization': 'Bearer '+localStorage.getItem('token')}
+            }
+           
+           if(this.referralName !=''){
+//this.$http.put
+                axios.post('https://shop.mulaa.co/api/wp-json/wp/v2/users/'+useridVal, {
+                title: '',
+                content: '',
+                fields : {
+                referal: this.referralName,
+                },
+                 status: "publish"
+            }, options)
+            .then(resp => {
+ this.loading = false
+this.confirmation = true
+            })
+           }else{
+this.loading = false
+this.confirmation = true
+           }
                   //return this.$router.push({name: 'dashboard', params: { popWelcome: true }})//{name: 'dashboard', params: { sheet: true }}
                   }
                 ) //this.$router.push("/")
@@ -390,6 +417,7 @@ return this.$router.push({name: 'dashboard', params: { popWelcome: true }})
                   "author"
                 ]*/
             },
+            referralName: this.$route.query.ref || '',
             theme: 'dark-theme',
             valid: false,
         show1: false,
