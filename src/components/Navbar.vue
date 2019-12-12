@@ -26,6 +26,9 @@
       <v-icon>mdi-magnify</v-icon>
     </v-btn> 
     -->
+    <div class="white--text mr-4">
+      Updates <span class="announcekit-widget ml-1"></span>
+      </div> 
     <v-btn
         text
         rounded ripple
@@ -45,7 +48,7 @@
           <v-list-item-title class="title teal--text text--lighten-3">
              Mulaa
           </v-list-item-title>
-          <v-list-item-subtitle class="caption teal--text text--lighten-3">
+          <v-list-item-subtitle class="caption teal--text text--lighten-2">
             one simple link to better sales
           </v-list-item-subtitle>
         </v-list-item-content>
@@ -69,7 +72,7 @@
               <v-list-item-title class="title teal--text text--lighten-3">
                 {{user}}
                 </v-list-item-title>
-              <v-list-item-subtitle class="caption white--text text--lighten-3">
+              <v-list-item-subtitle class="caption teal--text text--lighten-3">
                 {{userEmail}}
                 <v-icon class="teal--text text--lighten-3">
                    mdi-user
@@ -100,10 +103,10 @@
 <template v-slot:append>
         <div class="pa-4 text-higlight">
           <p class="caption">
-            © Mulaa Store, <br>MVPSkool. 2019.
+            © Mulaa.co, <br>MVPSkool. 2019.
           </p>
           <span class="caption">
-            A mobile-first ecommerce-enablement for creators, thought leaders and solo-preneurs - enabling you collect payments and leads with one link - no middleman or website needed 😎👌🏼.
+            A mobile-first sales-enablement for creators, thought leaders and solopreneurs - enabling you monetise your audience and build your leads list with one link - no middleman or website needed 😎👌🏼.
           </span>
         </div>
       </template>
@@ -129,7 +132,7 @@ export default {
                 {icon: 'mdi-cart', text: 'Products', route:'/products'},
                 {icon: 'mdi-store', text: 'Sales', route:'/sales'},
                 {icon: 'mdi-settings', text: 'Settings', route:'/settings'},
-                {icon: 'mdi-account', text: 'Account Activation', route:'/onboard'}
+                //{icon: 'mdi-account', text: 'Account Activation', route:'/onboard'}
             ],
             notice: false
         }

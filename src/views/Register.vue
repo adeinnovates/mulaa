@@ -5,12 +5,9 @@
     <v-layout row wrap align-center="align-center" justify-center="justify-center" pa-5>
       <v-flex xs12 sm4 id="sign-in-text-wrapper" text-xs-center px-5>
         <div class="headline font-weight-light text-center my-5" v-if="!show2">
-          Sign Up
-             
-            </div>
+          Sign Up</div>
             <div class="headline font-weight-light text-center my-2" v-else>
-             Welcome
-             
+             Welcome Back
             </div>
             <div>
                  <p v-if=" !show2 " class="body-2 teal--text text--lighten-3 text-capitalize text-center">Already have an account? <span @click="show2 = true" style="cursor: pointer;text-decoration:underline">Login</span></p>
@@ -27,29 +24,57 @@
     light="light"
     :loading="loading"
   >
-    <v-card-title class="caption text-capitalize text-center d-block py-5" v-if="!show2">
-        The last link between you and sales.
+    <v-card-title class="caption text-center d-block py-5" v-if="!show2">
+     <v-row
+      justify="space-around"
+    >
+    <v-col
+        class="text-center"
+        cols="12"
+      >
+ <v-icon class="teal--text">mdi-account-key-outline</v-icon>
+    </v-col>
+     </v-row>
+        <p class="text-center title teal--text font-weight-light">
+          
+          Your one link, multiple products, sell better, starts below</p>
     </v-card-title>
-    <v-card-title class="body-2 text-capitalize text-center d-block py-5" v-else>Sign in</v-card-title>
+    <v-card-title class="body-2 text-capitalize text-center d-block py-5" v-else>
+      Sign in <br>
+       <p class="text-center caption teal--text font-weight-light">
+      Enable more sales in less time
+</p>
+    </v-card-title>
     <v-card-text>
       <v-layout column align-center justify-center pa-0>
       <v-form 
       ref="form"
       v-model="valid"
       >
-<v-flex xs12 class="form-wrapper" v-show="!show2">
+<v-flex xs12 class="form-wrapper" v-show="!show2"><!-- :rules="nameRules" [nurules.required, nurules.min]-->
+
+<v-tooltip v-model="usertip" top>
+            <template v-slot:activator="{ on }">
             <v-text-field
               filled
               full-width
               single-line
              v-model="userCred.username"
-              label="Name"
+              label="Username"
               :rules="nameRules"
-              hint="a-z no spaces allowed"
+              hint="This will be your store link (USERNAME.mulaa.store) a-z no spaces allowed"
+            persistent-hint
               background-color="#f4f8f7"
-              class="teal--text form-field"
-              prepend-inner-icon="mdi-account-outline" mb-0
+              class="teal--text form-field mb-5"
+              prepend-inner-icon="mdi-account-outline"
+              :append-icon="usertip ? 'mdi-alert-circle-check' : 'mdi-alert-circle'"
+              @click:append="usertip = !usertip"
+
             ></v-text-field>
+ </template>
+            <span>choose preferred username, only letters no space</span>
+          </v-tooltip>
+
             <v-text-field
               filled
               full-width
@@ -85,7 +110,7 @@
               full-width
               single-line
              v-model="user.username"
-              label="Name"
+              label="username"
               background-color="#f4f8f7"
               class="teal--text form-field"
               prepend-inner-icon="mdi-account-outline" mb-0
@@ -103,7 +128,7 @@
               prepend-inner-icon="mdi-lock-outline"
               @click:append="show1 = !show1"
             ></v-text-field>
-           
+        
           </v-flex>
 
         </v-form>
@@ -112,7 +137,7 @@
     <v-card-actions class="pa-2 align-center">
       <v-btn 
       large ripple
-       class="px-5 mb-5 text teal--text" 
+       class="ml-10 px-5 mb-5 text teal--text" 
       color="#23d2aa" 
       @click="register(userCred)"
       :loading="loading" v-show="!show2">
@@ -126,8 +151,100 @@
             id="sign-in"
             @click="login(user)"
           :loading="loading" v-show="show2"><span class="caption px-5">Login</span></v-btn>
+
     </v-card-actions>
+
+<v-card-actions v-show="!show2">
+<p
+class="caption d-block"
+style="font-size: 0.875rem;
+line-height: 1.375rem;
+letter-spacing: 0.0071428571em;
+color: rgba(0, 0, 0, 0.54);
+"
+>
+By using mulaa.co, you agree to our  <a href="https://mulaa.co/go/terms-of-service" target="_blank"><span style="cursor: pointer;text-decoration:underline">terms</span></a> and you're not selling something on our prohibited list.
+</p>
+</v-card-actions>
+
+    <v-card-actions v-show="show2">
+ <p
+ style="font-size: 0.875rem;
+    line-height: 1.375rem;
+    letter-spacing: 0.0071428571em;
+    color: rgba(0, 0, 0, 0.54);
+    "
+ >
+            
+              Forgot password? <a href="https://shop.mulaa.co/api/forgot-password/" target="_blank"><span style="cursor: pointer;text-decoration:underline">Reset password</span></a></p>
+    </v-card-actions>
+
   </v-card>
+
+
+
+<v-overlay 
+:value="confirmation"
+:opacity="0.9"
+>
+<v-layout row wrap mx-auto>
+  <v-flex xs10 sm9 md9 lg9>
+<div class="headline font-weight-light"></div>
+  </v-flex>
+ <v-flex xs2 sm3 md3 lg3 text-right>
+    <v-btn
+icon
+@click="confirmation = false"
+>
+<v-icon right>mdi-close</v-icon>
+</v-btn>
+  </v-flex>
+</v-layout>
+
+<v-layout row wrap mx-auto>
+  <v-flex>
+<v-card
+    class="mx-auto"
+    max-width="344"
+    outlined
+    color="#23d2aa"
+  >
+  <v-card-text class="pa-10 deep-purple--text text--darken-4">
+  <h2 class="title mb-3">
+    Thank You for Signing Up! <br>
+
+Check the confirmation email at {{this.userCred.email}}
+  </h2>
+  <p>
+    <strong> Note:</strong> If you do not receive the email in few minutes:
+  </p>
+  <ul>
+    <li>
+      check spam folder (and move email to inbox)
+    </li>
+    <li>
+      verify if you typed your email correctly
+    </li>
+    <li>
+      if you can't resolve the issue, please contact team@mulaa.co
+    </li>
+  </ul>
+
+  <div class="text-cente">
+<v-btn class="caption my-5" x-large color="#000028" href="/"
+>
+<v-icon small left>mdi-chevron-right</v-icon>
+Continue to Login
+</v-btn>
+</div>
+  </v-card-text>
+</v-card>
+  </v-flex>
+</v-layout>
+
+
+</v-overlay>
+
 <v-row justify="center"> 
            <p class="caption text--grey my-5" style="margin: 0 auto">
 <img :src="require('../assets/mulaalogo-white.png')" alt="" style="max-width:100px;">
@@ -177,9 +294,12 @@ export default {
     },
     mounted(){
       //this.load();
-      this.test();
+      //this.test();
     },
     methods: {
+      confirmed(){
+return this.$router.push({name: 'dashboard', params: { popWelcome: true }})
+      },
       test(){
         console.log(decodeURI('https:\/\/mulaa.me\/u\/randommmmm'))
       },
@@ -195,6 +315,10 @@ export default {
                 );
           },
           register (userdets) {
+
+            if (this.$refs.form.validate() == true){
+            //console.log(this.$refs.form.validate())
+            
             this.loading = true; 
             this.$store
               .dispatch("register", userdets).then(() => {
@@ -205,7 +329,8 @@ export default {
               .catch(err => {
                 this.loading = false
                 console.log(err)
-              });
+              });   
+          }
           },
           newlogin (user) {
         this.loading = true;
@@ -231,7 +356,8 @@ export default {
                 () => {
                   this.loading = false
                   axios.get('https://mulaa.me/u/api/?key=P1fjdH02F3y2&url='+priUrl+'&custom='+userUnik)
-                  return this.$router.push({name: 'dashboard'})//{name: 'dashboard', params: { sheet: true }}
+                  this.confirmation = true
+                  //return this.$router.push({name: 'dashboard', params: { popWelcome: true }})//{name: 'dashboard', params: { sheet: true }}
                   }
                 ) //this.$router.push("/")
               .catch(err => {
@@ -248,6 +374,8 @@ export default {
     },
     data() {
       return {
+        usertip: false,
+        confirmation: false,
         usernameraw:'',
         user:{
           username: '',
@@ -255,7 +383,7 @@ export default {
         },
         userCred:
             {
-                username: '',
+                username: this.$route.query.storename || '',
                 email:'',
                 password:'',
                 /*"roles": [
@@ -275,8 +403,12 @@ export default {
        nameRules: [
         (v)=> /^[a-z0-9]+$/.test(v) || 'lowercase only, no space allowed',
       (v) => !!v || 'Name is required',
-      (v) => v && v.length <= 10 || 'Name must be less than 10 characters'
-    ]
+      (v) => v && v.length <= 20 || 'Name must be less than 20 characters'
+    ],
+    nurules: {
+          required: value => !!value || 'Required.',
+          min: v => v.length >= 6 || 'Min 6 characters'
+        }
       }
     }
 }

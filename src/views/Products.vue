@@ -11,7 +11,8 @@
                          <v-text-field v-model="search" :clearable=true
                          color="teal lighten-3 teal--text"
             label="Search"
-            placeholder="Search Product Name or Price"
+            placeholder="Search Product Name, Price or SKU"
+            prepend-inner-icon="mdi-magnify"
           ></v-text-field>
           </div>
                        </v-col>
@@ -36,6 +37,10 @@
                   {{product.title}}
                 </div>
                 <div class="grey--text text-truncate small"> {{product.description}}</div>
+                <v-chip outlined x-small>
+                  SKU {{product.productID}}
+                  </v-chip>
+                
               </v-card-text>
               <v-card-actions>
                <!-- <v-btn text color="#23d2aa" :to="{name:'product',params: {
@@ -93,7 +98,8 @@ export default {
     },
     methods: {
     fetchData(){
-        this.$store.dispatch('loadAllProducts', 'top')
+        //this.$store.dispatch('loadAllProducts', 'top')
+        this.$store.dispatch('loadDashboardProducts', this.user)
        // this.$store.dispatch('getUser', this.user)
        //this.reload()
     },
@@ -117,7 +123,7 @@ export default {
       'allProducts',
       'myproducts',
       'Discounted',
-      'userUrl'
+      'userUrl',
     ]),
     snackbar: {
       get() {
@@ -137,7 +143,14 @@ export default {
     },
     currentUserProd: {
       get() {
-        return this.$store.state.userProducts;
+        //let theUserProducts = this.$store.state.userProducts;
+        let theUserProducts = this.$store.state.myproducts;
+        if (theUserProducts.length > 0){
+          return theUserProducts
+        }else{
+console.log('No products yet')
+return null
+        }
       },
       set(value) {
         this.$store.commit('loadUserProducts', value);
@@ -150,9 +163,13 @@ export default {
         return Object.keys(this.approved).length;
     },
     filteredProducts: function(){
+        if(this.currentUserProd != null){
       return this.currentUserProd.filter((myproduct) => {
-        return myproduct.title.match(this.search) || myproduct.price.match(this.search)
+        return myproduct.title.match(this.search) || myproduct.price.match(this.search) || myproduct.productID.toString().match(this.search)
       })
+    }else{
+      return null
+    }
     }
     }
 }

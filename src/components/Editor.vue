@@ -66,6 +66,24 @@
             </v-col>
 
         </v-row>
+
+        <v-row>
+                    <v-col>
+        <v-text-field
+                  class="teal--text form-field ma-0"
+                    v-model="stock"
+                    label="available in stock"
+                    placeholder="stock"
+                    outlined
+                    color="teal lighten-3"
+                  ></v-text-field>
+                    </v-col>
+                    <v-col>
+        
+                    </v-col>
+
+          </v-row>
+
         <v-row>
           <v-col>
 <v-switch 
@@ -73,6 +91,7 @@
         label="Enable Discount?" 
         class="mt-0"
         color="#23d2aa"
+        inset
         >
         </v-switch>
           </v-col>
@@ -82,6 +101,7 @@
         label="hide?" 
         class="mt-0"
         color="#23d2aa"
+        inset
         >
         </v-switch>
           </v-col>
@@ -120,6 +140,7 @@ export default {
             price: this.theproducts.price,
             discount: this.theproducts.discount_price,
             discountEnable:this.theproducts.show_discount,
+            stock: this.theproducts.stock,
             deliveryLocations: '',
             hidethis: this.theproducts.hidden,
         infoMsg: '', 
@@ -159,7 +180,7 @@ export default {
                 this.loading = true;
                 
                 this.$http.put('/product/'+this.thepost, {
-                title: this.user +'-'+ this.title,
+                title: this.title,
                 content: this.description,
                 fields : {
                 description: this.description,
@@ -167,15 +188,17 @@ export default {
                 discount_price: this.discount,
                 show_discount: this.discountEnable,
                 delivery_locations: this.deliveryLocations,
+                stock: this.stock,
                 image: this.imgUrl,
+                hidden: this.hidethis
                 },
                  status: "publish"
             }).then((response) => {
                 this.loading = false;
                 //this.clear()
                 //this.loadProducts()
-                console.log(response)
-                this.$store.dispatch('loadAllProducts', 'top')
+                //console.log(response)
+                //this.$store.dispatch('loadAllProducts', 'top')
                 this.color = 'green lighten-1'
                 this.infoBar = true
               this.infoMsg = '🤗 Product Successfully updated'

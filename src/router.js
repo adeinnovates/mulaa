@@ -9,6 +9,7 @@ import Product from './components/Product.vue'
 import Sales from './views/Sales.vue'
 import User from './views/User.vue'
 import Settings from './views/Settings.vue'
+import ConfirmSub from './views/ConfirmSub.vue'
 import store from './store'
 import { userInfo } from 'os';
 
@@ -70,6 +71,15 @@ export default new Router({
       }
     },
     {
+      path: '/settings/confirm',
+      name: 'confirmation',
+      component: ConfirmSub,
+      meta: { 
+        hideNavigation: false,
+        requiresAuth: true
+      }
+    },
+    {
       path: '/onboard',
       name: 'onboard',
       component: Onboard,
@@ -99,8 +109,8 @@ export default new Router({
       }
     },
     {
-      path: '/u/',
-      name: 'user',
+      path: '*',//'/u/',
+      name: 'new user',
       component: Register,
       meta: { 
         hideNavigation: true,
@@ -133,7 +143,7 @@ export default new Router({
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth) {
     if (store.getters.isLoggedIn != true) {
-      console.log('/userr')
+      //console.log('/userr')
       return next('/user')
       //return
     }
@@ -143,5 +153,9 @@ router.beforeEach((to, from, next) => {
   }
 })
 
+router.afterEach((to, from) => {
+  // ...
+  //console.log('to: '+to.fullPath+store.state.userDetails.username)
+})
 
 export default router

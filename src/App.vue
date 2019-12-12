@@ -1,5 +1,30 @@
 <template>
   <v-app>
+    <v-snackbar
+        v-model="snackWithButtons"
+        :timeout="timeout"
+        bottom
+        left
+        class="snack"
+      >
+        {{ snackWithBtnText }}
+        <v-spacer />
+        <v-btn
+          dark
+          flat
+          color="#00f500"
+          @click.native="refreshApp"
+        >
+          {{ snackBtnText }}
+        </v-btn>
+        <v-btn
+          icon
+          @click="snackWithButtons = false"
+        >
+          <v-icon>close</v-icon>
+        </v-btn>
+      </v-snackbar>
+    
     <Navbar v-if="!$route.meta.hideNavigation"/>
 
     <v-content v-if="$route.path == '/user'" class="mb-0 pa-0 dark-theme">
@@ -32,13 +57,48 @@ export default {
   },
   data: () => ({
     //
-    theme: 'dark-theme'
+    theme: 'dark-theme',
+    refreshing: false,
+      registration: null,
+      snackBtnText: '',
+      snackWithBtnText: '',
+      snackWithButtons: false,
+      timeout: 0,
   }),
    created(){
-     if (this.$store.getters.isLoggedIn != true){
+     /*if (this.$store.getters.isLoggedIn != true){
        //this.$router.push("/user");
-     }
+     }*/
+     document.addEventListener(
+    'swUpdated', this.showRefreshUI, { once: true }
+  );
+  navigator.serviceWorker.addEventListener(
+    'controllerchange', () => {
+      if (this.refreshing) return;
+      this.refreshing = true;
+      window.location.reload();
     }
+  );
+    },
+
+    methods: {
+    showRefreshUI(e) {
+      // Display a snackbar inviting the user to refresh/reload the app due
+      // to an app update being available.
+      // The new service worker is installed, but not yet active.
+      // Store the ServiceWorkerRegistration instance for later use.
+      this.registration = e.detail;
+      this.snackBtnText = 'Refresh';
+      this.snackWithBtnText = 'New version available!';
+      this.snackWithButtons = true;
+    },
+    refreshApp() {
+      this.snackWithButtons = false;
+      // Protect against missing registration.waiting.
+      if (!this.registration || !this.registration.waiting) { return; }
+      this.registration.waiting.postMessage('skipWaiting');
+    },
+  },
 };
 </script>
 <style>

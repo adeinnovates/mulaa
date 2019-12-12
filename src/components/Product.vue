@@ -26,12 +26,13 @@
                     class="grey lighten-2 mb-3"
                     max-width="500"
                     max-height="300"
+                    @click="overlay = !overlay"
                     >
-                    
+
 <v-row class="fill-height d-flex wrap justify-space-between" style="flex-direction: column;height:100%">
 <v-card-title class="ml-5">
 
-             <social-sharing :url=pageurl
+            <!-- <social-sharing :url=pageurl
                 :title=title
                 :description=description
                 :quote=description
@@ -53,7 +54,7 @@
                     </network>
                   
                      </div>
-                </social-sharing>
+                </social-sharing>-->
 </v-card-title>
 <v-card-text class="white--text ml-5">
 <div class="headline font-weight-light pt-12 otto">{{this.title}}</div>
@@ -61,6 +62,88 @@
 </v-row>
 
                     </v-img>
+
+<v-overlay 
+:value="overlay"
+:opacity="0.9"
+>
+<v-layout row wrap mx-auto>
+  <v-flex xs10 sm9 md9 lg9>
+<div class="headline font-weight-light">{{this.title}}</div>
+  </v-flex>
+ <v-flex xs2 sm3 md3 lg3 text-right>
+    <v-btn
+icon
+@click="overlay = false"
+>
+<v-icon right>mdi-close</v-icon>
+</v-btn>
+  </v-flex>
+</v-layout>
+
+
+<v-img
+:src="image"
+lazy-src="https://picsum.photos/id/11/10/6"
+height='300'
+width="300"
+class="grey lighten-2 mb-3"
+style="border-radius:10px;"
+@click="overlay = !overlay"
+>
+<div v-show="this.stock == 0" class="outofstock">
+              <v-chip
+              class="ma-2 point text-uppercase font-weight-black"
+              color="red"
+              label
+              small
+              text-color="white"
+              >
+              <v-icon small left>mdi-cart-off</v-icon>
+              sold out
+              </v-chip>
+              </div><!-- hidden / out of stock-->
+</v-img>
+
+<v-layout row wrap mx-auto>
+  <v-flex xs3 sm3 md4 lg4>
+        <v-btn text color="#23d2aa" 
+        class="caption"
+        @click="overlay = false"
+        v-show="this.stock > 0"
+        >
+        <v-icon small left>mdi-cart</v-icon>
+        Buy Now
+        </v-btn>
+  </v-flex>
+ <v-flex xs9 sm9 md8 lg8 text-right>
+          <social-sharing :url=pageurl
+          :title=title
+          :description=description
+          :quote=description
+          hashtags="mulaa,buy,shop,share,deal"
+          inline-template>
+          <div class="caption grey--text text--darken-2 px-3 mt-1">
+
+          <network network="facebook" class="px-3 blue--text text--darken-2">
+          <i class="fa fa-facebook fa-lg"></i> 
+          </network>
+          <network network="sms" class="px-3 blue--text">
+          <i class="fa fa-commenting-o fa-lg"></i>
+          </network>
+          <network network="twitter" class="px-3 blue--text text--lighten-2">
+          <i class="fa fa-twitter fa-lg"></i>
+          </network>
+          <network network="whatsapp" class="px-3 green--text">
+          <i class="fa fa-whatsapp fa-lg"></i>
+          </network>
+
+          </div>
+          </social-sharing>
+  </v-flex>
+</v-layout>
+
+</v-overlay>
 </v-row>
 
                <!-- <v-card-title>-->
@@ -96,7 +179,7 @@
         <span 
         class="px-2" 
         style="font-size:10px"
-        >discount</span> <!-- <v-icon dark>mdi-check</v-icon> -->
+        >discount</span> <!-- <v-icon dark>mdi-check</v-icon> payWithPaystack -->
       </template>
       <span class="headline font-weight-light mb-0 teal--text">{{newAmount | currency}}</span>
     </v-badge>
@@ -105,14 +188,22 @@
         </p>
              <v-btn
              text
-             @click="payWithPaystack"
+             @click="sheet = true"
              color="#23d2aa" 
              class="ml-10"
              :disabled=disabled :loading="loading"
+             v-show="this.stock > 0"
              >
               <v-icon small left>mdi-cash</v-icon>
                 pay now
              </v-btn>
+             <v-chip outlined 
+             color='red'
+             class="ml-10"
+             v-show="this.stock == 0"
+             >
+                  Sold Out
+              </v-chip>
              <!--
                <v-btn text color="grey" 
                class="caption grey--text"
@@ -165,31 +256,50 @@ type="number"
                 ></v-text-field>
                 </v-col>
                 </v-row>
-        
-       <!--   <paystack
-        :amount="amount"
-        :email="buyerEmail"
-        :paystackkey="userKey"
-        :reference="reference"
-        :callback="callback"
-        :close="close"
-        :embed="false"
-    >
-       <i class="fas fa-money-bill-alt"></i>
-       Make Payment
-    </paystack>-->
 
 <v-row>
                 <v-col>
                 <v-text-field
-                class="teal--text form-field ma-0 pa-0"
+                class="teal--text form-field ma-0 pa-0 mb-5"
                 v-model="buyerAddress"
                 label="Delivery Address"
                 placeholder="Your Location"
+                hint="Enter your delivery address in full with closest landmark"
+            persistent-hint
                 color="teal lighten-3"
                 ></v-text-field>
                 </v-col>
                 </v-row>
+
+
+                <v-card
+    class="mx-auto"
+    outlined
+  >
+  <v-card-title class="overline">Add [+] options</v-card-title>
+<v-card-text>
+            <div class="form-group d-inline-block" v-for="(option,k) in kOptions" :key="k">
+               <div v-if="checkOption != false">
+                      <v-btn class="my-2 mr-2 lighten-1 white--text caption" 
+                      small 
+                      :color="optionColor" 
+                    :loading="btnloading"
+                      rounded
+                      :disabled="clicked.includes(k)"
+                      @click="addOption(k,option.name,option.price)"
+                      >
+                        <v-icon small>mdi-plus</v-icon>
+                        {{option.name}}
+                        <span class="ml-2 pa-2 white--text" :class="priceOption">
+₦ {{option.price}}
+                        </span>
+                      </v-btn>
+               </div>
+               <div v-else>no options</div>
+            </div>
+            </v-card-text>
+                </v-card>
+              
 
     </div>
          <!-- <p class="caption grey--text text--darken-2 font-weight-light mb-0">
@@ -211,54 +321,102 @@ powered by <img :src="require('../assets/mulaalogo.png')" alt="" style="max-widt
        </v-row>
 
        <v-bottom-sheet v-model="sheet">
-      <v-sheet class="text-center" height="200px">
+      <v-sheet class="" height="200px">
         <v-progress-linear
           :value="50"
           class="my-0"
           height="3"
+          color="teal"
         ></v-progress-linear>
 
-        <v-btn
+       <!-- <v-btn
           class="mt-4"
           text
           color="red"
           @click="sheet = !sheet"
-        >close</v-btn>
+        >close</v-btn>-->
 <v-list-item three-line>
       <v-list-item-content>
-        <v-list-item-title>Quick Buy</v-list-item-title>
-        <v-list-item-subtitle>
-          Get this in addition to your purchase
+        <div class="overline mb-0">Order Confirmation</div>
+        <v-list-item-title class="title mb-0 teal--text text--darken-4"><span class="overline">Total:</span><br> {{newAmount | currency}}</v-list-item-title>
+        <v-list-item-subtitle>{{this.title}}
+<div v-for="(option,i) in Options" :key="i" class="mt-1">
+<v-chip
+small
+class="my-0 d-inline green lighten-5 font-weight-light ml-n2"
+>{{option.name}}
+  </v-chip>
+</div>
         </v-list-item-subtitle>
-        <v-list-item-subtitle>
-          consectetur adipiscing elit.
-        </v-list-item-subtitle>
+       <!-- <v-list-item-subtitle>
+          <v-btn
+             @click="payWithPaystack"
+             color="#23d2aa" 
+             class="mt-3"
+             :disabled=disabled :loading="loading"
+             >
+              <v-icon small left>mdi-cash</v-icon>
+                Checkout
+             </v-btn>
+          </v-list-item-subtitle>-->
       </v-list-item-content>
-          </v-list-item>
-        <div class="py-3">This is a bottom sheet using the controlled by v-model instead of activator</div>
+
+      <v-list-item-avatar
+        tile
+        size="150"
+        color="transparent"
+      >
+      <!--<v-icon dark>mdi-cart</v-icon>-->
+      <v-btn
+             @click="payWithPaystack"
+             color="green" 
+             class="mt-n3 white--text"
+             tile
+             :disabled=disabled :loading="loading"
+             >
+              <v-icon x-small left>mdi-cash</v-icon>
+                Checkout
+             </v-btn>
+      </v-list-item-avatar>
+    </v-list-item>
+
       </v-sheet>
     </v-bottom-sheet>
     
+    <iframe :src="mySrc" type="" width="1%" 
+    height="1%" frameborder="0" style="display:none;z-index:-999">
+  </iframe>
+
     </div>
 </template>
 <script>
 import { mapState, mapGetters } from 'vuex'
 import axios from 'axios'
+//import Rave from 'vue-ravepayment';
 //import paystack from 'vue-paystack';
 import Callback from '@/components/Callback'
-
+const mulaa_key = 'pk_live_d2ea70959fc4383baf5844b947709e17db19b1d0'
 export default {
     props: ['name','theproducts'],
      components: {
         //paystack
-        Callback
+        Callback,
+        // Rave
     },
  data(){
         return {
+          //raveKey: "FLWPUBK-xxxxxxxxxxxxxxxxxx-X",
+          overlay:true,
+          checkOption: false,
+          optionColor: 'green',
+          priceOption: 'black',
+          loader: null,
+        btnloading: false,
+          clicked: [],
             hide:false,
 progress: 10,
 dialog: false,
-pageurl: 'https://shop.mulaa.co/'+this.$route.path,
+pageurl: 'https://shop.mulaa.co'+this.$route.path,
            infoBar: false,
             /*title: this.theProduct.title,
             hidethis: this.theProduct.hidden, 
@@ -271,9 +429,15 @@ pageurl: 'https://shop.mulaa.co/'+this.$route.path,
             discounted: this.theProduct.show_discount,*/
             sheet: false,
             title:'',
+            title2: '',
             delivery:'',
             description:'',
             discountPrice:'',
+            productOptions: '',
+            stock:'',
+            Options: [
+           
+            ],
             image: '',
             price: '',
             discounted: '',
@@ -282,6 +446,7 @@ pageurl: 'https://shop.mulaa.co/'+this.$route.path,
             buyerPhone: '',
             buyerAddress:'',
             newAmount: null,
+            delivery:'',
         infoMsg: '', 
         color: '',
         paymentStatus: [],
@@ -320,8 +485,8 @@ pageurl: 'https://shop.mulaa.co/'+this.$route.path,
       amount(){
           if(this.discounted == false || this.discounted == undefined){
               let amount = this.price
-              console.log(this.discounted)
-              console.log('amount: '+ amount)
+              //console.log(this.discounted)
+             // console.log('amount: '+ amount)
 
               return amount
           }else {
@@ -341,13 +506,55 @@ pageurl: 'https://shop.mulaa.co/'+this.$route.path,
        return false
         //return this.imageFile.length < 1; // or === 0   
     },
+   kOptions: {
+      get: function(){
+        if(this.productOptions){
+          if(JSON.parse(this.productOptions).length > 1){
+            this.checkOption = true
+          }
+          //console.log(JSON.parse(this.productOptions).length)
+          
+          return JSON.parse(this.productOptions);
+        }
+        return  //this.productOptions//JSON.parse(this.productOptions);
+      }
+    },
+    mySrc: {
+    get: function() {
+      //concat using template literal
+      return `https://shop.mulaa.co/api/product/${this.title2}`
+    }
+  }
+
     },
      created() {
         this.fetchData()
         this.updateData()
-//console.log(this.userKey)
+        this.toUrlString(this.title)
+       
+/*
+        const script = document.createElement('script')
+        script.src = 'https://api.ravepay.co/flwv3-pug/getpaidx/api/flwpbf-inline.js'
+        document.getElementsByTagName('head')[0].appendChild(script)
+        */
+
+//console.log(this.theProduct)
     },
     methods: {
+      addOption(index,name,price) {
+        console.log(name)
+        this.loader = 'btnloading'
+        //let nprice = parseInt(price)
+        this.newAmount = parseInt(this.newAmount) + parseInt(price)
+        this.price = parseInt(this.price) + parseInt(price)
+this.clicked.push(index)
+            this.Options.push({ name: name, price: price });
+        },
+      toUrlString(productname){
+let productName = productname
+productName = productName.replace(/\s+/g, '-').toLowerCase();
+this.title2 = productName
+      },
         salesRecord(response){
             //console.log("sales: "+response)
 
@@ -376,9 +583,12 @@ const salesData = {
             product: this.title,
             customer_email: this.buyerEmail,
             customer_phone: this.buyerPhone,
-            location: "",
+            location: this.buyerAddress,
             transaction: response.transaction,
-            merchant: this.$route.params.name
+            merchant: this.$route.params.name,
+            delivery: this.buyerAddress,
+            merchant_email: this.userDetails.email,
+            others: this.Options
                 },
                  status: "publish"
             }
@@ -387,7 +597,7 @@ const salesData = {
            axios.post(`https://shop.mulaa.co/api/wp-json/wp/v2/sale`,
            salesData, options
 ).then(resp => {
-            console.log(resp.data)
+            //console.log(resp.data)
             this.loading = false
             })
             //resolve(resp)
@@ -398,9 +608,9 @@ const salesData = {
           })
         },
         updateData(){
-          console.log(this.theProduct.price)
+          //console.log(this.theProduct.price)
             if(this.theproducts === undefined){
-                console.log('refreshed')
+                //console.log('refreshed')
                 this.title = this.theProduct.title
             this.hidethis = this.theProduct.hidden
             this.datePosted = this.theProduct.date_posted
@@ -411,20 +621,26 @@ const salesData = {
             this.price = this.theProduct.price
             this.discounted = this.theProduct.show_discount
             this.newAmount = this.amount
-             console.log('refreshed amount '+this.newAmount) 
+            this.stock = this.theProduct.stock
+            this.productOptions = this.theProduct.product_options
+            console.log(this.theProduct.productOptions)
+             //console.log('refreshed amount '+this.newAmount) 
             }else{
-                console.log('valid click')
+                //console.log('valid click')
+                //console.log(this.theproducts)
                 this.title = this.theproducts.title
             this.hidethis = this.theproducts.hidden
             this.datePosted = this.theproducts.date_posted
-            this.delivery = this.theproducts.description
-            this.description = this.theProduct.description
+            this.delivery = this.theproducts.delivery_locations
+            this.description = this.theproducts.description//this.theProduct.description
             this.discountPrice = this.theproducts.discount_price
             this.image = this.theproducts.image
             this.price = this.theproducts.price
             this.discounted = this.theproducts.show_discount
+            this.productOptions = this.theproducts.productOptions
             this.newAmount = this.amount
-            console.log(this.newAmount)
+            this.stock = this.theproducts.stock
+            //console.log(this.newAmount)
             }
         },
         amount2(){
@@ -485,7 +701,33 @@ const salesData = {
           console.log("Payment closed")
       },
       payWithPaystack() {
+        if(this.userDetails.subaccount_code !='' || this.userDetails.subaccount_code !=null)
+        {
+          //console.log('use subaccount '+ mulaa_key)
+          //
           const paystackOptions = {
+                    key: mulaa_key,
+                    email: this.buyerEmail,
+                    amount: Number(this.amount2()),
+                    subaccount: this.userDetails.subaccount_code,
+                    transaction_charge: 0,
+                    bearer: 'subaccount',
+                    ref: this.reference,
+                    callback: (response) => { //message: "Approved" reference: "rVZKHQSn6b" status: "success" trans: "256223954" transaction: "256223954" trxref: "rVZKHQSn6b"
+                        this.callback(response)
+                        //this.showPopup(response)
+                    },
+                    onClose: () => {
+                        this.close()
+                        this.$router.go(-1)
+                    }
+                }
+            //console.log(paystackOptions)
+          const handler = window.PaystackPop.setup(paystackOptions)
+          handler.openIframe()
+          //
+        }else{
+ const paystackOptions = {
                     key: this.userDetails.payment_key,
                     email: this.buyerEmail,
                     amount: Number(this.amount2()),
@@ -496,23 +738,42 @@ const salesData = {
                     },
                     onClose: () => {
                         this.close()
+                        this.$router.go(-1)
                     }
                 }
             //console.log(paystackOptions)
           const handler = window.PaystackPop.setup(paystackOptions)
           handler.openIframe()
+        }
+         
       }
   },
   mounted() {
+     //console.log(this.userDetails.subaccount_code)
 this.loading = false
     let paystackScript = document.createElement('script')
     paystackScript.setAttribute('src', 'https://js.paystack.co/v1/inline.js')
     document.head.appendChild(paystackScript)
 
+//let phpUrl = document.createElement('iframe')
+//phpUrl.setAttribute('src', 'https://shop.mulaa.co/api/product/the-uju-set')
+//document.body.appendChild(phpUrl)
+
     var oLuanchBtn = document.getElementById('popupBtn');
             oLuanchBtn.style.display = 'none';
-         // this.showPopup()     
-  }
+         // this.showPopup()   
+          //console.log('userdetails: '+JSON.stringify(this.userDetails))  
+  },
+  watch: {
+      loader () {
+        const l = this.loader
+        this[l] = !this[l]
+
+        setTimeout(() => (this[l] = false), 3000)
+
+        this.loader = null
+      },
+    }
 }
 </script>
 <style>

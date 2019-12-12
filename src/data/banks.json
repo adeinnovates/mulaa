@@ -1,0 +1,256 @@
+[
+    {
+      "text": "Access Bank",
+      "slug": "access-bank",
+      "value": "044",
+      "currency": "NGN",
+      "id": 1
+    },
+    {
+      "text": "Access Bank (Diamond)",
+      "slug": "access-bank-diamond",
+      "value": "063",
+      "currency": "NGN",
+      "id": 3
+    },
+    {
+      "text": "ALAT by WEMA",
+      "slug": "alat-by-wema",
+      "value": "035A",
+      
+      "currency": "NGN",
+      
+      "id": 27
+    
+    },
+    {
+      "text": "ASO Savings and Loans",
+      "slug": "asosavings",
+      "value": "401",
+     
+      "currency": "NGN",
+     
+      "id": 63
+     
+    },
+    {
+      "text": "Citibank Nigeria",
+      "slug": "citibank-nigeria",
+      "value": "023",
+      
+      "currency": "NGN",
+     
+      "id": 2
+     
+    },
+    {
+      "text": "Ecobank Nigeria",
+      "slug": "ecobank-nigeria",
+      "value": "050",
+      
+      "currency": "NGN",
+     
+      "id": 4
+     
+    },
+    {
+      "text": "Ekondo Microfinance Bank",
+      "slug": "ekondo-microfinance-bank",
+      "value": "562",
+      
+      "currency": "NGN",
+     
+      "id": 64
+     
+    },
+    {
+      "text": "Fidelity Bank",
+      "slug": "fidelity-bank",
+      "value": "070",
+     
+      "currency": "NGN",
+     
+      "id": 6
+     
+    },
+    {
+      "text": "First Bank of Nigeria",
+      "slug": "first-bank-of-nigeria",
+      "value": "011",
+      
+      "currency": "NGN",
+     
+      "id": 7
+     
+    },
+    {
+      "text": "First City Monument Bank",
+      "slug": "first-city-monument-bank",
+      "value": "214",
+      
+      "currency": "NGN",
+     
+      "id": 8
+      
+    },
+    {
+      "text": "Guaranty Trust Bank",
+      "slug": "guaranty-trust-bank",
+      "value": "058",
+      
+      "currency": "NGN",
+     
+      "id": 9
+     
+    },
+    {
+      "text": "Heritage Bank",
+      "slug": "heritage-bank",
+      "value": "030",
+     
+      "currency": "NGN",
+      
+      "id": 10
+      
+    },
+    {
+      "text": "Jaiz Bank",
+      "slug": "jaiz-bank",
+      "value": "301",
+     
+      "currency": "NGN",
+     
+      "id": 22
+     
+    },
+    {
+      "text": "Keystone Bank",
+      "slug": "keystone-bank",
+      "value": "082",
+     
+      "currency": "NGN",
+     
+      "id": 11
+     
+    },
+    {
+      "text": "Parallex Bank",
+      "slug": "parallex-bank",
+      "value": "526",
+      
+      "currency": "NGN",
+      
+      "id": 26
+     
+    },
+    {
+      "text": "Polaris Bank",
+      "slug": "polaris-bank",
+      "value": "076",
+      
+      "currency": "NGN",
+    
+      "id": 13
+    
+    },
+    {
+      "text": "Providus Bank",
+      "slug": "providus-bank",
+      "value": "101",
+      
+      "currency": "NGN",
+     
+      "id": 25
+     
+    },
+    {
+      "text": "Stanbic IBTC Bank",
+      "slug": "stanbic-ibtc-bank",
+      "value": "221",
+      
+      "currency": "NGN",
+     
+      "id": 14
+     
+    },
+    {
+      "text": "Standard Chartered Bank",
+      "slug": "standard-chartered-bank",
+      "value": "068",
+     
+      "currency": "NGN",
+     
+      "id": 15
+      
+    },
+    {
+      "text": "Sterling Bank",
+      "slug": "sterling-bank",
+      "value": "232",
+      
+      "currency": "NGN",
+     
+      "id": 16
+    
+    },
+    {
+      "text": "Suntrust Bank",
+      "slug": "suntrust-bank",
+      "value": "100",
+      
+      "currency": "NGN",
+     
+      "id": 23
+    
+    },
+    {
+      "text": "Union Bank of Nigeria",
+      "slug": "union-bank-of-nigeria",
+      "value": "032",
+     
+      "currency": "NGN",
+     
+      "id": 17
+     
+    },
+    {
+      "text": "United Bank For Africa",
+      "slug": "united-bank-for-africa",
+      "value": "033",
+     
+      "currency": "NGN",
+     
+      "id": 18
+      
+    },
+    {
+      "text": "Unity Bank",
+      "slug": "unity-bank",
+      "value": "215",
+      
+      "currency": "NGN",
+     
+      "id": 19
+     
+    },
+    {
+      "text": "Wema Bank",
+      "slug": "wema-bank",
+      "value": "035",
+      
+      "currency": "NGN",
+     
+      "id": 20
+    
+    },
+    {
+      "text": "Zenith Bank",
+      "slug": "zenith-bank",
+      "value": "057",
+      
+      "currency": "NGN",
+     
+      "id": 21
+     
+    }
+  ]
