@@ -24,6 +24,15 @@
     light="light"
     :loading="loading"
   >
+  <v-overlay 
+:value="loading"
+dark
+:z-index="9999">
+ <v-progress-circular indeterminate
+ :size="100"
+      :width="5"
+ >loading account</v-progress-circular>
+    </v-overlay>
     <v-card-title class="caption text-center d-block py-5" v-if="!show2">
      <v-row
       justify="space-around"

@@ -131,6 +131,7 @@ v-show="showWidget"
                     </v-layout>
 
                    <EmptyState v-if="counted < 1"></EmptyState>
+                  
                    <div v-else>
                        <!-- <div class="text-center mt-5 pt-4">
                             <v-sheet color="transparent">Add a new product</v-sheet>
@@ -769,10 +770,19 @@ return 0;
         //this.$store.dispatch('loadAllProducts', 'top')
          this.$store.dispatch('loadUserSales', this.user)
          this.$store.dispatch('loadUserDetails', this.user)
-         this.$store.dispatch('loadDashboardProducts', this.user)
-          this.$store.dispatch('linkStats', this.user)
+         this.$store.dispatch('loadDashboardProducts', this.user).then(resp => {
+//console.log('current prod')
+return this.currentUserProd
+         }
+         )
+          this.$store.dispatch('linkStats', this.user).then(resp => {
+//console.log(resp)
+
+         }
+         )
           this.$store.dispatch('loadDashboardLinks', this.user)
          
+         return this.counted
          //console.log(JSON.stringify(this.userDetails))
        // this.$store.dispatch('getUser', this.user)
        //this.reload()
@@ -856,6 +866,7 @@ return 0;
     },
     counted : function () {
         //return Object.keys(this.userProducts).length;
+        //console.log('counted ping')
         return Object.keys(this.myproducts).length;
     },
     countApproved: function () {
@@ -904,6 +915,7 @@ return 0;
        this.fetchData()
       }*/
       this.fetchData()
+
     }
     }
 }

@@ -220,6 +220,7 @@ style="border-top-left-radius:15px;border-top-right-radius:15px;"
        
         </v-sheet>
 
+
         <div
         v-show="!paid"
         >
@@ -231,7 +232,9 @@ style="border-top-left-radius:15px;border-top-right-radius:15px;"
       <v-progress-circular indeterminate size="84"></v-progress-circular>
     </v-overlay>
 
-    <div>
+    <div 
+    v-show="referred"
+    >
 
  <v-sheet 
         class="pa-5"
@@ -240,7 +243,7 @@ style="border-top-left-radius:15px;border-top-right-radius:15px;"
         >
         <span class="teal--text subtitle-1 text--darken-1">
           (Discounted) Annual Mogul: N52,500 <v-btn small color="success"
-          :disabled=false
+          
           @click="doSubscription('PLN_eoildbokktq5sle')"
           >Subscribe</v-btn>
         </span>
@@ -260,7 +263,7 @@ Unlimited content links,
         >
         <span class="teal--text subtitle-1 text--darken-1">
           (Discounted) Quarterly Sprinter: N13,500 <v-btn small color="success"
-          :disabled=false
+          
           @click="doSubscription('PLN_c7p40gbev53tons')"
           >Subscribe</v-btn>
         </span>
@@ -283,7 +286,7 @@ Unlimited content links,
         >
         <span class="teal--text subtitle-1 text--darken-1">
           Annual Mogul: N54,000 <v-btn small color="success"
-          :disabled=false
+          :disabled=disabled
           @click="doSubscription('PLN_g4m3pjhpsgb3u14')"
           >Subscribe</v-btn>
         </span>
@@ -303,7 +306,7 @@ Unlimited content links,
         >
         <span class="teal--text subtitle-1 text--darken-1">
           Quarterly Sprinter: N15,000 <v-btn small color="success"
-          :disabled=false
+          :disabled=disabled
           @click="doSubscription('PLN_xbwopoov59jncbi')"
           >Subscribe</v-btn>
         </span>
@@ -323,7 +326,7 @@ Unlimited content links,
         >
         <span class="teal--text subtitle-1 text--darken-1">
           Monthly Starter: N6,000 <v-btn small color="success"
-          :disabled=false
+          :disabled=disabled
           @click="doSubscription('PLN_pzvz7tl3qnrwbdh')"
           >Subscribe</v-btn>
         </span>
@@ -344,7 +347,7 @@ Unlimited content links,
         <span class="teal--text subtitle-1 text--darken-1">
           Base Plan: N1,000 (x6) 
         </span><v-btn small color="success"
-        :disabled=false
+        :disabled=disabled
         @click="doSubscription('PLN_n4bg3qza5v3va6r')"
         >Subscribe</v-btn>
       <div class="text--darken-2 grey--text mt-2">
@@ -400,8 +403,60 @@ export default {
      EditSettings,
      UserSubscribe
   },
+  computed: {
+        ...mapGetters([
+             'renderUser'
+           ]),
+      ...mapState({
+      registerMsg:'registerMsg',
+      color:'color',
+      show:'show',
+      loading:'loading',
+      user: 'user',
+      allProducts: 'allProducts',
+      myproducts:'myproducts',
+      Discounted:'Discounted',
+      userPhone: 'userPhone',
+       userDetails: 'userDetails',
+       userAcctStatus: 'userAcctStatus'
+      }),
+    userSales: {
+      get() {
+        return this.$store.state.userSales;
+      },
+      set(value) {
+        this.$store.commit('user_sales', value);
+      }
+    },
+    snackbar: {
+      get() {
+        return this.$store.state.snackbar;
+      },
+      set(value) {
+        this.$store.commit('snackbar', value);
+      }
+    },
+    loading: {
+      get() {
+        return this.$store.state.loading;
+      },
+      set(value) {
+        this.$store.commit('loading', value);
+      }
+    },
+    salesCount: function(){
+      return Object.keys(this.userSales).length;
+    },
+    myProfileImg: {
+    get: function() {
+      //concat using template literal
+      return userDetails.brand_image 
+    }
+  }
+    },
     data() {
       return {
+        disabled: false,
         nextPlanDate:'',
         embedcode: `<div class="mulaa_embed" data-src="https://mulaa.me/u/`+ this.$store.state.user +`" style="height:400px;width:680px;margin: 10px auto" data-responsive="true" data-img="https://shop.mulaa.co/shop_cover.png" data-css="background:url('//shop.mulaa.co/loading.gif') white center center no-repeat;border:0px;float:middle;" data-Id="mulaa-sdk" data-Class="mulaa-sdk" data-name="mulaa.co"></div>
         `+'<script src="https://shop.mulaa.co/async-iframe.js"',
@@ -409,7 +464,7 @@ export default {
         referred:false,
         subName: '',
         skk: process.env.VUE_APP_SECRET_KEY,
-        subOverlay:false,
+        subOverlay:true,
         infoMsg: '', 
         infoBar: false,
  valid:'',
@@ -537,8 +592,16 @@ const headers2 = {
           })
   },
 fetchUserData(){
-        this.$store.dispatch('loadUserDetails', this.user)
-       // console.log(this.userDetails)
+  //this.$store.dispatch('loadUserDetails', this.name)
+  console.log('fetch user')
+        this.$store.dispatch('loadUserDetails', this.user).then(resp => {
+          this.subOverlay = false
+          const response = resp.data[0]
+          //console.log(response)
+          //console.log('userDetail: '+response.acf.referal)
+        this.chkref()
+        }
+        )
     },
     confirmSub(tranx){
       const config = {
@@ -563,75 +626,39 @@ fetchUserData(){
             console.log(err)
             //reject(err)
           })
+    },
+    chkref : function () {
+       
+        //return Object.keys(this.myproducts).length;
+//console.log('chk rf')
+        if(this.userDetails.referal !=''){
+           this.referred = true
+           this.disabled = true
+          // console.log('ref: '+this.userDetails.referal)
+         }
+         return
     }
      },
      watch: {
-       userDetails(){
+       userDetails(val){
          //this.paid = true
          //console.log(this.userDetails.email)
-         console.log(this.userDetails.last_payment_date)
+         //console.log(this.userDetails.last_payment_date)
          if(this.userDetails.paid_user == true){
            //this.paid = true
            //console.log(this.userDetails.customer_code)
            this.confirmSub(this.userDetails.customer_code)
          }
-         if(this.userDetails.referal !=''){
+         /*if(this.userDetails.referal !=''){
            this.referred = true
-         }
+         }*/
          this.subName = this.userDetails.subscription
+       },
+       referred(){
+         return
        }
      },
-  computed: {
-        ...mapGetters([
-             'renderUser'
-           ]),
-      ...mapState({
-      registerMsg:'registerMsg',
-      color:'color',
-      show:'show',
-      loading:'loading',
-      user: 'user',
-      allProducts: 'allProducts',
-      myproducts:'myproducts',
-      Discounted:'Discounted',
-      userPhone: 'userPhone',
-       userDetails: 'userDetails',
-       userAcctStatus: 'userAcctStatus'
-      }),
-    userSales: {
-      get() {
-        return this.$store.state.userSales;
-      },
-      set(value) {
-        this.$store.commit('user_sales', value);
-      }
-    },
-    snackbar: {
-      get() {
-        return this.$store.state.snackbar;
-      },
-      set(value) {
-        this.$store.commit('snackbar', value);
-      }
-    },
-    loading: {
-      get() {
-        return this.$store.state.loading;
-      },
-      set(value) {
-        this.$store.commit('loading', value);
-      }
-    },
-    salesCount: function(){
-      return Object.keys(this.userSales).length;
-    },
-    myProfileImg: {
-    get: function() {
-      //concat using template literal
-      return userDetails.brand_image 
-    }
-  }
-    }
+  
 }
 </script>
 <style>

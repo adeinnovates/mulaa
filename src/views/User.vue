@@ -358,7 +358,7 @@ export default {
         this.$store.commit('loading', value);
       }
     },
-    merchantData: {
+    /*merchantData: {
     get: function() {
       //concat using template literal
       //return `https://mulaa.me/u/${this.$route.params.name}`
@@ -367,7 +367,7 @@ export default {
       set(value) {
         this.$store.commit('userDetails', value);
       }
-  },
+  },*/
     filteredProducts: function(){
 
       if(this.userProducts != ''){
@@ -463,7 +463,7 @@ const config = {
             let exclude_transactions = true
          if(this.userDetails.paid_user != true){
             this.limitVal = 1
-            console.log('base: '+this.userDetails.subscription)
+            //console.log('base: '+this.userDetails.subscription)
           }else {
             axios.get('https://api.paystack.co/customer/'+cus_code, config)
         .then(resp => { 
