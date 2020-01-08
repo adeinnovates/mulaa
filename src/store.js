@@ -11,7 +11,8 @@ const API_URL_USER = 'http://dev.mulaa.africa/admin/wp-json/wp/v2/users'
 
 const BASEURL = 'https://shop.mulaa.co/api/wp-json'
 const API_URL = 'https://shop.mulaa.co/api/wp-json/wp/v2/product'
-const API_URL_USER = 'https://shop.mulaa.co/api/wp-json/wp/v2/users'
+//const API_URL_USER = 'https://shop.mulaa.co/api/wp-json/wp/v2/users'
+const API_URL_USER = 'https://shop.mulaa.co/api/wp-json/mulaa-auth/v1/users'
 
 const Token_ENDPOINT = '/jwt-auth/v1/token'
 const Products_ENDPOINT = '/mulaa-auth/v1/products'
@@ -536,7 +537,8 @@ export default new Vuex.Store({
     loadUserDetails({ commit }, user){
       if (user != ''){
       return new Promise((resolve, reject) => {
-        axios({ url: `${API_URL_USER}`+ '/?search='+ user, headers: {
+        //axios({ url: `${API_URL_USER}`+ '/?search='+ user, headers: {
+          axios({ url: `${API_URL_USER}`+ '/?term='+ user, headers: {
           'Content-Type':  'application/json',
         }, 
         method: 'GET' 
@@ -545,7 +547,8 @@ export default new Vuex.Store({
         resp => {
           if(resp.data[0]){
             //console.log(JSON.stringify(resp.data[0].acf))
-            commit('user_detail', resp.data[0].acf)
+            //commit('user_detail', resp.data[0].acf)
+            commit('user_detail', resp.data[0])
             //commit('auth_success_login', {token, user, userEmail})
 
             resolve(resp)

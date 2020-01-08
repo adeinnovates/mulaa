@@ -104,6 +104,7 @@ dark
               full-width
               single-line
               label="Password"
+              :rules="[maxrules.required, maxrules.min, maxrules.max]"
               background-color="#f4f8f7"
               color="grey darken-2"
               prepend-inner-icon="mdi-lock-outline"
@@ -410,6 +411,7 @@ this.confirmation = true
     },
     data() {
       return {
+        isFormValid: false,
         usertip: false,
         confirmation: false,
         usernameraw:'',
@@ -445,6 +447,11 @@ this.confirmation = true
     nurules: {
           required: value => !!value || 'Required.',
           min: v => v.length >= 6 || 'Min 6 characters'
+        },
+        maxrules: {
+          required: value => !!value || 'Required.',
+          min: v => v.length >= 6 || 'Min 6 characters',
+          max: v => v.length <= 16 || 'Max 16 characters'
         }
       }
     }
