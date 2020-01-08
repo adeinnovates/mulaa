@@ -11,7 +11,8 @@ const API_URL_USER = 'http://dev.mulaa.africa/admin/wp-json/wp/v2/users'
 
 const BASEURL = 'https://shop.mulaa.co/api/wp-json'
 const API_URL = 'https://shop.mulaa.co/api/wp-json/wp/v2/product'
-const API_URL_USER = 'https://shop.mulaa.co/api/wp-json/wp/v2/users'
+//const API_URL_USER = 'https://shop.mulaa.co/api/wp-json/wp/v2/users'
+const API_URL_USER = 'https://shop.mulaa.co/api/wp-json/mulaa-auth/v1/users'
 
 const Token_ENDPOINT = '/jwt-auth/v1/token'
 const Products_ENDPOINT = '/mulaa-auth/v1/products'
@@ -163,7 +164,7 @@ export default new Vuex.Store({
     },
     set_products (state, products) {
         //state.allBooms = booms
-        //console.log(booms)
+        //console.log(products)
         const filtered = products.filter(function(item){
          // console.log(item.authorName)
           return item.authorName == state.user; 
@@ -209,7 +210,8 @@ export default new Vuex.Store({
         state.loading = false
     },
     dash_products (state, user_product) {
-       
+      //console.log(user_product)
+      return new Promise((resolve, reject) => {
        const Discounted = user_product.filter(function(item){
          return item.show_discount === 1; 
        });
@@ -217,6 +219,10 @@ export default new Vuex.Store({
        state.myproducts = user_product
       
        state.loading = false
+       resolve();
+      }).catch(() => {
+        reject();
+      });
    },
    dash_links (state, user_links) {
        
@@ -252,36 +258,55 @@ export default new Vuex.Store({
     state.userAcctStatus = value
   },
     user_detail(state, value){
-      state.userDetails = value
-      //console.log(value)
-    state.userAcctStatus = ' '
-   //state.userEmail = value.email
-   state.userKey = value.payment_key
-   state.userDesc = value.business_description
-   state.userBusiness = value.business_name
-   state.userPhone = value.phone_number
-   state.userImage = value.brand_image
-  
+      return new Promise((resolve, reject) => {
+            state.userDetails = value
+            //console.log(value)
+            state.userAcctStatus = ' '
+            //state.userEmail = value.email
+            state.userKey = value.payment_key
+            state.userDesc = value.business_description
+            state.userBusiness = value.business_name
+            state.userPhone = value.phone_number
+            state.userImage = value.brand_image
+            resolve();
+      }).catch(() => {
+        reject();
+      });
       //console.log('user detail: '+ JSON.stringify(value))
     },
     profileid(state, value){
       state.profileID = value
     },
     save_stat(state, value){
+      return new Promise((resolve, reject) => {
       state.linkStat = value
+      resolve();
+    }).catch(() => {
+      
+      reject();
+    });
     }
   },
   actions: {
     linkStats ({commit, state}, data){
+
       //state.loading = true
         //console.log(data)
         if (data != ''){
           axios({ url: `${STAT_URL}`+data, method: 'GET' })
           .then(resp => { 
-            const linkData = resp.data.data
-           // const socialData = resp.data.socialCount
-           // console.log(resp.data.data)
-            commit('save_stat', linkData)
+            if(resp.data.error == 0){
+              const linkData = resp.data.data
+              // const socialData = resp.data.socialCount
+               //console.log('link data: '+resp.data)
+               commit('save_stat', linkData)
+            }else{
+              const linkData = '{"clicks":"0","uniqueClicks":"0"}'
+              // const socialData = resp.data.socialCount
+               //console.log('link data error 1: '+JSON.stringify(resp.data.data))
+               commit('save_stat', linkData)
+            }
+           
           })
           .catch(err => {
             const linkData = 0
@@ -291,6 +316,7 @@ export default new Vuex.Store({
             //reject(err)
           })
         }else {console.log('link not found')}
+
       },
     createProfile({ commit, state }, data) {
       return new Promise((resolve, reject) => {
@@ -511,7 +537,8 @@ export default new Vuex.Store({
     loadUserDetails({ commit }, user){
       if (user != ''){
       return new Promise((resolve, reject) => {
-        axios({ url: `${API_URL_USER}`+ '/?search='+ user, headers: {
+        //axios({ url: `${API_URL_USER}`+ '/?search='+ user, headers: {
+          axios({ url: `${API_URL_USER}`+ '/?term='+ user, headers: {
           'Content-Type':  'application/json',
         }, 
         method: 'GET' 
@@ -520,13 +547,15 @@ export default new Vuex.Store({
         resp => {
           if(resp.data[0]){
             //console.log(JSON.stringify(resp.data[0].acf))
-            commit('user_detail', resp.data[0].acf)
+            //commit('user_detail', resp.data[0].acf)
+            commit('user_detail', resp.data[0])
             //commit('auth_success_login', {token, user, userEmail})
 
             resolve(resp)
           }else{
             commit('user_detail_blank', 'Your store account is not activated yet')
            // console.log('user acct not activated')
+           resolve(resp)
           }
             
         }
