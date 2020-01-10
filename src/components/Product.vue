@@ -367,16 +367,16 @@ class="my-0 d-inline green lighten-5 font-weight-light ml-n2"
         color="transparent"
       >
       <!--<v-icon dark>mdi-cart</v-icon>-->
-      <v-btn
-             @click="payWithPaystack"
-             color="green" 
-             class="mt-n3 white--text"
-             tile
-             :disabled=disabled :loading="loading"
-             >
-              <v-icon x-small left>mdi-cash</v-icon>
-                Checkout
-             </v-btn>
+          <v-btn
+          @click="payWithPaystack"
+          color="green" 
+          class="mt-n3 white--text"
+          tile
+          :disabled=disabled :loading="loading"
+          >
+            <v-icon x-small left>mdi-cash</v-icon>
+              Checkout
+          </v-btn>
       </v-list-item-avatar>
     </v-list-item>
 
@@ -699,6 +699,25 @@ const salesData = {
       },
       close: function(){
           console.log("Payment closed")
+      },
+      payWithMulaa(){
+
+        const payOptions = {
+                    key: mulaa_key,
+                    email: this.buyerEmail,
+                    amount: Number(this.amount2()),
+                    bearer: 'subaccount',
+                    ref: this.reference,
+                    callback: (response) => { //message: "Approved" reference: "rVZKHQSn6b" status: "success" trans: "256223954" transaction: "256223954" trxref: "rVZKHQSn6b"
+                        this.callback(response)
+                        //this.showPopup(response)
+                    },
+                    onClose: () => {
+                        this.close()
+                        this.$router.go(-1)
+                    }
+                }
+
       },
       payWithPaystack() {
         if(this.userDetails.subaccount_code !='' || this.userDetails.subaccount_code !=null)
