@@ -496,6 +496,7 @@ export default {
  data(){
         return {
           //raveKey: "FLWPUBK-xxxxxxxxxxxxxxxxxx-X",
+          nname: '',
           craaccount: '',
           show2: false,
           bank: null,
@@ -590,7 +591,7 @@ pageurl: 'https://shop.mulaa.co'+this.$route.path,
               return amount
           }else {
               //this.hide = true
-              console.log(this.discounted)
+              //console.log(this.discounted)
               let amount = this.discountPrice
               return amount
           }
@@ -630,6 +631,14 @@ pageurl: 'https://shop.mulaa.co'+this.$route.path,
         this.fetchData()
         this.updateData()
         this.toUrlString(this.title)
+
+         const host = window.location.host;
+const parts = host.split('.');
+const domain = 'mulaa'
+this.nname = parts[0]
+       //console.log('name created: '+parts[0])
+        //this.fetchData(parts[0])
+       // console.log('name: '+ this.name)
        
 /*
         const script = document.createElement('script')
@@ -787,7 +796,7 @@ const salesData = {
     },
     fetchData(){
         this.$store.dispatch('loadProduct', this.$route.params.id)
-        this.$store.dispatch('loadUserDetails', this.name)
+        this.$store.dispatch('loadUserDetails', this.nname)
         //console.log("product id: "+this.$route.params.id)
     },
   callback: function(response){
@@ -832,9 +841,10 @@ const salesData = {
         //this.sheet = false
         this.loading = false
         
-        if(this.userDetails.bank_payment_option !=true){
+        if(this.userDetails.bank_payment_option != true){
           this.payWithPaystack()
           console.log(this.userDetails.bank_payment_option)
+          console.log(this.name)
         }else{
           this.mulaapaydialog = true
          console.log('mulaapay') 
@@ -932,6 +942,13 @@ this.loading = false
     }
 }
 </script>
+<style scoped>
+   .theme--dark.v-card{
+        background-color:#000028;
+    }
+    .theme--dark .card__title{
+    }
+</style>
 <style>
     .hide{
         display:none!important;
