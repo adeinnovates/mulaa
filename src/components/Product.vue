@@ -337,7 +337,7 @@ powered by <img :src="require('../assets/mulaalogo.png')" alt="" style="max-widt
         >close</v-btn>-->
 <v-list-item three-line>
       <v-list-item-content>
-        <div class="overline mb-0">Order Confirmation</div>
+        <div class="overline mb-0">Order Confirmation - REVIEW YOUR ORDER</div>
         <v-list-item-title class="title mb-0 teal--text text--darken-4"><span class="overline">Total:</span><br> {{newAmount | currency}}</v-list-item-title>
         <v-list-item-subtitle>{{this.title}}
 <div v-for="(option,i) in Options" :key="i" class="mt-1">
@@ -368,15 +368,15 @@ class="my-0 d-inline green lighten-5 font-weight-light ml-n2"
       >
       <!--<v-icon dark>mdi-cart</v-icon>-->
       <v-btn
-             @click="payWithPaystack"
-             color="green" 
-             class="mt-n3 white--text"
-             tile
-             :disabled=disabled :loading="loading"
-             >
-              <v-icon x-small left>mdi-cash</v-icon>
-                Checkout
-             </v-btn>
+            @click.stop="payWithMulaa"
+            color="green" 
+            class="mt-3 white--text"
+            tile
+            :disabled=disabled :loading="loading"
+            >
+            <v-icon x-small left>mdi-cash</v-icon>
+            Pay Now
+            </v-btn>
       </v-list-item-avatar>
     </v-list-item>
 
@@ -387,9 +387,80 @@ class="my-0 d-inline green lighten-5 font-weight-light ml-n2"
     height="1%" frameborder="0" style="display:none;z-index:-999">
   </iframe>
 
+<v-dialog
+      v-model="mulaapaydialog"
+      transition="slide-x-transition" 
+      dark 
+      persistent 
+      max-width="454" 
+      class="extra-round extra white--text"
+    >
+<v-card
+        max-width="454"
+        class="mx-auto"
+            >
+            <v-card-title class="teal lighten-2">
+                <span class="headline text-center font-weight-light">
+                    Pay with Bank  Transfer
+                </span>
+            </v-card-title>
+                
+            <v-card-text class="pa-5 text-center">
+              <p class="headline">
+                Payment of <strong>{{newAmount | currency}}</strong>
+                </p>
+                <div v-show="!show2">
+            <span class="subtitle-1 text-center font-weight-light">
+            Select your bank below
+            </span>
+            <v-select
+         v-model="bank"
+          :items="bankList"
+          item-text="text"
+          item-value="value"
+          class="px-10"
+          filled
+          label="Select your bank"
+          background-color="#19193d"
+         return-object
+         single-line
+         v-on:change="showAcct"
+        ></v-select>
+                 <v-progress-linear
+                            :active=loading
+                            indeterminate
+                            color="green"
+                            ></v-progress-linear> 
+                            </div>
+                  <div v-show="show2">
+                    <p class="subtitle-1">Make an Internet Transfer as payment for your transaction.</p>
+                    <h4 class="title">Account Number: {{craaccount}} <br> Bank Name: Highstreet MFB</h4>
+                    <p class="text--teal caption">transaction expires in 30mins</p>
+                    </div>
+            </v-card-text>
+           
+         
+             <v-card-actions class="pr-7">
+               <v-btn text color="teal lighten-3 overline" @click="mulaapaydialog = false">
+              <v-icon right-3 color="teal lighten-3" class="mr-2">mdi-cancel</v-icon>
+             Cancel
+              </v-btn>
+
+              <v-row
+          class="ml-n5"
+          justify="end"
+        >
+          <v-icon small class="mr-1">mdi-lock</v-icon>
+          <span class="overline">mulaa.co</span>
+        </v-row>
+            </v-card-actions>
+            </v-card>
+</v-dialog>
+
     </div>
 </template>
 <script>
+import banks from '@/data/banks.json'
 import { mapState, mapGetters } from 'vuex'
 import axios from 'axios'
 //import Rave from 'vue-ravepayment';
@@ -425,6 +496,14 @@ export default {
  data(){
         return {
           //raveKey: "FLWPUBK-xxxxxxxxxxxxxxxxxx-X",
+          craaccount: '',
+          show2: false,
+          bank: null,
+          bankcode: null,
+          bankList:banks,
+          mulaapaydialog: false,
+ successimg: `../assets/successful.svg`,//`@/assets/images/successful.svg`,
+          productID: '',
           overlay:true,
           checkOption: false,
           optionColor: 'green',
@@ -725,6 +804,57 @@ const salesData = {
       },
       close: function(){
           console.log("Payment closed")
+      },
+      showAcct(){
+        //this.show2 = true
+        const payOptions = {
+                    key: this.reference,
+                    email: this.buyerEmail,
+                    productID: this.productID,
+                    phone: this.buyerPhone,
+                }
+          this.loading = true
+          axios.get('https://shop.mulaa.co/api/wp-json/mulaapay/v1/tranx', {
+            params: payOptions
+            })
+            .then(response => {
+              this.show2 = true
+              this.loading = false
+              this.craaccount = response.data
+              const msg = ""
+            //console.log(response);
+            })
+          .catch(error => {
+          console.log(error);
+          });
+      },
+      payWithMulaa(){
+        //this.sheet = false
+        this.loading = false
+        
+        if(this.userDetails.bank_payment_option !=true){
+          this.payWithPaystack()
+          console.log(this.userDetails.bank_payment_option)
+        }else{
+          this.mulaapaydialog = true
+         console.log('mulaapay') 
+        }
+        
+        //console.log(this.mulaapaydialog)
+        
+                
+                //this.$emit('payOptions', payOptions);
+/*
+          axios.get('http://dev.mulaa.africa/admin/wp-json/mulaapay/v1', {
+            params: payOptions
+            })
+            .then(function (response) {
+            console.log(response);
+            })
+          .catch(function (error) {
+          console.log(error);
+          });
+*/
       },
       payWithPaystack() {
         if(this.userDetails.subaccount_code !='' || this.userDetails.subaccount_code !=null)
