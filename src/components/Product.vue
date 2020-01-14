@@ -804,7 +804,7 @@ const salesData = {
               this.loading = false
               this.craaccount = response.data
               const msg = ""
-            console.log(response);
+            //console.log(response);
             })
           .catch(error => {
           console.log(error);
