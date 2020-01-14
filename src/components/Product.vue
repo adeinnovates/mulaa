@@ -819,7 +819,7 @@ const salesData = {
         const payOptions = {
                     key: this.reference,
                     email: this.buyerEmail,
-                    productID: this.productID,
+                    productID: this.$route.params.id,//this.productID,
                     phone: this.buyerPhone,
                 }
           this.loading = true
