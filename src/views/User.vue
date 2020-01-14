@@ -100,7 +100,7 @@
                           <v-icon small left class="teal--text lighten-1">
               mdi-vector-link
               </v-icon>
-                          <span class="title text-center" style="width:80%;">
+                          <span class="subtitle-1 text-center pb-2" style="width:80%;line-height:22px;">
                             {{link.link_title}}
                             </span>
                           <v-spacer></v-spacer>
@@ -444,35 +444,39 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
   },
     methods: {
        userLimit(){
-       /*
-       let subcheck = this.userDetails.subscription
-        let payment_date = this.userDetails.payment_date
-         
-let yesterday = new Date("11-13-2019")
-            let st = new Date();
-            console.log(new Date(payment_date))
-           let diff =  Math.ceil(
-  (st - new Date(payment_date)) / 1000 / 60 / 60 / 24
-);
-console.log('days left: '+ diff)
-*/
+       
 const config = {
             headers: {'Authorization': 'Bearer '+this.skk}
             }
             let cus_code = this.userDetails.customer_code
             let exclude_transactions = true
-         if(this.userDetails.paid_user != true){
+         if(this.userDetails.paid_user != true){ 
             this.limitVal = 1
+            this.contentloaded = false
+             if(this.userDetails.trial == true){
+                this.limitVal = 65
+                this.showSearch = true 
+                return
+              }
             //console.log('base: '+this.userDetails.subscription)
           }else {
             axios.get('https://api.paystack.co/customer/'+cus_code, config)
         .then(resp => { 
             const trxData = resp.data.data//.subscriptions
             if(trxData.subscriptions[0] != undefined){
+              this.contentloaded = false
               this.limitVal = 65
+              this.showSearch = true
               //console.log(trxData.subscriptions[0])
             }else{
+              this.contentloaded = false
               this.limitVal = 3
+              console.log(this.name)
+              //if(this.name = 'foodfashionplug'){
+                if(this.userDetails.trial == true){
+                this.limitVal = 65
+                this.showSearch = true 
+              }
               //console.log(trxData.subscriptions[0])
             }
             //console.log(trxData)

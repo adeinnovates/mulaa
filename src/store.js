@@ -43,7 +43,8 @@ const vuexLocalStorage = new VuexPersist({
     Discounted: state.Discounted,
     Sales: state.Sales,
     userEmail: state.userEmail,
-    userAcctStatus: state.userAcctStatus
+    userAcctStatus: state.userAcctStatus,
+    theProductId: state.theProductId,
     // getRidOfThisModule: state.getRidOfThisModule (No one likes it.)
   })
 });
@@ -52,6 +53,7 @@ export default new Vuex.Store({
   state: {
     linkStat: [],
     status: '',
+    theProductId: '',
     token: localStorage.getItem('token') || '',
     user: '',
     productOwner: '',
@@ -186,7 +188,8 @@ export default new Vuex.Store({
        });*/
        //state.userDiscounted = Discounted
        state.theProduct = product.acf
-       //console.log(product.acf)
+       state.theProductId = product.id
+       //console.log(product.id)
        state.loading = false
        //console.log('the product: '+JSON.stringify(state.theProduct))
    },
