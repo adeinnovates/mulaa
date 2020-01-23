@@ -823,6 +823,7 @@ const salesData = {
                     phone: this.buyerPhone,
                 }
           this.loading = true
+          console.log(this.$route.params.id)
           axios.get('https://shop.mulaa.co/api/wp-json/mulaapay/v1/tranx', {
             params: payOptions
             })
