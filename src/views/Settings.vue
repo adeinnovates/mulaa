@@ -244,7 +244,7 @@ style="border-top-left-radius:15px;border-top-right-radius:15px;"
         <span class="teal--text subtitle-1 text--darken-1">
           (Discounted) Annual Mogul: N52,500 <v-btn small color="success"
           
-          @click="doSubscription('PLN_eoildbokktq5sle')"
+          @click="doSubscription('PLN_eoildbokktq5sle', '5250000')"
           >Subscribe</v-btn>
         </span>
       <div class="grey--text text--darken-2 mt-2">
@@ -264,7 +264,7 @@ Unlimited content links,
         <span class="teal--text subtitle-1 text--darken-1">
           (Discounted) Quarterly Sprinter: N13,500 <v-btn small color="success"
           
-          @click="doSubscription('PLN_c7p40gbev53tons')"
+          @click="doSubscription('PLN_c7p40gbev53tons', '1350000')"
           >Subscribe</v-btn>
         </span>
       <div class="text--darken-2 grey--text mt-2">
@@ -287,7 +287,7 @@ Unlimited content links,
         <span class="teal--text subtitle-1 text--darken-1">
           Annual Mogul: N54,000 <v-btn small color="success"
           :disabled=disabled
-          @click="doSubscription('PLN_g4m3pjhpsgb3u14')"
+          @click="doSubscription('PLN_g4m3pjhpsgb3u14', '5400000')"
           >Subscribe</v-btn>
         </span>
       <div class="grey--text text--darken-2 mt-2">
@@ -307,7 +307,7 @@ Unlimited content links,
         <span class="teal--text subtitle-1 text--darken-1">
           Quarterly Sprinter: N15,000 <v-btn small color="success"
           :disabled=disabled
-          @click="doSubscription('PLN_xbwopoov59jncbi')"
+          @click="doSubscription('PLN_xbwopoov59jncbi', '1500000')"
           >Subscribe</v-btn>
         </span>
       <div class="text--darken-2 grey--text mt-2">
@@ -327,7 +327,7 @@ Unlimited content links,
         <span class="teal--text subtitle-1 text--darken-1">
           Monthly Starter: N6,000 <v-btn small color="success"
           :disabled=disabled
-          @click="doSubscription('PLN_pzvz7tl3qnrwbdh')"
+          @click="doSubscription('PLN_pzvz7tl3qnrwbdh', '600000')"
           >Subscribe</v-btn>
         </span>
       <div class="text--darken-2 grey--text mt-2">
@@ -348,7 +348,7 @@ Unlimited content links,
           Base Plan: N1,000 (x6) 
         </span><v-btn small color="success"
         :disabled=disabled
-        @click="doSubscription('PLN_n4bg3qza5v3va6r')"
+        @click="doSubscription('PLN_n4bg3qza5v3va6r', '100000')"
         >Subscribe</v-btn>
       <div class="text--darken-2 grey--text mt-2">
         Maximum 3 products
@@ -507,13 +507,13 @@ export default {
           testingCodeToCopy.setAttribute('type', 'hidden')
           window.getSelection().removeAllRanges()
         },
-       doSubscription(level){
+       doSubscription(level, amnt){
             //console.log(level)
             this.subOverlay = !this.subOverlay
             //let skey = 'sk_live_01952d79b3b14815af91d560256959358299e123'
             let subData = {
-            email: this.userDetails.email,
-            amount: "500",
+            email: this.userDetails.user_email,
+            amount: amnt,
             currency: "NGN",
             callback_url: "http://shop.mulaa.co/settings/confirm",
             plan:level
