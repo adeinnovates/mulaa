@@ -88,13 +88,14 @@
             outlined
             color="teal lighten-3"
             :rules="[nurules.required]"
+            :hide-details=true
           ></v-text-field>
           <v-textarea
-          class="teal--text form-field my-0"
+          class="teal--text form-field my-2"
           v-model="description"
           outlined
           label="Description"
-        
+        :hide-details=true
           color="teal lighten-3"
         ></v-textarea>
 
@@ -110,6 +111,7 @@
             outlined
             color="teal lighten-3"
             :rules="[nurules.required]"
+            :hide-details=true
           ></v-text-field>
             </v-col>
             <v-col>
@@ -122,64 +124,104 @@
             prepend-inner-icon="mdi-currency-ngn"
             outlined
             color="teal lighten-3"
+            :hide-details=true
           ></v-text-field>
             </v-col>
 
         </v-row>
-         <v-row>
-            <v-col>
-<v-text-field
+        <v-row >
+          <v-col class="pt-n2">
+ <v-text-field
            class="teal--text form-field ma-0"
             v-model="stock"
-            label="Available in Stock"
+            label="in Stock"
             placeholder="Total Stock"
             type="number"
             prepend-inner-icon="mdi-counter"
             outlined
-            color="teal lighten-3"
+            color="teal"
             :disabled=disableStock
             
           ></v-text-field>
-            </v-col>
-            <v-col>
-                <v-switch 
-                v-model="madetoorder" 
-                label="custom-made ?" 
-                class="mt-5"
-                color="#23d2aa"
-                inset
-                >
-                </v-switch>
-            </v-col>
+          </v-col>
+          </v-row>
 
-        </v-row>
-
-        <v-switch 
-        v-model="discountEnable" 
-        label="Show Discount?" 
-        class="mt-0"
+        <v-expansion-panels class="mt-n5 mb-5"
+        :hover=true
+        >
+        <v-expansion-panel>
+        <v-expansion-panel-header class="caption teal--text">Is this a digital product?</v-expansion-panel-header>
+        <v-expansion-panel-content>
+<v-switch 
+        v-model="eproduct" 
+        label="Yes, e-product" 
+        class="mt-n1"
         color="#23d2aa"
         inset
+        :disabled=true
         >
         </v-switch>
+
+        <v-text-field
+        v-show="this.eproduct != ''"
+           class="teal--text form-field ma-0"
+            v-model="eproductLink"
+            label="product url"
+            placeholder="url"
+            hint="Type or paste a link to your digital product (gdrive, dropbox, etc) or membership page (teachable, etc)"
+            type="text"
+            outlined
+            color="teal lighten-3"
+            :rules="[nurules.required, nurules.url]"
+          ></v-text-field>
+          <!--upload digital media-->
+        </v-expansion-panel-content>
+        </v-expansion-panel>
+        </v-expansion-panels>
+
             </v-card-text>
-           
         </v-col>
          
     </v-row>
 
-  <!---  
- <v-card
-    class="mx-auto mb-5"
-    max-width="90%"
-    outlined
-  >
-     <v-card-title class="overline">Delivery [+] charges</v-card-title>
-<v-card-text>
+    <!-- lower segment-->
+    <v-row 
+    class="teal lighten-5 mb-n2"
+    >
+        <v-col 
+        class="pa-5 border-right"
+        col="6"
+        sm="6"
+        xs="12"
+        >
+          <p class="body-1 teal--text">Product Options</p>
+         
+<v-switch 
+        v-model="discountEnable" 
+        label="Show Discount?" 
+        class="mt-n1"
+        color="#23d2aa"
+        inset
+        >
+        </v-switch>
 
-</v-card-text>
-  </v-card>
-  -->
+        <v-switch 
+                v-model="madetoorder" 
+                label="custom made / made to order ?" 
+                class="mt-1"
+                color="#23d2aa"
+                inset
+                >
+                </v-switch>
+
+        </v-col>
+        <v-col
+         class="pa-5"
+         col="6"
+        sm="6"
+        xs="12"
+        >
+           <p class="body-1 teal--text">Product Variations</p>
 
   <v-expansion-panels popout>
       <v-expansion-panel>
@@ -248,6 +290,23 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
   </v-expansion-panels>
+
+
+        </v-col>
+    </v-row>
+
+  <!---  
+ <v-card
+    class="mx-auto mb-5"
+    max-width="90%"
+    outlined
+  >
+     <v-card-title class="overline">Delivery [+] charges</v-card-title>
+<v-card-text>
+
+</v-card-text>
+  </v-card>
+  -->
 
    </v-form>
 </div>
@@ -380,6 +439,8 @@ import axios from 'axios'
 export default {
     data(){
         return{
+          eproduct: '',
+          eproductLink:'',
           disableStock: false,
           madetoorder: false,
           stock:1,
@@ -602,5 +663,8 @@ this.$refs.linkForm.reset()
     }
     .img-inputer__preview-box.clear{
         display: none !important;
+    }
+    .border-right{
+      border-right:1px dotted teal;
     }
 </style>

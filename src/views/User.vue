@@ -178,7 +178,7 @@
               <v-card-actions>
                   
                <v-btn text color="#23d2aa" 
-               class="caption"
+               class="caption font-weight-bold"
                :to="{
                    name: 'product',
                    params: {
@@ -195,7 +195,7 @@
                
                
                 <v-spacer></v-spacer>
-                <div class="grey--text text--darken-3 overline"> 
+                <div class="grey--text text--darken-3 caption"> 
                   <!--sku {{product.productID}}-->
                   <v-chip outlined x-small>
                   #{{product.productID}}
