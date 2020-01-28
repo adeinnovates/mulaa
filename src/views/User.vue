@@ -294,6 +294,7 @@ export default {
     }*/,
      data(){
         return{
+          pageNum: null,
           teststock: 1,
           limitVal: 1,
           showWidget: false,
@@ -506,8 +507,14 @@ return
          //return console.log('loggedin user: '+ this.$store.getters.isLoggedIn)
        }
      },
+     paginate(){
+       this.pageNum += this.pageNum
+       const paged = this.name + '&page='+this.pageNum
+        this.$store.dispatch('loadUserProducts', paged)
+     },
     fetchData(){
       //console.log('this user '+this.name)
+      const paged = this.name + '&page='+this.pageNum
         this.$store.dispatch('loadUserProducts', this.name)
         this.$store.dispatch('loadUserDetails', this.name)
         this.$store.dispatch('loadDashboardLinks', this.name)
@@ -556,6 +563,10 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
 }
 </script>
 <style>
+.pagination {
+}
+.page-item {
+}
 .outofstock{
   
    filter: alpha(opacity=80);
