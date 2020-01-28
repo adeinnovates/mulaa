@@ -193,6 +193,26 @@ export default new Vuex.Store({
        state.loading = false
        //console.log('the product: '+JSON.stringify(state.theProduct))
    },
+   more_products (state, user_product) {
+       
+    const Discounted = user_product.filter(function(item){
+      return item.show_discount === 1; 
+    });
+    state.userDiscounted = Discounted
+    //state.myproducts = user_product
+    const old = state.userProducts
+    state.userProducts = {...old, user_product}
+    //console.log(state.userProducts)
+    
+   // console.log('mutation: '+user_product)
+/*
+    state.Discounted = Discounted
+    state.allProducts = products
+    state.myproducts = filtered
+    console.log(state.myproducts)
+*/
+    state.loading = false
+},
     user_products (state, user_product) {
        
         const Discounted = user_product.filter(function(item){
@@ -392,6 +412,36 @@ export default new Vuex.Store({
           //reject(err)
         })
       }else {console.log('logout and login, user object not found')}
+    },
+    loadMoreProducts ({commit, state}, userdata){
+      state.loading = true
+      return new Promise((resolve, reject) => {
+    
+      //console.log(data) https://shop.mulaa.co/api/wp-json/mulaa-auth/v1/products
+      if (userdata != ''){ //http://dev.mulaa.africa/admin/wp-json/wp/v2/product?per_page=100
+        axios({ url: `${BASEURL}${Products_ENDPOINT}`+'?author='+userdata, method: 'GET' })
+        .then(resp => { 
+          if(resp.data.length > 0){
+            const user_products = resp.data
+            const authorID = resp.data.theAuthor
+            //$store.dispatch('getUser', authorID)
+            commit('more_products', user_products)
+            //console.log('action: '+resp.data)
+          }else {
+            //console.log('Store Empty')
+            commit('showEmpty')
+            return
+          }
+          
+          resolve(resp)
+        })
+        .catch(err => {
+          commit('load_error', err)
+          console.log(err)
+          reject(err)
+        })
+      }else {console.log('An error occured loading product data, try again later')}
+    })
     },
     loadUserProducts ({commit, state}, userdata){
       state.loading = true

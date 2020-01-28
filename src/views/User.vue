@@ -6,8 +6,7 @@
      color="transparent"
     >
         <v-container>
-          <!--
-            <div 
+          <div 
           class="text-right small text-uppercase"
           v-show="showWidget"
           >
@@ -17,8 +16,11 @@
           >
 
           </Widget>
+         <!-- <v-icon small color="teal">
+              mdi-settings
+              </v-icon>
+              Widget -->
           </div>
-          -->
                 <div class="text-center">
                   
               <v-avatar class="my-2" size="80">
@@ -100,7 +102,7 @@
                           <v-icon small left class="teal--text lighten-1">
               mdi-vector-link
               </v-icon>
-                          <span class="subtitle-1 text-center pb-2" style="width:80%;line-height:22px;">
+                          <span class="title text-center" style="width:80%;">
                             {{link.link_title}}
                             </span>
                           <v-spacer></v-spacer>
@@ -110,8 +112,29 @@
                           </v-card>
                   </div>
                 <div class="layout-desktop mx-auto" style="max-width:854px;">
-<p class="overline mb-0 mt-6"><v-icon small left>mdi-shopping-outline</v-icon> My products</p>
-</div>
+                <v-layout row wrap mx-auto>
+                <v-flex xs7 sm7 md8 lg9>
+                <p class="overline mb-0 mt-6"><v-icon small left>mdi-shopping-outline</v-icon> My products</p>
+                </v-flex>
+                <v-flex xs5 sm5 md4 lg3 text-right>
+               <!-- <v-btn
+                icon
+                >
+                <v-icon right>mdi-magnify</v-icon>
+                </v-btn> -->
+                <v-text-field
+            
+            append-icon="mdi-magnify"
+            class=""
+            v-model="search" :clearable=true
+            color= teal
+            placeholder="Product No."
+            v-show="showSearch"
+          ></v-text-field>
+                </v-flex>
+                </v-layout>
+
+                </div>
         <v-layout row wrap pt-2 class="layout-desktop mx-auto" style="max-width:854px;">
                            
                          
@@ -172,13 +195,12 @@
                 </div>
                 <div class="grey--text text-truncate"> {{product.acf.description}}</div>
               </v-card-text>-->  <!--<Buy :theproducts="product">
-
                 </Buy>-->
                
               <v-card-actions>
                   
                <v-btn text color="#23d2aa" 
-               class="caption font-weight-bold"
+               class="caption"
                :to="{
                    name: 'product',
                    params: {
@@ -195,7 +217,7 @@
                
                
                 <v-spacer></v-spacer>
-                <div class="grey--text text--darken-3 caption"> 
+                <div class="grey--text text--darken-3 overline"> 
                   <!--sku {{product.productID}}-->
                   <v-chip outlined x-small>
                   #{{product.productID}}
@@ -209,8 +231,25 @@
               
         </v-flex>
        
+       <v-flex xs6 sm6 md4 lg4 v-for="(product, index) in filterHiddenProduct" :key="`product-${index}`" v-show="contentloaded">
+        <!--<v-skeleton-loader
+      class="mx-auto"
+      max-width="300"
+      type="card"
+    ></v-skeleton-loader>
+    -->
+        </v-flex>
                        </v-layout>
-                        </div>
+              <div class="text-center mt-4">
+                <v-pagination
+                v-model="pageNum"
+                :length="10"
+                :total-visible="2"
+                circle
+                color="teal"
+                ></v-pagination>
+              </div>
+          </div>
         </v-container>
         </v-sheet>
        <v-row justify="center" class="mb-10"> 
@@ -294,9 +333,11 @@ export default {
     }*/,
      data(){
         return{
-          pageNum: null,
-          teststock: 1,
+          bottom: false,
+          pageNum: 1,
+          contentloaded:true,
           limitVal: 1,
+          nname: '',
           showWidget: false,
           inputs: [
             {
@@ -304,6 +345,7 @@ export default {
             }
         ],
             search:'',
+            showSearch: false,
             overlay:false,
             userdata: this.$route.params.name,
             dialog: false,
@@ -425,6 +467,11 @@ export default {
      created() {
         this.fetchData()
        // console.log('name: '+ this.name)
+       window.addEventListener('scroll', () => {
+      this.bottom = this.bottomVisible()
+    })
+    this.paginate()
+    
     },
      watch: {
     // call again the method if the route changes
@@ -441,9 +488,27 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
       //console.log('details updated')
       return this.userLimit()
       //return
+    },
+    pageNum: function (val) {
+      console.log(this.pageNum)
+      const paged = this.name + '&page='+this.pageNum
+        this.$store.dispatch('loadMoreProducts', paged)
+    },
+    bottom(bottom) {
+      if (bottom) {
+        this.pageNum ++
+        this.paginate()
+      }
     }
   },
     methods: {
+       bottomVisible() {
+      const scrollY = window.scrollY
+      const visible = document.documentElement.clientHeight
+      const pageHeight = document.documentElement.scrollHeight
+      const bottomOfPage = visible + scrollY >= pageHeight
+      return bottomOfPage || pageHeight < visible
+    },
        userLimit(){
        
 const config = {
@@ -508,13 +573,13 @@ return
        }
      },
      paginate(){
-       this.pageNum += this.pageNum
+       //this.pageNum += this.pageNum
        const paged = this.name + '&page='+this.pageNum
-        this.$store.dispatch('loadUserProducts', paged)
+        this.$store.dispatch('loadMoreProducts', paged)
      },
     fetchData(){
       //console.log('this user '+this.name)
-      const paged = this.name + '&page='+this.pageNum
+      //const paged = this.name + '&page='+this.pageNum
         this.$store.dispatch('loadUserProducts', this.name)
         this.$store.dispatch('loadUserDetails', this.name)
         this.$store.dispatch('loadDashboardLinks', this.name)
