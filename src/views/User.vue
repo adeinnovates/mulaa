@@ -218,7 +218,7 @@
                
                
                 <v-spacer></v-spacer>
-                <div class="grey--text text--darken-3 overline"> 
+                <div class="grey--text text--darken-3 caption"> 
                   <!--sku {{product.productID}}-->
                   <v-chip outlined x-small>
                   #{{product.productID}}
