@@ -220,9 +220,12 @@
                 <v-spacer></v-spacer>
                 <div class="grey--text text--darken-3 caption"> 
                   <!--sku {{product.productID}}-->
-                  <v-chip outlined x-small>
+                  <!--<v-chip outlined x-small>
                   #{{product.productID}}
-                  </v-chip>
+                  </v-chip>-->
+                  <span class="x-small outline">
+                    #{{product.productID}}
+                  </span>
                   </div>
               </v-card-actions>
              
@@ -602,6 +605,12 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
 }
 </script>
 <style>
+.x-small.outline{
+  font-size: 9px;
+  border:1px solid #ccc;
+  border-radius: 10px;
+  padding: 1px 5px;
+}
 .outofstock{
   
    filter: alpha(opacity=80);
