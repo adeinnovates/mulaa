@@ -194,14 +194,72 @@ export default new Vuex.Store({
        //console.log('the product: '+JSON.stringify(state.theProduct))
    },
    more_products (state, user_product) {
+     console.log(user_product.length)
        
     const Discounted = user_product.filter(function(item){
       return item.show_discount === 1; 
     });
     state.userDiscounted = Discounted
     //state.myproducts = user_product
-    const old = state.userProducts
-    state.userProducts = {...old, user_product}
+    const old = Object.values(state.userProducts)
+    const neew = Object.values(user_product)
+    const nnew = [...old,...neew]
+    
+    const convertArrayToObject = (array, key) => {
+      const initialValue = {};
+      return array.reduce((obj, item) => {
+        return {
+          ...obj,
+          [item[key]]: item,
+        };
+      }, initialValue);
+    };
+
+
+    //state.userProducts = nnew
+    
+    /*
+    var extend = function () {
+
+      // Variables
+      var extended = {};
+      var deep = false;
+      var i = 0;
+    
+      // Check if a deep merge
+      if (typeof (arguments[0]) === 'boolean') {
+        deep = arguments[0];
+        i++;
+      }
+    
+      // Merge the object into the extended object
+      var merge = function (obj) {
+        for (var prop in obj) {
+          if (obj.hasOwnProperty(prop)) {
+            if (deep && Object.prototype.toString.call(obj[prop]) === '[object Object]') {
+              // If we're doing a deep merge and the property is an object
+              extended[prop] = extend(true, extended[prop], obj[prop]);
+            } else {
+              // Otherwise, do a regular merge
+              extended[prop] = obj[prop];
+            }
+          }
+        }
+      };
+    
+      // Loop through each object and conduct a merge
+      for (; i < arguments.length; i++) {
+        merge(arguments[i]);
+      }
+    
+      return extended;
+    
+    }; */
+    
+
+    console.log(convertArrayToObject(nnew,'productID'))
+    //state.userProducts = convertArrayToObject(nnew,'productID')
+    //state.userProducts = Object.assign({},old, user_product)
     //console.log(state.userProducts)
     
    // console.log('mutation: '+user_product)

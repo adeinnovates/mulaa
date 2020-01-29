@@ -164,6 +164,7 @@
           lazy-src="https://picsum.photos/id/1002/10/6"
          >
               <div v-show="product.stock == 0" class="outofstock">
+
               <v-chip
               class="ma-2 point text-uppercase font-weight-black"
               color="red"
@@ -172,8 +173,9 @@
               text-color="white"
               >
               <v-icon small left>mdi-cart-off</v-icon>
-              sold out
+                sold out
               </v-chip>
+
               </div><!-- hidden / out of stock-->
             <template v-slot:placeholder>
             <v-row
@@ -217,18 +219,21 @@
                
                
                 <v-spacer></v-spacer>
-                <div class="grey--text text--darken-3 overline"> 
+                <div class="grey--text text--darken-3 caption"> 
                   <!--sku {{product.productID}}-->
-                  <v-chip outlined x-small>
+                  <!--<v-chip outlined x-small>
                   #{{product.productID}}
-                  </v-chip>
+                  </v-chip>-->
+                  <span class="x-small outline">
+                    #{{product.productID}}
+                  </span>
                   </div>
               </v-card-actions>
              
               </v-card>
               
               </transition>
-              
+             
         </v-flex>
        
        <v-flex xs6 sm6 md4 lg4 v-for="(product, index) in filterHiddenProduct" :key="`product-${index}`" v-show="contentloaded">
@@ -239,7 +244,17 @@
     ></v-skeleton-loader>
     -->
         </v-flex>
+
                        </v-layout>
+  <div class="text-center mt-4"
+  v-show="showloader"
+  >
+<v-progress-circular 
+indeterminate
+color="primary"
+></v-progress-circular>
+</div>
+                       <!--
               <div class="text-center mt-4">
                 <v-pagination
                 v-model="pageNum"
@@ -249,6 +264,7 @@
                 color="teal"
                 ></v-pagination>
               </div>
+              -->
           </div>
         </v-container>
         </v-sheet>
@@ -333,6 +349,7 @@ export default {
     }*/,
      data(){
         return{
+          showloader: false,
           bottom: false,
           pageNum: 1,
           contentloaded:true,
@@ -491,6 +508,7 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
     },
     pageNum: function (val) {
       console.log(this.pageNum)
+      this.showloader = true
       const paged = this.name + '&page='+this.pageNum
         this.$store.dispatch('loadMoreProducts', paged)
     },
@@ -499,10 +517,13 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
         this.pageNum ++
         this.paginate()
       }
+    },
+    filterHiddenProduct(){
+      this.showloader = false
     }
   },
     methods: {
-       bottomVisible() {
+      bottomVisible() {
       const scrollY = window.scrollY
       const visible = document.documentElement.clientHeight
       const pageHeight = document.documentElement.scrollHeight
@@ -576,6 +597,7 @@ return
        //this.pageNum += this.pageNum
        const paged = this.name + '&page='+this.pageNum
         this.$store.dispatch('loadMoreProducts', paged)
+        //this.showloader = false
      },
     fetchData(){
       //console.log('this user '+this.name)
@@ -628,6 +650,12 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
 }
 </script>
 <style>
+.x-small.outline{
+  font-size: 9px;
+  border:1px solid #ccc;
+  border-radius: 10px;
+  padding: 1px 5px;
+}
 .pagination {
 }
 .page-item {
