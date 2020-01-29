@@ -251,7 +251,7 @@
   >
 <v-progress-circular 
 indeterminate
-color="primary"
+color="teal lighten-3"
 ></v-progress-circular>
 </div>
                        <!--
@@ -383,6 +383,7 @@ export default {
              'renderUser'
            ]),
       ...mapState({
+        productListEnd: 'productListEnd',
           emptyStore: 'emptyStore',
       registerMsg:'registerMsg',
       color:'color',
@@ -487,7 +488,7 @@ export default {
        window.addEventListener('scroll', () => {
       this.bottom = this.bottomVisible()
     })
-    this.paginate()
+    //this.paginate()
     
     },
      watch: {
@@ -507,10 +508,22 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
       //return
     },
     pageNum: function (val) {
-      console.log(this.pageNum)
-      this.showloader = true
+      //console.log(this.pageNum)
+      if(this.productListEnd != true){
+        this.showloader = true
+      }else{
+        this.showloader = false
+        console.log('productListEnd '+this.productListEnd)
+        return
+      }
       const paged = this.name + '&page='+this.pageNum
-        this.$store.dispatch('loadMoreProducts', paged)
+      
+        this.$store.dispatch('loadMoreProducts', paged).then(response => {
+          this.showloader = false
+          
+            //console.log("End of product list :) Now buy stuff")
+        })
+      
     },
     bottom(bottom) {
       if (bottom) {
@@ -596,7 +609,12 @@ return
      paginate(){
        //this.pageNum += this.pageNum
        const paged = this.name + '&page='+this.pageNum
-        this.$store.dispatch('loadMoreProducts', paged)
+        this.$store.dispatch('loadMoreProducts', paged).then(response => {
+          
+          this.showloader = false
+
+            //console.log("End of product list :) Now buy stuff")
+        })
         //this.showloader = false
      },
     fetchData(){

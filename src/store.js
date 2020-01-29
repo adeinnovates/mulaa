@@ -51,6 +51,7 @@ const vuexLocalStorage = new VuexPersist({
 
 export default new Vuex.Store({
   state: {
+    productListEnd: false,
     linkStat: [],
     status: '',
     theProductId: '',
@@ -194,18 +195,60 @@ export default new Vuex.Store({
        //console.log('the product: '+JSON.stringify(state.theProduct))
    },
    more_products (state, user_product) {
-     console.log(user_product.length)
-       
+     //console.log(state.userProducts.length)
+     
+    
+    //state.myproducts = user_product
+
+    Array.prototype.unique = function() {
+      var a = this.concat();
+      for(var i=0; i<a.length; ++i) {
+          for(var j=i+1; j<a.length; ++j) {
+              if(a[i] === a[j])
+                  a.splice(j--, 1);
+          }
+      }
+  
+      return a;
+  };
+
+  function arrayUnique(array) {
+    var a = array.concat();
+    for(var i=0; i<a.length; ++i) {
+        for(var j=i+1; j<a.length; ++j) {
+            if(a[i] === a[j])
+                a.splice(j--, 1);
+        }
+    }
+
+    return a;
+}
+
+const removeDuplicates = (array, key) => {
+  return array.reduce((arr, item) => {
+    const removed = arr.filter(i => i[key] !== item[key]);
+    return [...removed, item];
+  }, []);
+};
+    const old = state.userProducts
+    const neew = user_product //Object.values(user_product)
+    const nnew = old.concat(neew)//[...old,...neew]
+
+    if(user_product != 0){
+    state.userProducts = removeDuplicates(nnew, 'productID')
+
     const Discounted = user_product.filter(function(item){
       return item.show_discount === 1; 
     });
     state.userDiscounted = Discounted
-    //state.myproducts = user_product
-    const old = Object.values(state.userProducts)
-    const neew = Object.values(user_product)
-    const nnew = [...old,...neew]
+
+    }else{
+      state.productListEnd = true
+      state.userProducts
+      return
+    }
     
-    const convertArrayToObject = (array, key) => {
+    /*const convertArrayToObject = (array, key) => {
       const initialValue = {};
       return array.reduce((obj, item) => {
         return {
@@ -213,7 +256,14 @@ export default new Vuex.Store({
           [item[key]]: item,
         };
       }, initialValue);
-    };
+    };*/
+    const convertArrayToObject = (array, key) => 
+   array.reduce((obj, item) => ((obj[[item[key]]] = item), obj), {});
+
+    //const oldd = old.concat(user_product)
+    //state.userProducts = old.concat(user_product)
+    //state.userProducts = user_product
+    //const result = Object.assign({}, ...nnew.map(object => ({[object.id]: object})))
 
 
     //state.userProducts = nnew
@@ -256,8 +306,9 @@ export default new Vuex.Store({
     
     }; */
     
-
-    console.log(convertArrayToObject(nnew,'productID'))
+//console.log(state.userProducts)
+//console.log(nnew)
+    //console.log(convertArrayToObject(nnew,'productID'))
     //state.userProducts = convertArrayToObject(nnew,'productID')
     //state.userProducts = Object.assign({},old, user_product)
     //console.log(state.userProducts)
@@ -487,7 +538,8 @@ export default new Vuex.Store({
             //console.log('action: '+resp.data)
           }else {
             //console.log('Store Empty')
-            commit('showEmpty')
+            //commit('showEmpty')
+            commit('more_products', 0)
             return
           }
           
