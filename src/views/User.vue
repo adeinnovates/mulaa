@@ -243,6 +243,14 @@
     ></v-skeleton-loader>
         </v-flex>
                        </v-layout>
+<div class="text-center mt-4"
+v-show="showloader"
+>
+<v-progress-circular 
+indeterminate
+color="teal lighten-3"
+></v-progress-circular>
+</div>
                         </div>
         </v-container>
         </v-sheet>
@@ -329,6 +337,9 @@ export default {
     }*/,
      data(){
         return{
+          showloader: false,
+          bottom: false,
+          pageNum: 1,
           contentloaded:true,
           limitVal: 1,
           nname: '',
@@ -360,6 +371,7 @@ export default {
              'renderUser'
            ]),
       ...mapState({
+        productListEnd: 'productListEnd',
           emptyStore: 'emptyStore',
       registerMsg:'registerMsg',
       color:'color',
@@ -468,6 +480,10 @@ this.nname = parts[0]
        //console.log('name created: '+parts[0])
         this.fetchData(parts[0])
        // console.log('name: '+ this.name)
+
+       window.addEventListener('scroll', () => {
+      this.bottom = this.bottomVisible()
+    })
     },
      watch: {
     // call again the method if the route changes
@@ -487,9 +503,44 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
       //console.log('details updated')
       return this.userLimit()
       //return
+    },
+    pageNum: function (val) {
+      //console.log(this.pageNum)
+      if(this.productListEnd != true){
+        this.showloader = true
+      }else{
+        this.showloader = false
+        console.log('productListEnd '+this.productListEnd)
+        return
+      }
+      const paged = this.nname + '&page='+this.pageNum
+      
+        this.$store.dispatch('loadMoreProducts', paged).then(response => {
+          this.showloader = false
+          
+            //console.log("End of product list :) Now buy stuff")
+        })
+      
+    },
+    bottom(bottom) {
+      if (bottom) {
+        this.pageNum ++
+        this.paginate()
+      }
+    },
+    filterHiddenProduct(){
+      this.showloader = false
     }
+
   },
     methods: {
+      bottomVisible() {
+      const scrollY = window.scrollY
+      const visible = document.documentElement.clientHeight
+      const pageHeight = document.documentElement.scrollHeight
+      const bottomOfPage = visible + scrollY >= pageHeight
+      return bottomOfPage || pageHeight < visible
+    },
       userLimit(){
        
 const config = {
@@ -554,6 +605,16 @@ return
          }
          //return console.log('loggedin user: '+ this.$store.getters.isLoggedIn)
        }
+     },
+     paginate(){
+       //this.pageNum += this.pageNum
+       const paged = this.nname + '&page='+this.pageNum
+        this.$store.dispatch('loadMoreProducts', paged).then(response => {
+          
+          this.showloader = false
+            //console.log("End of product list :) Now buy stuff")
+        })
+        //this.showloader = false
      },
     fetchData(nname){
       //console.log('this user '+this.name)

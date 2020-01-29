@@ -50,6 +50,7 @@ const vuexLocalStorage = new VuexPersist({
 
 export default new Vuex.Store({
   state: {
+    productListEnd: false,
     linkStat: [],
     status: '',
     token: localStorage.getItem('token') || '',
@@ -190,6 +191,65 @@ export default new Vuex.Store({
        state.loading = false
        //console.log('the product: '+JSON.stringify(state.theProduct))
    },
+   more_products (state, user_product) {
+    //console.log(state.userProducts.length)
+    
+   
+   //state.myproducts = user_product
+
+   Array.prototype.unique = function() {
+     var a = this.concat();
+     for(var i=0; i<a.length; ++i) {
+         for(var j=i+1; j<a.length; ++j) {
+             if(a[i] === a[j])
+                 a.splice(j--, 1);
+         }
+     }
+ 
+     return a;
+ };
+
+ function arrayUnique(array) {
+   var a = array.concat();
+   for(var i=0; i<a.length; ++i) {
+       for(var j=i+1; j<a.length; ++j) {
+           if(a[i] === a[j])
+               a.splice(j--, 1);
+       }
+   }
+
+   return a;
+}
+
+const removeDuplicates = (array, key) => {
+ return array.reduce((arr, item) => {
+   const removed = arr.filter(i => i[key] !== item[key]);
+   return [...removed, item];
+ }, []);
+};
+   const old = state.userProducts
+   const neew = user_product //Object.values(user_product)
+   const nnew = old.concat(neew)//[...old,...neew]
+
+   if(user_product != 0){
+   state.userProducts = removeDuplicates(nnew, 'productID')
+
+   const Discounted = user_product.filter(function(item){
+     return item.show_discount === 1; 
+   });
+   state.userDiscounted = Discounted
+
+   }else{
+     state.productListEnd = true
+     state.userProducts
+     return
+   }
+    
+  const convertArrayToObject = (array, key) => 
+  array.reduce((obj, item) => ((obj[[item[key]]] = item), obj), {});
+
+  state.loading = false
+},
     user_products (state, user_product) {
        
         const Discounted = user_product.filter(function(item){
@@ -389,6 +449,37 @@ export default new Vuex.Store({
           //reject(err)
         })
       }else {console.log('logout and login, user object not found')}
+    },
+    loadMoreProducts ({commit, state}, userdata){
+      state.loading = true
+      return new Promise((resolve, reject) => {
+    
+      //console.log(data) https://shop.mulaa.co/api/wp-json/mulaa-auth/v1/products
+      if (userdata != ''){ //http://dev.mulaa.africa/admin/wp-json/wp/v2/product?per_page=100
+        axios({ url: `${BASEURL}${Products_ENDPOINT}`+'?author='+userdata, method: 'GET' })
+        .then(resp => { 
+          if(resp.data.length > 0){
+            const user_products = resp.data
+            const authorID = resp.data.theAuthor
+            //$store.dispatch('getUser', authorID)
+            commit('more_products', user_products)
+            //console.log('action: '+resp.data)
+          }else {
+            //console.log('Store Empty')
+            //commit('showEmpty')
+            commit('more_products', 0)
+            return
+          }
+          
+          resolve(resp)
+        })
+        .catch(err => {
+          commit('load_error', err)
+          console.log(err)
+          reject(err)
+        })
+      }else {console.log('An error occured loading product data, try again later')}
+    })
     },
     loadUserProducts ({commit, state}, userdata){
       state.loading = true
