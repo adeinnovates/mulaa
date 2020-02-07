@@ -307,6 +307,7 @@ powered by <a href="https://mulaa.co/?utm_source=footer&utm_medium=userpage" tar
     </div>
 </template>
 <script>
+import countapi from 'countapi-js';
 import { mapState, mapGetters } from 'vuex'
 import Buy from '@/components/BuyProduct'
 import Widget from '@/components/GetWidget'
@@ -485,6 +486,34 @@ export default {
      created() {
         this.fetchData()
        // console.log('name: '+ this.name)
+       
+       const metricOps = {
+        namespace: this.name+'.mulaa.store', //this.nname
+        key: this.userDetails.customer_code,
+}
+/*
+countapi.create(metricOps).then((result) => { 
+  console.log(result);
+ });*/
+ countapi.hit(metricOps.namespace, metricOps.key).then((result) => { 
+   console.log(result.value);
+  });
+  /*
+ countapi.info(metricOps.namespace, metricOps.key).then((result) => { 
+   console.log(result); //.value
+  });*/
+  
+
+/*
+      countapi.visits().then((result) => {
+      console.log(result);
+      });
+      */
+/*
+      countapi.get('http://localhost:8080/u/foodfashionplug').then((result) => { 
+        console.log(result.value); 
+        });
+*/
        window.addEventListener('scroll', () => {
       this.bottom = this.bottomVisible()
     })

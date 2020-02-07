@@ -111,16 +111,16 @@
     
     </div>   
 
-<v-btn text color="#23d2aa" 
-class="caption"
+<v-btn text color="#EF5350" 
+class="caption my-3"
 @click="processJson()"
 >
 <v-icon small left>mdi-download</v-icon>
-Download
+Download Records
 <!--Buy-->
 </v-btn>
 
-   <v-simple-table fixed-header height="300px" class="pa-4" elevation="3">
+   <v-simple-table fixed-header height="300px" class="pa-0" elevation="3">
     <thead>
       <tr>
         <th class="text-left">Ref Id</th>
@@ -139,8 +139,8 @@ Download
       </tr>
     </thead>
     <tbody>
-      <tr v-for="item in filteredSales" :key="item.refid">
-        <td class="caption">{{ item.refID }}</td>
+      <tr v-for="item in filteredSales" :key="item.refid" :class="`pa-2 ${item.acf.status}`">
+        <td :class="`caption ${item.acf.status}`">{{ item.refID }}</td>
         <td class="caption">{{ item.acf.amount | currency }}</td>
         <td class="caption">{{ item.acf.product_id }}</td>
         <td class="caption">{{ item.acf.product}}</td>
@@ -371,5 +371,10 @@ return this.exportCSVFile(headers, itemsFormatted, fileTitle);
 }
 </script>
 <style>
-    
+    .Pending{
+      border-left:4px solid #EF5350;
+    }
+    .Successful{
+      border-left:4px solid #81C784;
+    }
 </style>

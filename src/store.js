@@ -4,13 +4,14 @@ import axios from 'axios'
 import VuexPersist from 'vuex-persist';
 //import { exists } from 'fs';
 
-/*const BASEURL = 'http://dev.mulaa.africa/admin/wp-json'
+const BASEURL = 'http://dev.mulaa.africa/admin/wp-json'
 const API_URL = 'http://dev.mulaa.africa/admin/wp-json/wp/v2/product'
-const API_URL_USER = 'http://dev.mulaa.africa/admin/wp-json/wp/v2/users'
+/*const API_URL_USER = 'http://dev.mulaa.africa/admin/wp-json/wp/v2/users'
 */
 
-const BASEURL = 'https://shop.mulaa.co/api/wp-json'
-const API_URL = 'https://shop.mulaa.co/api/wp-json/wp/v2/product'
+/*const BASEURL = 'https://shop.mulaa.co/api/wp-json'*/
+const MEDIAURL = '/wp/v2/media?parent='
+/*const API_URL = 'https://shop.mulaa.co/api/wp-json/wp/v2/product'*/
 const API_URL_USER = 'https://shop.mulaa.co/api/wp-json/wp/v2/users'
 const API_URL_USER_DATA = 'https://shop.mulaa.co/api/wp-json/mulaa-auth/v1/users'
 
@@ -45,6 +46,7 @@ const vuexLocalStorage = new VuexPersist({
     userEmail: state.userEmail,
     userAcctStatus: state.userAcctStatus,
     theProductId: state.theProductId,
+    pslides: state.pslides,
     // getRidOfThisModule: state.getRidOfThisModule (No one likes it.)
   })
 });
@@ -88,6 +90,7 @@ export default new Vuex.Store({
     shortUrl: '',
     filteredLinks:'',
     userLinks: '',
+    pslides: [],
 
   },
   getters: {
@@ -183,13 +186,18 @@ export default new Vuex.Store({
     
         state.loading = false
     },
-    the_product (state, product) {
+    the_product (state, {product, the_media}) {
        /*const Discounted = product.filter(function(item){
          return item.showDiscount == true; 
        });*/
        //state.userDiscounted = Discounted
+       console.log('the media', the_media)
+       state.pslides = the_media 
        state.theProduct = product.acf
        state.theProductId = product.id
+       
+       
+       //Vue.set(state, 'items', [...items]);
        //console.log(product.id)
        state.loading = false
        //console.log('the product: '+JSON.stringify(state.theProduct))
@@ -680,7 +688,24 @@ const removeDuplicates = (array, key) => {
             const the_product = resp.data
             //const authorID = resp.data.author
             //$store.dispatch('getUser', authorID)
-            commit('the_product', the_product) //resp.data.acf.hidden
+            axios({ url: `${BASEURL}`+`${MEDIAURL}`+userdata, method: 'GET' })
+            .then(media =>{
+              const media_count = media.data.length
+              console.log(media_count)
+              console.log(media.data)
+              //console.log(the_product)
+              if(media_count > 0 ){
+                const the_media = media.data
+                commit('the_product', {the_product, the_media})
+              }
+              /*else{
+                const the_media = []
+                commit('the_product', {the_product, the_media})
+              }*/
+              
+             // return
+            })
+            //commit('the_product', the_product, ) //resp.data.acf.hidden
             //console.log("hidden: "+ JSON.stringify(resp.data))
          }else {
             console.log('Product not found')

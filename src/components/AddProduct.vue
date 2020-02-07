@@ -55,6 +55,7 @@
         <v-col>
              <v-card-text class="pt-0">
              <p class="mb-3 mt-2 overline">upload product image</p>
+             <!--
   <img-inputer accept="image/*" 
             v-model="imageFile"
             icon="img"
@@ -72,7 +73,37 @@
             ref="imgUploader"
             
             />
-             </v-card-text>
+            -->
+             
+<!--
+             <v-file-input small-chips multiple label="File input"
+             prepend-icon="mdi-camera"
+             v-model="imgslides"
+             ref="file"
+             ></v-file-input>-->
+<v-progress-linear
+                            :active=loading
+                            indeterminate
+                            color="green"
+                            ></v-progress-linear>       
+<vue-upload-multiple-image
+@upload-success="uploadImageSuccess"
+@before-remove="beforeRemove"
+@edit-image="editImage"
+:data-images="images"
+@data-change="dataChange"
+dragText="your product images"
+browseText="tap to upload"
+primaryText="product"
+popupText="-"
+markIsPrimaryText="0"
+class="imgBox"
+ref="imgBox"
+>
+</vue-upload-multiple-image>
+
+</v-card-text>
+             
         </v-col>
         
         <v-col class="pt-0">
@@ -434,11 +465,15 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import axios from 'axios'
+import VueUploadMultipleImage from 'vue-upload-multiple-image'
 //import EmojiPicker from 'vue-emoji-picker'
 
 export default {
     data(){
         return{
+          postid: null,
+          images: [],
+          imgslides: null,
           eproduct: '',
           eproductLink:'',
           disableStock: false,
@@ -482,7 +517,197 @@ export default {
         ]
         }
     },
+    components: {
+    VueUploadMultipleImage
+  },
+  mounted(){
+
+  },
     methods: {
+      dataChange(index, done, fileList){
+console.log('the index',index)
+      },
+      uploadImageSuccess(formData, index, fileList) {
+        this.loading = true;
+       
+      console.log('file', formData, index, fileList)
+
+       
+        //return
+      // Upload image api
+      // axios.post('http://your-url-upload', formData).then(response => {
+      //   console.log(response)
+      // })
+      //console.log(formData)
+
+      //create draft product post first if it doesn't exist
+      if(this.postid == null){
+        this.loading = true;
+        //const label = this.$refs.imgBox.querySelector('.cursor-pointer')
+       
+       /*
+       const label = document.querySelectorAll('.imgBox label')
+        //label.style.display = "none"
+        console.log(label)
+        */
+
+        this.loading = true;
+        this.$http.post('/product', {
+                title: this.title, // + '-' + this.user,
+                content: ' ',
+                 status: "draft"
+                }).then((response) => {
+                  //console.log('label: ', label)
+                    console.log(response)
+                    this.postid = response.data.id
+                    this.loading = false;
+                    this.processFile(formData, index, fileList)
+                }).catch((e) => {
+                this.loading = false;
+                console.error(e)
+                })
+      }
+const config = {
+            headers: {
+              'Authorization': 'Bearer '+localStorage.getItem('token'),
+              'Content-Type': 'image/png',
+              'Content-Disposition': 'form-data'
+              }
+            }
+           if(this.postid != null) {
+             const label = document.querySelectorAll('.display-block.full-width.full-height.cursor-pointer')
+        label[0].style.cursor = "default"
+        label[0].style.display = "none"
+        console.log(label[0])
+
+             this.loading = true
+formData.append("post", this.postid);
+            
+axios
+  .post("http://dev.mulaa.africa/admin/wp-json/wp/v2/media/", formData, config)
+  .then(response => {
+/*
+    this.images.push(
+                    {
+                        path: response.data.source_url,
+                        default: index,
+                        highlight: index,
+                        caption: response.data.slug
+                    }
+                );
+                */
+               this.imgUrl = response.data.source_url
+                this.loading = false;
+                label[0].style.cursor = "pointer"
+        label[0].style.display = "block"
+      console.log("Success!");
+      console.log({ response }); //response.data.source_url / response.data.id / response.data.slug
+  })
+  .catch(error => {
+      console.log({ error });
+      this.loading = false;
+  });
+  
+           }else{
+             console.log('post id not created yet')
+             this.loading = false;
+           }
+      
+    },
+    beforeRemove (index, done, fileList) {
+      console.log('index', index, fileList)
+      var r = confirm("remove image")
+      if (r == true) {
+        done()
+      } else {
+      }
+    },
+    editImage (formData, index, fileList) {
+      console.log('edit data', formData, index, fileList)
+    },
+      processFile(formData, index, fileList) {
+         const label = document.querySelectorAll('.display-block.full-width.full-height.cursor-pointer')
+        label[0].style.cursor = "default"
+        console.log(label[0])
+//console.log(formData)
+const config = {
+            headers: {
+              'Authorization': 'Bearer '+localStorage.getItem('token'),
+              'Content-Type': 'image/png',
+              'Content-Disposition': 'form-data'
+              }
+            }
+           if(this.postid != null) {
+             this.loading = true
+formData.append("post", this.postid);
+            
+axios
+  .post("http://dev.mulaa.africa/admin/wp-json/wp/v2/media/", formData, config)
+  .then(response => {
+/*
+    this.images.push(
+                    {
+                        path: response.data.source_url,
+                        default: index,
+                        highlight: index,
+                        caption: response.data.slug
+                    }
+                );
+                */
+               this.imgUrl = response.data.source_url
+               label[0].style.cursor = "pointer"
+        label[0].style.display = "block"
+                this.loading = false;
+      console.log("Success!");
+      console.log({ response }); //response.data.source_url / response.data.id / response.data.slug
+  })
+  .catch(error => {
+      console.log({ error });
+      this.loading = false;
+  });
+  
+           }else{
+             console.log('post id not created yet')
+             this.loading = false;
+           }
+        /*
+    //this.imgslides = event.target.files[0]
+    if (this.imgslides) {
+        let formData = new FormData();
+
+        
+
+        // files
+        
+        for (let file of this.imgslides) {
+            formData.append("file", file, file.name);
+        }
+        
+
+        // additional data
+        //formData.append("test", "foo bar");
+        console.log(formData)
+        const config = {
+            headers: {
+              'Authorization': 'Bearer '+localStorage.getItem('token'),
+              'Content-Type': 'image/png',
+              'Content-Disposition': 'form-data'
+              }
+            }
+        axios
+            .post("http://dev.mulaa.africa/admin/wp-json/wp/v2/media/", formData, config)
+            .then(response => {
+                console.log("Success!");
+                console.log({ response });
+            })
+            .catch(error => {
+                console.log({ error });
+            });
+    } else {
+        console.log("there are no files.");
+    }
+    */
+  },
       add(index) {
             this.options.push({ name: '' });
         },
@@ -534,7 +759,7 @@ export default {
     postProduct:  function() {
       //console.log(JSON.stringify(this.options))
                 this.loading = true;
-                this.$http.post('/product', {
+                this.$http.put('/product/'+this.postid, {
                 title: this.title, // + '-' + this.user,
                 content: this.description,
                 fields : {
@@ -626,7 +851,8 @@ this.$refs.linkForm.reset()
       user:'user'
       }),
      disabled() {
-       if (this.imageFile.length < 1 || this.title == ' '){
+       //if (this.imageFile.length < 1 || this.title == ' '){
+         if (this.images == [] || this.title == ' '){
          return true
        }
        return false
@@ -666,5 +892,16 @@ this.$refs.linkForm.reset()
     }
     .border-right{
       border-right:1px dotted teal;
+    }
+    .imgBox .image-container{
+      width:100%;
+      height:250px;
+    }
+    .imgBox .preview-image{
+      height:180px;
+    }
+    .imgBox .image-list{
+      border: 1px solid rgba(178, 223, 219, 0.54) !important;
+      background-color: rgba(224, 242, 241, 0.24)!important;
     }
 </style>

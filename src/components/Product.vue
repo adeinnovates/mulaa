@@ -547,7 +547,8 @@ pageurl: 'https://shop.mulaa.co'+this.$route.path,
       userKey:'userKey',
       theProduct:'theProduct',
       userDetails:'userDetails',
-      theProductId: 'theProductId'
+      theProductId: 'theProductId',
+      pslides: 'pslides'
       }),
       loading: {
       get() {
@@ -894,7 +895,7 @@ this.loading = false
     let paystackScript = document.createElement('script')
     paystackScript.setAttribute('src', 'https://js.paystack.co/v1/inline.js')
     document.head.appendChild(paystackScript)
-
+console.log(this.pslides)
 //let phpUrl = document.createElement('iframe')
 //phpUrl.setAttribute('src', 'https://shop.mulaa.co/api/product/the-uju-set')
 //document.body.appendChild(phpUrl)

@@ -11,6 +11,7 @@
     "animejs": "^3.1.0",
     "axios": "^0.19.0",
     "core-js": "^2.6.5",
+    "countapi-js": "^1.0.1",
     "logrocket": "^1.0.3",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.10",
@@ -29,6 +30,7 @@
     "vue-ravepayment": "^2.0.2",
     "vue-router": "^3.0.3",
     "vue-social-sharing": "^2.4.6",
+    "vue-upload-multiple-image": "^1.1.4",
     "vuetify": "^2.0.0",
     "vuex": "^3.0.1",
     "vuex-persist": "^2.0.1"

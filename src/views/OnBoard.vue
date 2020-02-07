@@ -539,7 +539,7 @@ export default {
       if(this.$store.getters.isLoggedIn=== true){
        // this.$router.push('/') //this.$store.getters.isLoggedIn
       }
-      //console.log('email: '+this.userEmail)
+      console.log('email: '+this.user)
       
     },
     mounted() {
@@ -818,6 +818,14 @@ const headers2 = {
                 )
                // .then(([respA,response]) => {
                   .then(response => {
+                     const metricOps = {
+        namespace: this.user+'.mulaa.store', //this.nname
+        key: this.userDetails.customer_code,
+        enable_reset: 1,
+}
+countapi.create(metricOps).then((result) => { 
+  console.log(result);
+ });
                 this.loading = false;
                 //this.clear()
                 //this.loadProducts()
