@@ -467,7 +467,7 @@ import axios from 'axios'
 //import paystack from 'vue-paystack';
 import Callback from '@/components/Callback'
 const mulaa_key = 'pk_live_d2ea70959fc4383baf5844b947709e17db19b1d0'
-export default {
+export default { 
   metaInfo() {
     let pageTitle = this.title
     return {
