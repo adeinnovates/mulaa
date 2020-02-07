@@ -14,6 +14,10 @@ import vueCustomElement from 'vue-custom-element'
 
 Vue.use(vueCustomElement)
 
+import VueLazyload from 'vue-lazyload'
+ 
+Vue.use(VueLazyload)
+
 import VueClipboard from 'vue-clipboard2'
 import ImgInputer from 'vue-img-inputer'
 import 'vue-img-inputer/dist/index.css'

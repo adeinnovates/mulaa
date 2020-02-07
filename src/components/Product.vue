@@ -62,12 +62,15 @@
 </v-row>
 
                     </v-img>
-
 <v-overlay 
 :value="overlay"
 :opacity="0.9"
 >
+<div 
+style="width:85%;margin-left:5%"
+>
 <v-layout row wrap mx-auto>
+  
   <v-flex xs10 sm9 md9 lg9>
 <div class="headline font-weight-light">{{this.title}}</div>
   </v-flex>
@@ -80,8 +83,51 @@ icon
 </v-btn>
   </v-flex>
 </v-layout>
+</div>
 
+<v-layout row wrap mx-auto>
+  
+<v-flex xs10 sm9 md9 lg9>
+<div class="mx-auto" style="width:390px;" v-if="pslides.length > 0">
+    <vue-glide ref="slider" type='carousel' :perView=1 :gap=5 :autoplay=3000 :hoverpause=true
+    :animationDuration=400
+    :peek="30"
+    >
+          <vue-glide-slide v-for="slide in pslides" :key="slide.id">
+          <v-card
+          max-width="400"
+          class="mx-auto mb-3 pa-0"
+          outlined
+          :flat=true
+          >
+          <v-img
+          class="white--text elevation-5 grey lighten-2"
+          height="320px"
+          max-width="400"
+          lazy-src="https://picsum.photos/id/1002/10/6" 
+          :src="slide.source_url"
+          @click="overlay = !overlay"
+          >
+          <template v-slot:placeholder>
+          <v-layout
+          fill-height
+          align-center
+          justify-center
+          ma-0
+          >
+          <v-progress-circular indeterminate color="#1A227E lighten-5"></v-progress-circular>
+          </v-layout>
+          </template>
 
+          
+          </v-img>
+
+          </v-card>
+          </vue-glide-slide>
+    </vue-glide>
+</div>
+
+<div class="mx-auto" style="width:390px;" v-else>
 <v-img
 :src="image"
 lazy-src="https://picsum.photos/id/11/10/6"
@@ -105,7 +151,14 @@ style="border-radius:10px;"
               </div><!-- hidden / out of stock-->
 </v-img>
 
-<v-layout row wrap mx-auto>
+  </div>
+
+
+  </v-flex>
+</v-layout>
+
+
+<v-layout row wrap mx-auto style="width:85%;margin-left:5%;">
   <v-flex xs3 sm3 md4 lg4>
         <v-btn text color="#23d2aa" 
         class="caption"
@@ -144,6 +197,7 @@ style="border-radius:10px;"
 </v-layout>
 
 </v-overlay>
+
 </v-row>
 
                <!-- <v-card-title>-->
@@ -463,6 +517,9 @@ class="my-0 d-inline green lighten-5 font-weight-light ml-n2"
 import banks from '@/data/banks.json'
 import { mapState, mapGetters } from 'vuex'
 import axios from 'axios'
+
+import { Glide, GlideSlide } from 'vue-glide-js'
+
 //import Rave from 'vue-ravepayment';
 //import paystack from 'vue-paystack';
 import Callback from '@/components/Callback'
@@ -490,7 +547,10 @@ export default {
     props: ['name','theproducts'],
      components: {
         //paystack
-        Callback,
+        Callback: Callback,
+        //MulaaPay: MulaaPay,
+        [Glide.name]: Glide,
+    [GlideSlide.name]: GlideSlide
         // Rave
     },
  data(){
@@ -572,6 +632,14 @@ pageurl: 'https://shop.mulaa.co'+this.$route.path,
       set(value) {
         this.$store.commit('loading', value);
       }
+    },
+    pslides: {
+      get() {
+        return this.$store.state.pslides;
+      },
+     /* set(value) {
+        this.$store.commit('snackbar', value);
+      }*/
     },
     reference(){
         let text = "";
@@ -940,6 +1008,10 @@ this.loading = false
 
         this.loader = null
       },
+      pslides(){
+        //console.log('length',this.pslides.length)
+        //this.$refs.slider.glide.go(">");
+      }
     }
 }
 </script>
