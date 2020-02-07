@@ -4,14 +4,14 @@ import axios from 'axios'
 import VuexPersist from 'vuex-persist';
 //import { exists } from 'fs';
 
-const BASEURL = 'http://dev.mulaa.africa/admin/wp-json'
+/*const BASEURL = 'http://dev.mulaa.africa/admin/wp-json'
 const API_URL = 'http://dev.mulaa.africa/admin/wp-json/wp/v2/product'
-/*const API_URL_USER = 'http://dev.mulaa.africa/admin/wp-json/wp/v2/users'
+const API_URL_USER = 'http://dev.mulaa.africa/admin/wp-json/wp/v2/users'
 */
 
-/*const BASEURL = 'https://shop.mulaa.co/api/wp-json'*/
+const BASEURL = 'https://shop.mulaa.co/api/wp-json'
 const MEDIAURL = '/wp/v2/media?parent='
-/*const API_URL = 'https://shop.mulaa.co/api/wp-json/wp/v2/product'*/
+const API_URL = 'https://shop.mulaa.co/api/wp-json/wp/v2/product'
 const API_URL_USER = 'https://shop.mulaa.co/api/wp-json/wp/v2/users'
 const API_URL_USER_DATA = 'https://shop.mulaa.co/api/wp-json/mulaa-auth/v1/users'
 
@@ -46,7 +46,7 @@ const vuexLocalStorage = new VuexPersist({
     userEmail: state.userEmail,
     userAcctStatus: state.userAcctStatus,
     theProductId: state.theProductId,
-    pslides: state.pslides,
+    //pslides: state.pslides,
     // getRidOfThisModule: state.getRidOfThisModule (No one likes it.)
   })
 });
@@ -191,7 +191,7 @@ export default new Vuex.Store({
          return item.showDiscount == true; 
        });*/
        //state.userDiscounted = Discounted
-       console.log('the media', the_media)
+       //console.log('the media', the_media)
        state.pslides = the_media 
        state.theProduct = product.acf
        state.theProductId = product.id
@@ -691,8 +691,8 @@ const removeDuplicates = (array, key) => {
             axios({ url: `${BASEURL}`+`${MEDIAURL}`+userdata, method: 'GET' })
             .then(media =>{
               const media_count = media.data.length
-              console.log(media_count)
-              console.log(media.data)
+              //console.log(media_count)
+              //console.log(media.data)
               //console.log(the_product)
               if(media_count > 0 ){
                 const the_media = media.data

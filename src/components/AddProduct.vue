@@ -189,7 +189,7 @@ ref="imgBox"
         class="mt-n1"
         color="#23d2aa"
         inset
-        :disabled=true
+        :disabled=false
         >
         </v-switch>
 
@@ -530,7 +530,7 @@ console.log('the index',index)
       uploadImageSuccess(formData, index, fileList) {
         this.loading = true;
        
-      console.log('file', formData, index, fileList)
+      //console.log('file', formData, index, fileList)
 
        
         //return
@@ -558,7 +558,7 @@ console.log('the index',index)
                  status: "draft"
                 }).then((response) => {
                   //console.log('label: ', label)
-                    console.log(response)
+                    //console.log(response)
                     this.postid = response.data.id
                     this.loading = false;
                     this.processFile(formData, index, fileList)
@@ -584,7 +584,7 @@ const config = {
 formData.append("post", this.postid);
             
 axios
-  .post("http://dev.mulaa.africa/admin/wp-json/wp/v2/media/", formData, config)
+  .post("https://shop.mulaa.co/api/wp-json/wp/v2/media/", formData, config) //http://dev.mulaa.africa/admin/
   .then(response => {
 /*
     this.images.push(
@@ -628,7 +628,7 @@ axios
       processFile(formData, index, fileList) {
          const label = document.querySelectorAll('.display-block.full-width.full-height.cursor-pointer')
         label[0].style.cursor = "default"
-        console.log(label[0])
+        //console.log(label[0])
 //console.log(formData)
 const config = {
             headers: {
@@ -763,7 +763,7 @@ axios
                 title: this.title, // + '-' + this.user,
                 content: this.description,
                 fields : {
-                  title: this.title,
+                title: this.title,
                 description: this.description,
                 price: this.price,
                 discount_price: this.discount,
@@ -774,7 +774,9 @@ axios
                 date_posted: this.date,
                 product_options: JSON.stringify(this.options),
                 stock: this.stock,
-                madetoorder: this.madetoorder
+                madetoorder: this.madetoorder,
+                eproduct: this.eproduct,
+                eproductlink: this.eproductLink
                 },
                  status: "publish"
                 }).then((response) => {
@@ -783,10 +785,10 @@ axios
                 //this.loadProducts()
                 //console.log(response)
                 //this.$store.dispatch('loadAllProducts', 'top')
-                this.$store.dispatch('loadDashboardProducts', this.user)
+                //this.$store.dispatch('loadDashboardProducts', this.user)
                 this.color = 'green lighten-1'
                 this.infoBar = true
-              this.infoMsg = 'Product Successfully saved'
+              this.infoMsg = 'Product Successfully Saved'
               this.fetchData()
             this.resetForm()
            // dialog = false
