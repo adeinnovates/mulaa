@@ -24,7 +24,7 @@
      class="mx-auto teal lighten-5 mb-0"
             >
              <v-snackbar v-model=infoBar :timeout="10000" top right :color="color" :value=infoMsg>
-  <span style="color:#fff">{{infoMsg}}</span>
+  <span style="color:#000028">{{infoMsg}}</span>
 </v-snackbar>
 
  <v-card-title>
@@ -52,7 +52,7 @@
       ref="uploadForm"
     >
     <v-row>
-        <v-col>
+        <v-col cols="12" md="12" sm="12">
              <v-card-text class="pt-0">
              <p class="mb-3 mt-2 overline">upload product image</p>
              <!--
@@ -105,11 +105,12 @@ ref="imgBox"
 </v-card-text>
              
         </v-col>
+    </v-row>
+    <v-row>
         
-        <v-col class="pt-0">
+        <v-col cols="12" lg="6" md="6" sm="12">
           
-
-            <v-card-text class="py-0">
+           
                 
            <v-text-field
            class="teal--text form-field mt-3"
@@ -129,92 +130,94 @@ ref="imgBox"
         :hide-details=true
           color="teal lighten-3"
         ></v-textarea>
-
-        <v-row>
-            <v-col>
-<v-text-field
-           class="teal--text form-field ma-0"
-            v-model="price"
-            label="price"
-            placeholder="base price"
-            type="number"
-            prepend-inner-icon="mdi-currency-ngn"
-            outlined
-            color="teal lighten-3"
-            :rules="[nurules.required]"
-            :hide-details=true
-          ></v-text-field>
-            </v-col>
-            <v-col>
-<v-text-field
-           class="teal--text form-field ma-0"
-            v-model="discount"
-            label="discount"
-            type="number"
-            placeholder="discount price"
-            prepend-inner-icon="mdi-currency-ngn"
-            outlined
-            color="teal lighten-3"
-            :hide-details=true
-          ></v-text-field>
-            </v-col>
-
-        </v-row>
-        <v-row >
-          <v-col class="pt-n2">
- <v-text-field
-           class="teal--text form-field ma-0"
-            v-model="stock"
-            label="in Stock"
-            placeholder="Total Stock"
-            type="number"
-            prepend-inner-icon="mdi-counter"
-            outlined
-            color="teal"
-            :disabled=disableStock
-            
-          ></v-text-field>
-          </v-col>
-          </v-row>
-
-        <v-expansion-panels class="mt-n5 mb-5"
-        :hover=true
-        >
-        <v-expansion-panel>
-        <v-expansion-panel-header class="caption teal--text">Is this a digital product?</v-expansion-panel-header>
-        <v-expansion-panel-content>
-<v-switch 
-        v-model="eproduct" 
-        label="Yes, e-product" 
-        class="mt-n1"
-        color="#23d2aa"
-        inset
-        :disabled=false
-        >
-        </v-switch>
-
-        <v-text-field
-        v-show="this.eproduct != ''"
-           class="teal--text form-field ma-0"
-            v-model="eproductLink"
-            label="product url"
-            placeholder="url"
-            hint="Type or paste a link to your digital product (gdrive, dropbox, etc) or membership page (teachable, etc)"
-            type="text"
-            outlined
-            color="teal lighten-3"
-            :rules="[nurules.required, nurules.url]"
-          ></v-text-field>
-          <!--upload digital media-->
-        </v-expansion-panel-content>
-        </v-expansion-panel>
-        </v-expansion-panels>
-
-            </v-card-text>
+           
         </v-col>
-         
-    </v-row>
 
+    <v-col cols="12" lg="6" md="6" sm="12">
+       
+            <v-row>
+                  <v-col>
+              <v-text-field
+                        class="teal--text form-field ma-0"
+                          v-model="price"
+                          label="price"
+                          placeholder="base price"
+                          type="number"
+                          prepend-inner-icon="mdi-currency-ngn"
+                          outlined
+                          color="teal lighten-3"
+                          :rules="[nurules.required]"
+                          :hide-details=true
+                        ></v-text-field>
+                  </v-col>
+                <v-col>
+        <v-text-field
+                class="teal--text form-field ma-0"
+                v-model="discount"
+                label="discount"
+                type="number"
+                placeholder="discount price"
+                prepend-inner-icon="mdi-currency-ngn"
+                outlined
+                color="teal lighten-3"
+                :hide-details=true
+              ></v-text-field>
+                </v-col>
+
+            </v-row>
+            <v-row >
+            <v-col class="pt-n4">
+            <v-text-field
+              class="teal--text form-field ma-0"
+              v-model="stock"
+              label="in Stock"
+              placeholder="Total Stock"
+              type="number"
+              prepend-inner-icon="mdi-counter"
+              outlined
+              color="teal"
+              :disabled=disableStock
+              
+            ></v-text-field>
+            </v-col>
+            </v-row>
+
+            <v-expansion-panels class="mt-n5 mb-5"
+            :hover=true
+            >
+            <v-expansion-panel>
+            <v-expansion-panel-header class="caption teal--text">Is this a digital product?</v-expansion-panel-header>
+            <v-expansion-panel-content>
+    <v-switch 
+            v-model="eproduct" 
+            label="Yes, e-product" 
+            class="mt-n1"
+            color="#23d2aa"
+            inset
+            :disabled=true
+            >
+            </v-switch>
+
+            <v-text-field
+            v-show="this.eproduct != ''"
+              class="teal--text form-field ma-0"
+                v-model="eproductLink"
+                label="product url"
+                placeholder="url"
+                hint="Type or paste a link to your digital product (gdrive, dropbox, etc) or membership page (teachable, etc)"
+                type="text"
+                outlined
+                color="teal lighten-3"
+                :rules="[nurules.required, nurules.url]"
+              ></v-text-field>
+              <!--upload digital media-->
+            </v-expansion-panel-content>
+            </v-expansion-panel>
+            </v-expansion-panels>
+
+        </v-col>   
+    </v-row>
+ 
     <!-- lower segment-->
     <v-row 
     class="teal lighten-5 mb-n2"
@@ -471,6 +474,9 @@ import VueUploadMultipleImage from 'vue-upload-multiple-image'
 export default {
     data(){
         return{
+           infoBar: true,
+        infoMsg: 'Product Successfully Saved', 
+        color: '',
           postid: null,
           images: [],
           imgslides: null,
@@ -504,9 +510,6 @@ export default {
         },
             imgUrl: '',
             uploadMsg: '',
-            infoBar: false,
-        infoMsg: '', 
-        color: '',
         date: this.dateFunction(),
         owner: this.$store.state.userId,
         options: [
