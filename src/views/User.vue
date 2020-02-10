@@ -600,7 +600,7 @@ const config = {
             }else{
               this.contentloaded = false
               this.limitVal = 3
-              console.log(this.name)
+              //console.log(this.name)
               //if(this.name = 'foodfashionplug'){
                 if(this.userDetails.trial == true){
                 this.limitVal = 65
@@ -625,7 +625,7 @@ return
     },
        isPageOwner: function(){
        if (this.$store.getters.isLoggedIn != true){
-           return console.log('not logged in')
+           //return console.log('not logged in')
        }else{
          //console.log('render user: '+ this.$store.getters.renderUser)
          //console.log(this.name)

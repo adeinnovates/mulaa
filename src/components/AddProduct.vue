@@ -106,7 +106,7 @@ ref="imgBox"
              
         </v-col>
     </v-row>
-    <v-row>
+    <v-row class="px-8">
         
         <v-col cols="12" lg="6" md="6" sm="12">
           
@@ -553,7 +553,7 @@ console.log('the index',index)
         //label.style.display = "none"
         console.log(label)
         */
-
+//console.log(this.token)
         this.loading = true;
         this.$http.post('/product', {
                 title: this.title, // + '-' + this.user,
@@ -570,24 +570,30 @@ console.log('the index',index)
                 console.error(e)
                 })
       }
+      const token = localStorage.getItem('token')
 const config = {
             headers: {
-              'Authorization': 'Bearer '+localStorage.getItem('token'),
+              'Authorization': 'Bearer '+`${token}`, //localStorage.getItem('token')
               'Content-Type': 'image/png',
               'Content-Disposition': 'form-data'
               }
             }
            if(this.postid != null) {
-             const label = document.querySelectorAll('.display-block.full-width.full-height.cursor-pointer')
-        label[0].style.cursor = "default"
-        label[0].style.display = "none"
+             //const label = document.querySelectorAll('.display-block.full-width.full-height.cursor-pointer')
+             const label = document.querySelectorAll('.image-list-container.display-flex.flex-wrap')
+             const labelIcon = document.querySelectorAll('.image-list-item.cursor-pointer svg')
+        label[0].style.cursor = "not-allowed"
+        label[0].style.opacity = 0.1
+        labelIcon[0].style.display = "none"
+        //label[0].style.display = "none"
         console.log(label[0])
 
              this.loading = true
 formData.append("post", this.postid);
-            
+     
 axios
-  .post("https://shop.mulaa.co/api/wp-json/wp/v2/media/", formData, config) //http://dev.mulaa.africa/admin/
+  .post("https://shop.mulaa.co/api/wp-json/wp/v2/media/", formData, config) //http://dev.mulaa.africa/admin/ */
+  //this.$http.post('/media/',formData, config)
   .then(response => {
 /*
     this.images.push(
@@ -600,9 +606,12 @@ axios
                 );
                 */
                this.imgUrl = response.data.source_url
+               console.log('icon ', labelIcon[0])
+               labelIcon[0].style.display = "block"
                 this.loading = false;
                 label[0].style.cursor = "pointer"
-        label[0].style.display = "block"
+              label[0].style.opacity = 1
+        
       console.log("Success!");
       console.log({ response }); //response.data.source_url / response.data.id / response.data.slug
   })
@@ -631,6 +640,8 @@ axios
       processFile(formData, index, fileList) {
          const label = document.querySelectorAll('.display-block.full-width.full-height.cursor-pointer')
         label[0].style.cursor = "default"
+        const labelIcon = document.querySelectorAll('.image-list-item.cursor-pointer svg')
+        labelIcon[0].style.display = "none"
         //console.log(label[0])
 //console.log(formData)
 const config = {
@@ -645,7 +656,7 @@ const config = {
 formData.append("post", this.postid);
             
 axios
-  .post("http://dev.mulaa.africa/admin/wp-json/wp/v2/media/", formData, config)
+  .post("https://shop.mulaa.co/api/wp-json/wp/v2/media/", formData, config)
   .then(response => {
 /*
     this.images.push(
@@ -659,7 +670,9 @@ axios
                 */
                this.imgUrl = response.data.source_url
                label[0].style.cursor = "pointer"
-        label[0].style.display = "block"
+               labelIcon[0].style.display = "block"
+        //label[0].style.display = "block"
+        label[0].style.opacity = 1
                 this.loading = false;
       console.log("Success!");
       console.log({ response }); //response.data.source_url / response.data.id / response.data.slug
@@ -853,7 +866,7 @@ this.$refs.linkForm.reset()
   computed: {
       ...mapState({
       registerMsg:'registerMsg',
-      user:'user'
+      user:'user',
       }),
      disabled() {
        //if (this.imageFile.length < 1 || this.title == ' '){
