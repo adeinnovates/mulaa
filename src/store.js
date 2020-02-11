@@ -697,7 +697,7 @@ const removeDuplicates = (array, key) => {
               //console.log(theproduct)
               
               if(media_count > 0 ){
-                console.log(media_count)
+                //console.log(media_count)
                 const the_media = media.data
                 commit('the_product', {theproduct, the_media})
               }
