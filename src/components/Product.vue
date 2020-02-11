@@ -241,9 +241,9 @@ style="border-radius:10px;"
        {{newAmount | currency}}
         </p>
               <v-btn
-             text
+             
              @click="sheet = true"
-             color="#23d2aa" 
+             color="green" 
              class="ml-10"
              :disabled=disabled :loading="loading"
              v-show="this.stock > 0"
@@ -429,7 +429,7 @@ class="my-0 d-inline green lighten-5 font-weight-light ml-n2"
             :disabled=disabled :loading="loading"
             >
             <v-icon x-small left>mdi-cash</v-icon>
-            Pay Now
+            Confirm
             </v-btn>
       </v-list-item-avatar>
     </v-list-item>
@@ -792,7 +792,7 @@ const salesData = {
         updateData(){
           //console.log(this.theProduct.price)
             if(this.theproducts === undefined){
-                //console.log('refreshed')
+                console.log('refreshed')
                 this.title = this.theProduct.title
             this.hidethis = this.theProduct.hidden
             this.datePosted = this.theProduct.date_posted
