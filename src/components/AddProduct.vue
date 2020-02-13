@@ -147,7 +147,7 @@ ref="imgBox"
                     chips
                     deletable-chips
                     class="tag-input"
-                    hint="If you deliver everywhere, enter 'ALL' or seperate each location with a comma"
+                    hint="If you deliver everywhere, enter 'ALL' or enter each location seperately"
             persistent-hint
                     :search-input.sync="search" 
                     @keyup.tab="updateTags"
@@ -497,7 +497,7 @@ import VueUploadMultipleImage from 'vue-upload-multiple-image'
 export default {
     data(){
         return{
-          tester: [],
+          disabled: true,
           selectLocation: ['add-each-location', 'then press enter', 'or tab key'],
            search: "", //sync search
            items: [],
@@ -565,7 +565,7 @@ export default {
       });
     },
       dataChange(index, done, fileList){
-console.log('the index',index)
+//console.log('the index',index)
       },
       uploadImageSuccess(formData, index, fileList) {
         this.loading = true;
@@ -623,7 +623,7 @@ const config = {
         label[0].style.opacity = 0.1
         labelIcon[0].style.display = "none"
         //label[0].style.display = "none"
-        console.log(label[0])
+        //console.log(label[0])
 
              this.loading = true
 formData.append("post", this.postid);
@@ -643,14 +643,14 @@ axios
                 );
                 */
                this.imgUrl = response.data.source_url
-               console.log('icon ', labelIcon[0])
+               //console.log('icon ', labelIcon[0])
                labelIcon[0].style.display = "block"
                 this.loading = false;
                 label[0].style.cursor = "pointer"
               label[0].style.opacity = 1
         
       console.log("Success!");
-      console.log({ response }); //response.data.source_url / response.data.id / response.data.slug
+      //console.log({ response }); //response.data.source_url / response.data.id / response.data.slug
   })
   .catch(error => {
       console.log({ error });
@@ -658,13 +658,13 @@ axios
   });
   
            }else{
-             console.log('post id not created yet')
+             //console.log('post id not created yet')
              this.loading = false;
            }
       
     },
     beforeRemove (index, done, fileList) {
-      console.log('index', index, fileList)
+      //console.log('index', index, fileList)
       var r = confirm("remove image")
       if (r == true) {
         done()
@@ -672,7 +672,7 @@ axios
       }
     },
     editImage (formData, index, fileList) {
-      console.log('edit data', formData, index, fileList)
+      //console.log('edit data', formData, index, fileList)
     },
       processFile(formData, index, fileList) {
          const label = document.querySelectorAll('.display-block.full-width.full-height.cursor-pointer')
@@ -712,7 +712,7 @@ axios
         label[0].style.opacity = 1
                 this.loading = false;
       console.log("Success!");
-      console.log({ response }); //response.data.source_url / response.data.id / response.data.slug
+      //console.log({ response }); //response.data.source_url / response.data.id / response.data.slug
   })
   .catch(error => {
       console.log({ error });
@@ -905,14 +905,14 @@ this.$refs.linkForm.reset()
       registerMsg:'registerMsg',
       user:'user',
       }),
-     disabled() {
+    /* disabled() {
        //if (this.imageFile.length < 1 || this.title == ' '){
-         if (this.images == [] || this.title == ' '){
+         if (this.images == [] && this.title == ''){
          return true
        }
        return false
-        //return this.imageFile.length < 1; // or === 0   
-    },
+        
+    }, */
     /*dateFunction() {
    
             var currentDate = new Date();
@@ -929,6 +929,18 @@ this.$refs.linkForm.reset()
            this.stock = 0
            this.disableStock = !this.disableStock
          }
+       },
+       images(val){
+         if(val.length > 0){
+           this.disabled=false
+         }
+         return
+       },
+       title(val){
+if(val != ''){
+           this.disabled=false
+         }
+         return
        }
      }
 }
@@ -969,7 +981,7 @@ this.$refs.linkForm.reset()
 .tag-input span.v-chip {
   background-color: teal !important;
   color: #fff;
-  font-size:1em;
+  font-size:.8em;
   padding-left:7px;
 }
 
