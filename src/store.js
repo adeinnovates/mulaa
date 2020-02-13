@@ -183,15 +183,15 @@ export default new Vuex.Store({
     
         state.loading = false
     },
-    the_product (state, {product, the_media}) {
+    the_product (state, {theproduct, the_media}) {
       /*const Discounted = product.filter(function(item){
         return item.showDiscount == true; 
       });*/
       //state.userDiscounted = Discounted
       //console.log('the media', the_media)
       state.pslides = the_media 
-      state.theProduct = product.acf
-      state.theProductId = product.id
+      state.theProduct = theproduct.acf
+      state.theProductId = theproduct.id
       
       
       //Vue.set(state, 'items', [...items]);
@@ -613,7 +613,7 @@ const removeDuplicates = (array, key) => {
             .then(resp => { 
               //console.log(userdata)
               if(resp.data.hidden == false || resp.data.hidden == null){//resp.data.acf.hidden 
-                const the_product = resp.data
+                const theproduct = resp.data
                 //const authorID = resp.data.author
                 //$store.dispatch('getUser', authorID)
                 axios({ url: `${BASEURL}`+`${MEDIAURL}`+userdata, method: 'GET' })
@@ -624,12 +624,12 @@ const removeDuplicates = (array, key) => {
                   //console.log(the_product)
                   if(media_count > 0 ){
                     const the_media = media.data
-                    commit('the_product', {the_product, the_media})
+                    commit('the_product', {theproduct, the_media})
                   }
-                  /*else{
+                  else{
                     const the_media = []
-                    commit('the_product', {the_product, the_media})
-                  }*/
+                    commit('the_product', {theproduct, the_media})
+                  }
                   
                  // return
                 })
