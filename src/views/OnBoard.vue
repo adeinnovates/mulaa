@@ -545,7 +545,10 @@ export default {
     mounted() {
   this.dateFunction;
   this.confirmUpdate();
-  
+  let chatScript = document.createElement('script')
+    chatScript.setAttribute('src', '//code.tidio.co/dh6fwddvbrzinw01vijt0tzc0334bi1d.js')
+    chatScript.setAttribute('async', 'true')
+    document.head.appendChild(chatScript)
   },
     computed: {
       ...mapState({

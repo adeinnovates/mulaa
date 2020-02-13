@@ -797,6 +797,11 @@ return this.currentUserProd
     //this.fetchData()
       //this.$store.dispatch('loadUserProducts', this.user)
 
+      let chatScript = document.createElement('script')
+    chatScript.setAttribute('src', '//code.tidio.co/dh6fwddvbrzinw01vijt0tzc0334bi1d.js')
+    chatScript.setAttribute('async', 'true')
+    document.head.appendChild(chatScript)
+
        const metricOps = {
         namespace: this.user+'.mulaa.store', //this.nname
         key: this.userDetails.customer_code,

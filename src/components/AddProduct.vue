@@ -109,9 +109,7 @@ ref="imgBox"
     <v-row class="px-8">
         
         <v-col cols="12" lg="6" md="6" sm="12">
-          
-           
-                
+            
            <v-text-field
            class="teal--text form-field mt-3"
             v-model="title"
@@ -130,6 +128,31 @@ ref="imgBox"
         :hide-details=true
           color="teal lighten-3"
         ></v-textarea>
+        <!--<v-text-field
+           class="teal--text form-field mt-3"
+            v-model="deliveryLocations"
+            label="delivery Locations"
+            placeholder="Seperate each location with a comma"
+            outlined
+            color="teal lighten-3"
+            hint="If you deliver everywhere, enter 'ALL' or seperate each location with a comma"
+            persistent-hint
+            :rules="[nurules.required]"
+          ></v-text-field> -->
+
+          <v-combobox multiple
+                    v-model="selectLocation" 
+                    label="Delivery Locations" 
+                    append-icon
+                    chips
+                    deletable-chips
+                    class="tag-input"
+                    hint="If you deliver everywhere, enter 'ALL' or seperate each location with a comma"
+            persistent-hint
+                    :search-input.sync="search" 
+                    @keyup.tab="updateTags"
+                    @paste="updateTags">
+          </v-combobox>
            
         </v-col>
 
@@ -474,6 +497,10 @@ import VueUploadMultipleImage from 'vue-upload-multiple-image'
 export default {
     data(){
         return{
+          tester: [],
+          selectLocation: ['add-each-location', 'then press enter', 'or tab key'],
+           search: "", //sync search
+           items: [],
            infoBar: true,
         infoMsg: 'Product Successfully Saved', 
         color: '',
@@ -527,6 +554,16 @@ export default {
 
   },
     methods: {
+      updateTags() {
+      this.$nextTick(() => {
+        this.selectLocation.push();//...this.search.split(",")
+        //this.tester = JSON.stringify(this.selectLocation)
+        //this.deliveryLocation = JSON.parse(tester)
+        this.$nextTick(() => {
+          this.search = "";
+        });
+      });
+    },
       dataChange(index, done, fileList){
 console.log('the index',index)
       },
@@ -784,7 +821,7 @@ axios
                 price: this.price,
                 discount_price: this.discount,
                 show_discount: this.discountEnable,
-                delivery_locations: this.deliveryLocations,
+                delivery_locations: JSON.stringify(this.selectLocation),
                 image: this.imgUrl,
                 owner : this.owner,
                 date_posted: this.date,
@@ -922,4 +959,34 @@ this.$refs.linkForm.reset()
       border: 1px solid rgba(178, 223, 219, 0.54) !important;
       background-color: rgba(224, 242, 241, 0.24)!important;
     }
+
+    .tag-input span.chip {
+  background-color:teal !important;
+  color: #fff;
+  font-size: 1em;
+}
+
+.tag-input span.v-chip {
+  background-color: teal !important;
+  color: #fff;
+  font-size:1em;
+  padding-left:7px;
+}
+
+.tag-input span.v-chip::before {
+    content: "label";
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+}
 </style>

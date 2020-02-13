@@ -14,7 +14,7 @@
       class="pa-0"
     >
            
- <v-snackbar v-model=infoBar bottom right :color="color" :value=infoMsg>
+ <v-snackbar v-model=infoBar top right :color="color" :value=infoMsg>
   <span>{{infoMsg}}</span>
   <v-btn text overline color="white" @click="infoBar = false">close</v-btn>
 </v-snackbar>
@@ -23,7 +23,7 @@
                     :src="image"
                     lazy-src="https://picsum.photos/id/11/10/6"
                     aspect-ratio="1"
-                    class="grey lighten-2 mb-3"
+                    class="grey lighten-2 mb-3 cursor"
                     max-width="500"
                     max-height="300"
                     @click="overlay = !overlay"
@@ -224,6 +224,18 @@ style="border-radius:10px;"
            
             </v-col>
             </v-row>  
+            <v-row>
+         <v-col>
+           <p class="caption grey--text text--darken-2 mb-0">
+            <span class="font-weight-bold">
+              Delivery Location(s): 
+              </span>
+              </p>
+ <v-chip v-for="tag in delivery_locations" x-small class="mb-2 mr-1 red lighten-5" :key="tag">
+                    {{tag}}
+                     </v-chip> 
+         </v-col>
+         </v-row>
             </div>
             </v-card-text>
 
@@ -277,7 +289,7 @@ style="border-radius:10px;"
 
  <v-card-text class="">
      <div class="px-4">
-                <v-row>
+  <v-row>
                 <v-col>
                 <v-text-field
                 class="teal--text form-field ma-0 pa-0"
@@ -316,7 +328,7 @@ type="number"
                 <v-text-field
                 class="teal--text form-field ma-0 pa-0 mb-5"
                 v-model="buyerAddress"
-                label="Delivery Address"
+                label="Enter Delivery Address"
                 placeholder="Your Location"
                 hint="Enter your delivery address in full with closest landmark"
             persistent-hint
@@ -540,6 +552,7 @@ export default {
     },
  data(){
         return {
+          delivery_locations: [],
           craaccount: '',
           show2: false,
           bank: null,
@@ -763,6 +776,7 @@ const salesData = {
             if(this.theproducts === undefined){
                 //console.log('refreshed')
                 //console.log(this.theProduct)
+                this.delivery_locations = JSON.parse(this.theProduct.delivery_locations)
                 this.productID = this.theProductId
                 this.title = this.theProduct.title
             this.hidethis = this.theProduct.hidden
@@ -781,6 +795,7 @@ const salesData = {
             }else{
                 //console.log('valid click')
                 //console.log(this.theproducts)
+                this.delivery_locations = JSON.parse(this.theproducts.delivery_locations)
                 this.productID = this.theproducts.productID
                 this.title = this.theproducts.title
             this.hidethis = this.theproducts.hidden
@@ -994,6 +1009,9 @@ this.loading = false
     }
     .theme--dark .card__title{
 
+    }
+    .cursor{
+      cursor: move
     }
 </style>
 <style>
