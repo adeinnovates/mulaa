@@ -14,7 +14,7 @@
       class="pa-0"
     >
            
- <v-snackbar v-model=infoBar bottom right :color="color" :value=infoMsg>
+ <v-snackbar v-model=infoBar top right :color="color" :value=infoMsg>
   <span>{{infoMsg}}</span>
   <v-btn text overline color="white" @click="infoBar = false">close</v-btn>
 </v-snackbar>
@@ -224,6 +224,19 @@ style="border-radius:10px;"
            
             </v-col>
             </v-row>  
+          <v-row v-if="delivery_locations">
+          <v-col>
+            <p class="caption grey--text text--darken-2 mb-0">
+            <span class="font-weight-bold">
+              Delivery Location(s): 
+              </span>
+              </p>
+          <v-chip v-for="tag in delivery_locations" x-small class="mb-2 mr-1 red lighten-5" :key="tag">
+                    {{tag}}
+                      </v-chip> 
+          </v-col>
+          </v-row>
+
             </div>
             </v-card-text>
 
@@ -556,6 +569,7 @@ export default {
  data(){
         return {
           //raveKey: "FLWPUBK-xxxxxxxxxxxxxxxxxx-X",
+          delivery_locations: [],
           nname: '',
           craaccount: '',
           show2: false,
@@ -793,6 +807,7 @@ const salesData = {
           //console.log(this.theProduct.price)
             if(this.theproducts === undefined){
                 console.log('refreshed')
+                this.delivery_locations = JSON.parse(this.theProduct.delivery_locations)
                 this.title = this.theProduct.title
             this.hidethis = this.theProduct.hidden
             this.datePosted = this.theProduct.date_posted
@@ -810,6 +825,7 @@ const salesData = {
             }else{
                 //console.log('valid click')
                 //console.log(this.theproducts)
+                this.delivery_locations = JSON.parse(this.theproducts.delivery_locations)
                 this.title = this.theproducts.title
             this.hidethis = this.theproducts.hidden
             this.datePosted = this.theproducts.date_posted

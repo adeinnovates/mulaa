@@ -570,7 +570,7 @@ const config = {
             }else{
               this.contentloaded = false
               this.limitVal = 3
-              console.log(this.name)
+              //console.log(this.nname)
               //if(this.name = 'foodfashionplug'){
                 if(this.userDetails.trial == true){
                 this.limitVal = 65
