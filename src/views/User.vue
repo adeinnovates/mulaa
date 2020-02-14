@@ -572,7 +572,38 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
       const bottomOfPage = visible + scrollY >= pageHeight
       return bottomOfPage || pageHeight < visible
     },
-       userLimit(){
+    userLimit(){
+let exclude_transactions = true
+         if(this.userDetails.paid_user != true){ 
+            this.limitVal = 1
+            this.contentloaded = false
+             if(this.userDetails.trial == true){
+                this.limitVal = 65
+                this.showSearch = true 
+                return
+              }
+            //console.log('base: '+this.userDetails.subscription)
+          }else {
+               if(this.userDetails.subscription_status != undefined){
+              this.contentloaded = false
+              this.limitVal = 65
+              this.showSearch = true
+              //console.log(trxData.subscriptions[0])
+            }else{
+              this.contentloaded = false
+              this.limitVal = 3
+              //console.log(this.name)
+              //if(this.name = 'foodfashionplug'){
+                if(this.userDetails.trial == true){
+                this.limitVal = 65
+                this.showSearch = true 
+              }
+              //console.log(trxData.subscriptions[0])
+            }
+          }
+          return;
+    },
+     /*  userLimit(){
        
 const config = {
             headers: {'Authorization': 'Bearer '+this.skk}
@@ -608,21 +639,13 @@ const config = {
               }
               //console.log(trxData.subscriptions[0])
             }
-            //console.log(trxData)
-             /*
-             if(trxData[0].status == 'active'){
-                this.limitVal = 65
-             }
-             else {
-               this.limitVal = 3
-             }
-             */
+            
         }).catch(err => {
             console.log(err)   
             })
           }
 return
-    },
+    },*/
        isPageOwner: function(){
        if (this.$store.getters.isLoggedIn != true){
            //return console.log('not logged in')

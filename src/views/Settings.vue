@@ -81,6 +81,18 @@ outlined
     </v-card-title>
   <v-list two-line subheader class="pa-5">
 
+    <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title class="teal--text subtitle-1 text--darken-2 text-uppercase">
+            <v-icon small color="teal">
+              mdi-currency-ngn
+              </v-icon>
+            Store Delivery Charge</v-list-item-title>
+          <v-list-item-subtitle class="caption grey lighten-4 pa-3 mt-2">{{userDetails.delivery_fee}}</v-list-item-subtitle>
+        </v-list-item-content>
+        
+      </v-list-item>
+
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="teal--text subtitle-1 text--darken-2 text-uppercase">
@@ -602,7 +614,7 @@ fetchUserData(){
         this.chkref()
         }
         )
-    },
+    },/*
     confirmSub(tranx){
       const config = {
             headers: {'Authorization': 'Bearer '+this.skk}
@@ -626,7 +638,7 @@ fetchUserData(){
             console.log(err)
             //reject(err)
           })
-    },
+    },*/
     chkref : function () {
        
         //return Object.keys(this.myproducts).length;
@@ -644,11 +656,17 @@ fetchUserData(){
          //this.paid = true
          //console.log(this.userDetails.email)
          //console.log(this.userDetails.last_payment_date)
-         if(this.userDetails.paid_user == true){
+         if(this.userDetails.subscription_status == 'active'){
            //this.paid = true
            //console.log(this.userDetails.customer_code)
-           this.confirmSub(this.userDetails.customer_code)
-         }
+           //this.confirmSub(this.userDetails.customer_code)
+           //this.confirmSub()
+              this.paid = true
+              //this.nextPlanDate = trxData[0].next_payment_date//.toDateString()
+         }else{
+               this.paid = false
+              //return
+            }
          /*if(this.userDetails.referal !=''){
            this.referred = true
          }*/

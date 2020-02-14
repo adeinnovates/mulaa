@@ -89,13 +89,23 @@
             outlined
             color="teal lighten-3"
           ></v-text-field>
-       
-       
-<v-text-field
+
+          <v-text-field
            class="teal--text form-field ma-0"
             v-model="facebookPixel"
             label="Facebook"
             placeholder="Facebook Pixel"
+            outlined
+            color="teal lighten-3"
+          ></v-text-field>
+
+          <v-text-field
+           class="teal--text form-field ma-0"
+            v-model="deliveryfee"
+            label="Store Delivery Fee"
+            placeholder="Delivery Fee"
+            hint="figures only"
+            prepend-inner-icon="mdi-currency-ngn"
             outlined
             color="teal lighten-3"
           ></v-text-field>
@@ -125,7 +135,7 @@ export default {
      props: ['theuser','user','userImg'],
  data(){
         return{
-            businessName : this.user,
+        businessName : this.user,
         Instagram: this.theuser.instagram,
         phoneNumber: this.theuser.phone_number,
         BusinessAddress: this.theuser.business_address,
@@ -134,6 +144,7 @@ export default {
         paystackKey: this.theuser.payment_key,
         facebookPixel: this.theuser.facebook_pixel,
         businessDesc: this.theuser.business_description,
+        deliveryfee: null,
         infoMsg: '', 
         infoBar: false,
         dialog: false,
@@ -188,6 +199,7 @@ export default {
                 facebook_pixel: this.facebookPixel,
                 brand_image: this.userImg,
                 business_description: this.businessDesc,
+                delivery_fee: this.deliveryfee,
                // last_login: ''//dateFunction() //JSON.stringify({ user })
                 },
                  status: "publish"
@@ -226,8 +238,19 @@ export default {
       set(value) {
         this.$store.commit('loading', value);
       }
-    }
-    }  
+    },
+    },
+    watch: {
+    
+    },
+    mounted() {
+       if(!this.theuser.delivery_fee){
+          return this.deliveryfee = 0
+        }else{
+return this.deliveryfee = this.theuser.delivery_fee
+        }
+    
+    } 
 }
 </script>
 

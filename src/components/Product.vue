@@ -790,7 +790,7 @@ const salesData = {
             this.newAmount = this.amount
             this.stock = this.theProduct.stock
             this.productOptions = this.theProduct.product_options
-            console.log(this.theProduct.productOptions)
+            //console.log(this.theProduct.productOptions)
              //console.log('refreshed amount '+this.newAmount) 
             }else{
                 //console.log('valid click')
