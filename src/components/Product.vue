@@ -400,7 +400,7 @@ powered by <img :src="require('../assets/mulaalogo.png')" alt="" style="max-widt
        
         <v-list-item-title class="title mb-0 teal--text text--darken-4">
           <div style="font-size:10px">{{buyerEmail}} // {{buyerPhone}}</div>
-          <div class="py-2" style="border-bottom:1px dotted #ccc">
+          <div class="py-2" style="border-bottom:1px dotted #ccc;line-height:1px;">
           <p class="my-0 " style="font-size:10px"><span class="overline my-0 py-0">Sub-total:</span> {{newAmount | currency}} </p>
           <p class="my-0" style="font-size:10px"><span class="overline my-0 py-0">Delivery:</span> {{this.userDetails.delivery_fee | currency}} </p>
           </div>
