@@ -203,6 +203,23 @@ export default new Vuex.Store({
        state.loading = false
        //console.log('the product: '+JSON.stringify(state.theProduct))
    },
+   the_product_single (state, theproduct) {
+    /*const Discounted = product.filter(function(item){
+      return item.showDiscount == true; 
+    });*/
+    //state.userDiscounted = Discounted
+    //console.log('the media', the_media)
+    //console.log('LOL',theproduct)
+    //state.pslides = the_media 
+    state.theProduct = theproduct.acf
+    state.theProductId = theproduct.id
+    
+    
+    //Vue.set(state, 'items', [...items]);
+    //console.log(product.id)
+    state.loading = false
+    //console.log('the product: '+JSON.stringify(state.theProduct))
+},
    more_products (state, user_product) {
      //console.log(state.userProducts.length)
      
@@ -703,8 +720,8 @@ const removeDuplicates = (array, key) => {
               }
               else{
                 //console.log(theproduct)
-                const the_media = []
-                commit('the_product', {theproduct, the_media})
+                //const the_media = []
+                commit('the_product_single', theproduct)
               }
               
              // return

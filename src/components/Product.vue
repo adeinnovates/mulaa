@@ -224,14 +224,14 @@ style="border-radius:10px;"
            
             </v-col>
             </v-row>  
-            <v-row>
+            <v-row :v-if="delivery_locations_obj">
          <v-col>
            <p class="caption grey--text text--darken-2 mb-0">
             <span class="font-weight-bold">
               Delivery Location(s): 
               </span>
               </p>
- <v-chip v-for="tag in delivery_locations" x-small class="mb-2 mr-1 red lighten-5" :key="tag">
+ <v-chip v-for="tag in delivery_locations_obj" x-small class="mb-2 mr-1 red lighten-5" :key="tag">
                     {{tag}}
                      </v-chip> 
          </v-col>
@@ -387,14 +387,8 @@ powered by <img :src="require('../assets/mulaalogo.png')" alt="" style="max-widt
        </v-row>
 
        <v-bottom-sheet v-model="sheet">
-      <v-sheet class="" height="200px">
-        <v-progress-linear
-          :value="50"
-          class="my-0"
-          height="3"
-          color="teal"
-        ></v-progress-linear>
-
+      <v-sheet class="" height="300px" style="border-radius: 20px 20px 0 0" :elevation=5>
+ <div class="pa-5 grey--text text--darken-3 font-weight-bold">REVIEW/CONFIRM YOUR ORDER</div>
        <!-- <v-btn
           class="mt-4"
           text
@@ -403,8 +397,14 @@ powered by <img :src="require('../assets/mulaalogo.png')" alt="" style="max-widt
         >close</v-btn>-->
 <v-list-item three-line>
       <v-list-item-content>
-        <div class="overline mb-0">Order Confirmation - REVIEW YOUR ORDER</div>
-        <v-list-item-title class="title mb-0 teal--text text--darken-4"><span class="overline">Total:</span><br> {{newAmount | currency}}</v-list-item-title>
+       
+        <v-list-item-title class="title mb-0 teal--text text--darken-4">
+          <div style="font-size:10px">{{buyerEmail}} // {{buyerPhone}}</div>
+          <div class="py-2" style="border-bottom:1px dotted #ccc">
+          <p class="my-0 " style="font-size:10px"><span class="overline my-0 py-0">Sub-total:</span> {{newAmount | currency}} </p>
+          <p class="my-0" style="font-size:10px"><span class="overline my-0 py-0">Delivery:</span> {{this.userDetails.delivery_fee | currency}} </p>
+          </div>
+          <span class="overline">Total:</span><br> {{this.amount2()/100  | currency}}</v-list-item-title> <!-- newAmount -->
         <v-list-item-subtitle>{{this.title}}
 <div v-for="(option,i) in Options" :key="i" class="mt-1">
 <v-chip
@@ -476,7 +476,7 @@ class="my-0 d-inline green lighten-5 font-weight-light ml-n2"
                 
             <v-card-text class="pa-5 text-center">
               <p class="headline">
-                Payment of <strong>{{newAmount | currency}}</strong>
+                Payment of <strong>{{totalPrice| currency}}</strong>
                 </p>
                 <div v-show="!show2">
             <span class="subtitle-1 text-center font-weight-light">
@@ -503,7 +503,7 @@ class="my-0 d-inline green lighten-5 font-weight-light ml-n2"
                             </div>
                   <div v-show="show2">
                     <p class="subtitle-1">Make an Internet Transfer as payment for your transaction.</p>
-                    <h4 class="title">Account Number: {{craaccount}} <br> Bank Name: Highstreet MFB</h4>
+                    <h4 class="title">Account Number: {{craaccount}} <br> Bank Name: Rubies MFB</h4>
                     <p class="text--teal caption">transaction expires in 30mins</p>
                     </div>
             </v-card-text>
@@ -552,7 +552,9 @@ export default {
     },
  data(){
         return {
-          delivery_locations: [],
+          totalPrice:0,
+          delivery_locations: [], //JSON.parse(this.theProduct.delivery_locations)
+          delivery_locations_obj: null,
           craaccount: '',
           show2: false,
           bank: null,
@@ -650,6 +652,13 @@ pageurl: 'https://shop.mulaa.co'+this.$route.path,
       amount(){
           if(this.discounted == false || this.discounted == undefined){
               let amount = this.price
+              /*
+ if(this.userDetails.delivery_fee){
+               let charge = this.userDetails.delivery_fee// * 100
+               let amount2 = parseInt(amount) + parseInt(charge)
+               return amount2
+              }
+             */
               //console.log(this.discounted)
              // console.log('amount: '+ amount)
 
@@ -658,9 +667,11 @@ pageurl: 'https://shop.mulaa.co'+this.$route.path,
               //this.hide = true
               console.log(this.discounted)
               let amount = this.discountPrice
+              
               return amount
           }
       },
+      
        disabled() {
        if (this.buyerName.length < 1 || this.buyerEmail == ' '){
            this.infoBar = true
@@ -776,7 +787,7 @@ const salesData = {
             if(this.theproducts === undefined){
                 //console.log('refreshed')
                 //console.log(this.theProduct)
-                this.delivery_locations = JSON.parse(this.theProduct.delivery_locations)
+                this.delivery_locations = this.theProduct.delivery_locations
                 this.productID = this.theProductId
                 this.title = this.theProduct.title
             this.hidethis = this.theProduct.hidden
@@ -795,7 +806,8 @@ const salesData = {
             }else{
                 //console.log('valid click')
                 //console.log(this.theproducts)
-                this.delivery_locations = JSON.parse(this.theproducts.delivery_locations)
+                //this.delivery_locations = JSON.parse(this.theproducts.delivery_locations)
+                this.delivery_locations = this.theproducts.delivery_locations
                 this.productID = this.theproducts.productID
                 this.title = this.theproducts.title
             this.hidethis = this.theproducts.hidden
@@ -814,16 +826,39 @@ const salesData = {
         },
         amount2(){
           if(this.discounted == true){
-              let amount = this.discountPrice * 100
-              
+              let amount = this.discountPrice //* 100
+              if(this.userDetails.delivery_fee){
+               let charge = this.userDetails.delivery_fee// * 100
+               let amount2 = parseInt(amount) + parseInt(charge)
+               
+               this.totalPrice = amount2
+               console.log('full price: '+amount2+" delivery: "+charge+" total "+this.totalPrice)
+               return amount2 * 100
+              }
               console.log('discount price: '+ amount)
-              return amount
+              return amount * 100
           }else {
-              let amount = this.price * 100
-              console.log('full price: '+this.price)
-              return amount
+              let amount = this.price //* 100
+              if(this.userDetails.delivery_fee){
+               let charge = this.userDetails.delivery_fee// * 100
+               let amount2 = parseInt(amount) + parseInt(charge)
+               
+                this.totalPrice = amount2
+                console.log('full price: '+amount2+" delivery: "+charge+" total "+this.totalPrice)
+               return amount2 * 100
+              }
+              console.log('full price: '+this.price+" delivery: "+charge)
+              return amount * 100
           }
       },
+     /* pushDelivery(){
+        console.log(this.theProduct.delivery_locations)
+        if(!this.theProduct.delivery_locations){
+          return null
+        }else{
+return JSON.parse(this.theProduct.delivery_locations)
+        }
+      }, */
       resetForm () {
         this.$refs.buyForm.reset()
       },
@@ -986,6 +1021,7 @@ this.loading = false
             oLuanchBtn.style.display = 'none';
          // this.showPopup()   
           //console.log('userdetails: '+JSON.stringify(this.userDetails))  
+          //this.amount2()
   },
   watch: {
       loader () {
@@ -999,7 +1035,18 @@ this.loading = false
       pslides(){
         //console.log('length',this.pslides.length)
         //this.$refs.slider.glide.go(">");
+      },
+      delivery_locations(val){
+        console.log('location value ',val)
+        if(this.delivery_locations == ''){
+        return
+      }else{
+console.log('not null', val)
+        return this.delivery_locations_obj = JSON.parse(this.delivery_locations)
       }
+      return
+      },
+     
     }
 }
 </script>

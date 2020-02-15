@@ -142,7 +142,7 @@ v-show="showWidget"
                             </v-btn>
                         </div>-->
                         <AddProduct></AddProduct>
-<v-sheet class="mb-3 pa-3 rounded body-2" color="orange lighten-4" style="color:#000028" elevation="1" :v-show="showNotice">
+<v-sheet class="mb-3 pa-3 rounded body-2" color="orange lighten-4" style="color:#000028" elevation="1" :v-if="userDetails.subscription_status != active">
 You don't have an active mulaa subscription plan. 
 <v-btn 
 text
