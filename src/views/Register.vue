@@ -24,6 +24,15 @@
     light="light"
     :loading="loading"
   >
+  <v-overlay 
+:value="loading"
+dark
+:z-index="9999">
+ <v-progress-circular indeterminate
+ :size="100"
+      :width="5"
+ >loading account</v-progress-circular>
+    </v-overlay>
     <v-card-title class="caption text-center d-block py-5" v-if="!show2">
      <v-row
       justify="space-around"
@@ -95,6 +104,7 @@
               full-width
               single-line
               label="Password"
+              :rules="[maxrules.required, maxrules.min, maxrules.max]"
               background-color="#f4f8f7"
               color="grey darken-2"
               prepend-inner-icon="mdi-lock-outline"
@@ -354,9 +364,36 @@ return this.$router.push({name: 'dashboard', params: { popWelcome: true }})
               .dispatch("login", user)
               .then(
                 () => {
-                  this.loading = false
+                  //this.loading = false
                   axios.get('https://mulaa.me/u/api/?key=P1fjdH02F3y2&url='+priUrl+'&custom='+userUnik)
-                  this.confirmation = true
+                  //this.confirmation = true
+                  const useridVal = this.$store.state.userId
+                  //console.log(localStorage.getItem('token'))
+//console.log(useridVal)
+//console.log('referred by :'+this.referralName)
+
+const options = {
+            headers: {'Authorization': 'Bearer '+localStorage.getItem('token')}
+            }
+           
+           if(this.referralName !=''){
+//this.$http.put
+                axios.post('https://shop.mulaa.co/api/wp-json/wp/v2/users/'+useridVal, {
+                title: '',
+                content: '',
+                fields : {
+                referal: this.referralName,
+                },
+                 status: "publish"
+            }, options)
+            .then(resp => {
+ this.loading = false
+this.confirmation = true
+            })
+           }else{
+this.loading = false
+this.confirmation = true
+           }
                   //return this.$router.push({name: 'dashboard', params: { popWelcome: true }})//{name: 'dashboard', params: { sheet: true }}
                   }
                 ) //this.$router.push("/")
@@ -374,6 +411,7 @@ return this.$router.push({name: 'dashboard', params: { popWelcome: true }})
     },
     data() {
       return {
+        isFormValid: false,
         usertip: false,
         confirmation: false,
         usernameraw:'',
@@ -390,6 +428,7 @@ return this.$router.push({name: 'dashboard', params: { popWelcome: true }})
                   "author"
                 ]*/
             },
+            referralName: this.$route.query.ref || '',
             theme: 'dark-theme',
             valid: false,
         show1: false,
@@ -408,6 +447,11 @@ return this.$router.push({name: 'dashboard', params: { popWelcome: true }})
     nurules: {
           required: value => !!value || 'Required.',
           min: v => v.length >= 6 || 'Min 6 characters'
+        },
+        maxrules: {
+          required: value => !!value || 'Required.',
+          min: v => v.length >= 6 || 'Min 6 characters',
+          max: v => v.length <= 16 || 'Max 16 characters'
         }
       }
     }

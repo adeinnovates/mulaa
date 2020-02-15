@@ -6,8 +6,7 @@
      color="transparent"
     >
         <v-container>
-          <!--
-            <div 
+          <div 
           class="text-right small text-uppercase"
           v-show="showWidget"
           >
@@ -17,8 +16,11 @@
           >
 
           </Widget>
+         <!-- <v-icon small color="teal">
+              mdi-settings
+              </v-icon>
+              Widget -->
           </div>
-          -->
                 <div class="text-center">
                   
               <v-avatar class="my-2" size="80">
@@ -110,8 +112,29 @@
                           </v-card>
                   </div>
                 <div class="layout-desktop mx-auto" style="max-width:854px;">
-<p class="overline mb-0 mt-6"><v-icon small left>mdi-shopping-outline</v-icon> My products</p>
-</div>
+                <v-layout row wrap mx-auto>
+                <v-flex xs7 sm7 md8 lg9>
+                <p class="overline mb-0 mt-6"><v-icon small left>mdi-shopping-outline</v-icon> My products</p>
+                </v-flex>
+                <v-flex xs5 sm5 md4 lg3 text-right>
+               <!-- <v-btn
+                icon
+                >
+                <v-icon right>mdi-magnify</v-icon>
+                </v-btn> -->
+                <v-text-field
+            
+            append-icon="mdi-magnify"
+            class=""
+            v-model="search" :clearable=true
+            color= teal
+            placeholder="Product No."
+            v-show="showSearch"
+          ></v-text-field>
+                </v-flex>
+                </v-layout>
+
+                </div>
         <v-layout row wrap pt-2 class="layout-desktop mx-auto" style="max-width:854px;">
                            
                          
@@ -141,6 +164,7 @@
           lazy-src="https://picsum.photos/id/1002/10/6"
          >
               <div v-show="product.stock == 0" class="outofstock">
+
               <v-chip
               class="ma-2 point text-uppercase font-weight-black"
               color="red"
@@ -149,8 +173,9 @@
               text-color="white"
               >
               <v-icon small left>mdi-cart-off</v-icon>
-              sold out
+                sold out
               </v-chip>
+
               </div><!-- hidden / out of stock-->
             <template v-slot:placeholder>
             <v-row
@@ -172,7 +197,6 @@
                 </div>
                 <div class="grey--text text-truncate"> {{product.acf.description}}</div>
               </v-card-text>-->  <!--<Buy :theproducts="product">
-
                 </Buy>-->
                
               <v-card-actions>
@@ -195,22 +219,53 @@
                
                
                 <v-spacer></v-spacer>
-                <div class="grey--text text--darken-3 overline"> 
+                <div class="grey--text text--darken-3 caption"> 
                   <!--sku {{product.productID}}-->
-                  <v-chip outlined x-small>
+                  <!--<v-chip outlined x-small>
                   #{{product.productID}}
-                  </v-chip>
+                  </v-chip>-->
+                  <span class="x-small outline">
+                    #{{product.productID}}
+                  </span>
                   </div>
               </v-card-actions>
              
               </v-card>
               
               </transition>
-              
+             
         </v-flex>
        
+       <v-flex xs6 sm6 md4 lg4 v-for="(product, index) in filterHiddenProduct" :key="`product-${index}`" v-show="contentloaded">
+        <!--<v-skeleton-loader
+      class="mx-auto"
+      max-width="300"
+      type="card"
+    ></v-skeleton-loader>
+    -->
+        </v-flex>
+
                        </v-layout>
-                        </div>
+  <div class="text-center mt-4"
+  v-show="showloader"
+  >
+<v-progress-circular 
+indeterminate
+color="teal lighten-3"
+></v-progress-circular>
+</div>
+                       <!--
+              <div class="text-center mt-4">
+                <v-pagination
+                v-model="pageNum"
+                :length="10"
+                :total-visible="2"
+                circle
+                color="teal"
+                ></v-pagination>
+              </div>
+              -->
+          </div>
         </v-container>
         </v-sheet>
        <v-row justify="center" class="mb-10"> 
@@ -252,6 +307,7 @@ powered by <a href="https://mulaa.co/?utm_source=footer&utm_medium=userpage" tar
     </div>
 </template>
 <script>
+import countapi from 'countapi-js';
 import { mapState, mapGetters } from 'vuex'
 import Buy from '@/components/BuyProduct'
 import Widget from '@/components/GetWidget'
@@ -294,8 +350,12 @@ export default {
     }*/,
      data(){
         return{
-          teststock: 1,
+          showloader: false,
+          bottom: false,
+          pageNum: 1,
+          contentloaded:true,
           limitVal: 1,
+          nname: '',
           showWidget: false,
           inputs: [
             {
@@ -303,6 +363,7 @@ export default {
             }
         ],
             search:'',
+            showSearch: false,
             overlay:false,
             userdata: this.$route.params.name,
             dialog: false,
@@ -323,6 +384,7 @@ export default {
              'renderUser'
            ]),
       ...mapState({
+        productListEnd: 'productListEnd',
           emptyStore: 'emptyStore',
       registerMsg:'registerMsg',
       color:'color',
@@ -358,7 +420,7 @@ export default {
         this.$store.commit('loading', value);
       }
     },
-    merchantData: {
+    /*merchantData: {
     get: function() {
       //concat using template literal
       //return `https://mulaa.me/u/${this.$route.params.name}`
@@ -367,7 +429,7 @@ export default {
       set(value) {
         this.$store.commit('userDetails', value);
       }
-  },
+  },*/
     filteredProducts: function(){
 
       if(this.userProducts != ''){
@@ -424,6 +486,39 @@ export default {
      created() {
         this.fetchData()
        // console.log('name: '+ this.name)
+       
+       const metricOps = {
+        namespace: this.name+'.mulaa.store', //this.nname
+        key: this.userDetails.customer_code,
+}
+/*
+countapi.create(metricOps).then((result) => { 
+  console.log(result);
+ });*/
+ countapi.hit(metricOps.namespace, metricOps.key).then((result) => { 
+   console.log(result.value);
+  });
+  /*
+ countapi.info(metricOps.namespace, metricOps.key).then((result) => { 
+   console.log(result); //.value
+  });*/
+  
+
+/*
+      countapi.visits().then((result) => {
+      console.log(result);
+      });
+      */
+/*
+      countapi.get('http://localhost:8080/u/foodfashionplug').then((result) => { 
+        console.log(result.value); 
+        });
+*/
+       window.addEventListener('scroll', () => {
+      this.bottom = this.bottomVisible()
+    })
+    //this.paginate()
+    
     },
      watch: {
     // call again the method if the route changes
@@ -440,59 +535,120 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
       //console.log('details updated')
       return this.userLimit()
       //return
+    },
+    pageNum: function (val) {
+      //console.log(this.pageNum)
+      if(this.productListEnd != true){
+        this.showloader = true
+      }else{
+        this.showloader = false
+        console.log('productListEnd '+this.productListEnd)
+        return
+      }
+      const paged = this.name + '&page='+this.pageNum
+      
+        this.$store.dispatch('loadMoreProducts', paged).then(response => {
+          this.showloader = false
+          
+            //console.log("End of product list :) Now buy stuff")
+        })
+      
+    },
+    bottom(bottom) {
+      if (bottom) {
+        this.pageNum ++
+        this.paginate()
+      }
+    },
+    filterHiddenProduct(){
+      this.showloader = false
     }
   },
     methods: {
-       userLimit(){
-       /*
-       let subcheck = this.userDetails.subscription
-        let payment_date = this.userDetails.payment_date
-         
-let yesterday = new Date("11-13-2019")
-            let st = new Date();
-            console.log(new Date(payment_date))
-           let diff =  Math.ceil(
-  (st - new Date(payment_date)) / 1000 / 60 / 60 / 24
-);
-console.log('days left: '+ diff)
-*/
+      bottomVisible() {
+      const scrollY = window.scrollY
+      const visible = document.documentElement.clientHeight
+      const pageHeight = document.documentElement.scrollHeight
+      const bottomOfPage = visible + scrollY >= pageHeight
+      return bottomOfPage || pageHeight < visible
+    },
+    userLimit(){
+let exclude_transactions = true
+         if(this.userDetails.paid_user != true){ 
+            this.limitVal = 1
+            this.contentloaded = false
+             if(this.userDetails.trial == true){
+                this.limitVal = 65
+                this.showSearch = true 
+                return
+              }
+            //console.log('base: '+this.userDetails.subscription)
+          }else {
+               if(this.userDetails.subscription_status != undefined){
+              this.contentloaded = false
+              this.limitVal = 65
+              this.showSearch = true
+              //console.log(trxData.subscriptions[0])
+            }else{
+              this.contentloaded = false
+              this.limitVal = 3
+              //console.log(this.name)
+              //if(this.name = 'foodfashionplug'){
+                if(this.userDetails.trial == true){
+                this.limitVal = 65
+                this.showSearch = true 
+              }
+              //console.log(trxData.subscriptions[0])
+            }
+          }
+          return;
+    },
+     /*  userLimit(){
+       
 const config = {
             headers: {'Authorization': 'Bearer '+this.skk}
             }
             let cus_code = this.userDetails.customer_code
             let exclude_transactions = true
-         if(this.userDetails.paid_user != true){
+         if(this.userDetails.paid_user != true){ 
             this.limitVal = 1
-            console.log('base: '+this.userDetails.subscription)
+            this.contentloaded = false
+             if(this.userDetails.trial == true){
+                this.limitVal = 65
+                this.showSearch = true 
+                return
+              }
+            //console.log('base: '+this.userDetails.subscription)
           }else {
             axios.get('https://api.paystack.co/customer/'+cus_code, config)
         .then(resp => { 
             const trxData = resp.data.data//.subscriptions
             if(trxData.subscriptions[0] != undefined){
+              this.contentloaded = false
               this.limitVal = 65
+              this.showSearch = true
               //console.log(trxData.subscriptions[0])
             }else{
+              this.contentloaded = false
               this.limitVal = 3
+              //console.log(this.name)
+              //if(this.name = 'foodfashionplug'){
+                if(this.userDetails.trial == true){
+                this.limitVal = 65
+                this.showSearch = true 
+              }
               //console.log(trxData.subscriptions[0])
             }
-            //console.log(trxData)
-             /*
-             if(trxData[0].status == 'active'){
-                this.limitVal = 65
-             }
-             else {
-               this.limitVal = 3
-             }
-             */
+            
         }).catch(err => {
             console.log(err)   
             })
           }
 return
-    },
+    },*/
        isPageOwner: function(){
        if (this.$store.getters.isLoggedIn != true){
-           return console.log('not logged in')
+           //return console.log('not logged in')
        }else{
          //console.log('render user: '+ this.$store.getters.renderUser)
          //console.log(this.name)
@@ -502,8 +658,20 @@ return
          //return console.log('loggedin user: '+ this.$store.getters.isLoggedIn)
        }
      },
+     paginate(){
+       //this.pageNum += this.pageNum
+       const paged = this.name + '&page='+this.pageNum
+        this.$store.dispatch('loadMoreProducts', paged).then(response => {
+          
+          this.showloader = false
+
+            //console.log("End of product list :) Now buy stuff")
+        })
+        //this.showloader = false
+     },
     fetchData(){
       //console.log('this user '+this.name)
+      //const paged = this.name + '&page='+this.pageNum
         this.$store.dispatch('loadUserProducts', this.name)
         this.$store.dispatch('loadUserDetails', this.name)
         this.$store.dispatch('loadDashboardLinks', this.name)
@@ -552,6 +720,16 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
 }
 </script>
 <style>
+.x-small.outline{
+  font-size: 9px;
+  border:1px solid #ccc;
+  border-radius: 10px;
+  padding: 1px 5px;
+}
+.pagination {
+}
+.page-item {
+}
 .outofstock{
   
    filter: alpha(opacity=80);

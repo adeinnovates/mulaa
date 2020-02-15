@@ -81,6 +81,18 @@ outlined
     </v-card-title>
   <v-list two-line subheader class="pa-5">
 
+    <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title class="teal--text subtitle-1 text--darken-2 text-uppercase">
+            <v-icon small color="teal">
+              mdi-currency-ngn
+              </v-icon>
+            Store Delivery Charge</v-list-item-title>
+          <v-list-item-subtitle class="caption grey lighten-4 pa-3 mt-2">{{userDetails.delivery_fee}}</v-list-item-subtitle>
+        </v-list-item-content>
+        
+      </v-list-item>
+
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="teal--text subtitle-1 text--darken-2 text-uppercase">
@@ -220,6 +232,7 @@ style="border-top-left-radius:15px;border-top-right-radius:15px;"
        
         </v-sheet>
 
+
         <div
         v-show="!paid"
         >
@@ -231,6 +244,53 @@ style="border-top-left-radius:15px;border-top-right-radius:15px;"
       <v-progress-circular indeterminate size="84"></v-progress-circular>
     </v-overlay>
 
+    <div 
+    v-show="referred"
+    >
+
+ <v-sheet 
+        class="pa-5"
+        color="teal lighten-5"
+        style="border:2px dotted rgba(178, 223, 219, 0.3) !important;border-radius:0px;"
+        >
+        <span class="teal--text subtitle-1 text--darken-1">
+          (Discounted) Annual Mogul: N52,500 <v-btn small color="success"
+          
+          @click="doSubscription('PLN_eoildbokktq5sle', '5250000')"
+          >Subscribe</v-btn>
+        </span>
+      <div class="grey--text text--darken-2 mt-2">
+        Unlimited products,
+Unlimited content links,
+0% transaction charge,
+12 months subscription (3 months free)
+      </div>
+       
+        </v-sheet>
+        <v-divider inset></v-divider>
+        <v-sheet 
+        class="pa-5"
+        color="teal lighten-5"
+        style="border:2px dotted rgba(178, 223, 219, 0.3) !important;border-radius:0px;"
+        >
+        <span class="teal--text subtitle-1 text--darken-1">
+          (Discounted) Quarterly Sprinter: N13,500 <v-btn small color="success"
+          
+          @click="doSubscription('PLN_c7p40gbev53tons', '1350000')"
+          >Subscribe</v-btn>
+        </span>
+      <div class="text--darken-2 grey--text mt-2">
+        Unlimited products,
+Unlimited content links,
+0% transaction charge,
+3 months subscription (pay Quarterly)
+      </div>
+       
+        </v-sheet>
+
+    </div>
+
+
           <v-sheet 
         class="pa-5"
         color="teal lighten-5"
@@ -238,8 +298,8 @@ style="border-top-left-radius:15px;border-top-right-radius:15px;"
         >
         <span class="teal--text subtitle-1 text--darken-1">
           Annual Mogul: N54,000 <v-btn small color="success"
-          :disabled=false
-          @click="doSubscription('PLN_g4m3pjhpsgb3u14')"
+          :disabled=disabled
+          @click="doSubscription('PLN_g4m3pjhpsgb3u14', '5400000')"
           >Subscribe</v-btn>
         </span>
       <div class="grey--text text--darken-2 mt-2">
@@ -258,8 +318,8 @@ Unlimited content links,
         >
         <span class="teal--text subtitle-1 text--darken-1">
           Quarterly Sprinter: N15,000 <v-btn small color="success"
-          :disabled=false
-          @click="doSubscription('PLN_xbwopoov59jncbi')"
+          :disabled=disabled
+          @click="doSubscription('PLN_xbwopoov59jncbi', '1500000')"
           >Subscribe</v-btn>
         </span>
       <div class="text--darken-2 grey--text mt-2">
@@ -278,8 +338,8 @@ Unlimited content links,
         >
         <span class="teal--text subtitle-1 text--darken-1">
           Monthly Starter: N6,000 <v-btn small color="success"
-          :disabled=false
-          @click="doSubscription('PLN_pzvz7tl3qnrwbdh')"
+          :disabled=disabled
+          @click="doSubscription('PLN_pzvz7tl3qnrwbdh', '600000')"
           >Subscribe</v-btn>
         </span>
       <div class="text--darken-2 grey--text mt-2">
@@ -299,8 +359,8 @@ Unlimited content links,
         <span class="teal--text subtitle-1 text--darken-1">
           Base Plan: N1,000 (x6) 
         </span><v-btn small color="success"
-        :disabled=false
-        @click="doSubscription('PLN_n4bg3qza5v3va6r')"
+        :disabled=disabled
+        @click="doSubscription('PLN_n4bg3qza5v3va6r', '100000')"
         >Subscribe</v-btn>
       <div class="text--darken-2 grey--text mt-2">
         Maximum 3 products
@@ -355,15 +415,68 @@ export default {
      EditSettings,
      UserSubscribe
   },
+  computed: {
+        ...mapGetters([
+             'renderUser'
+           ]),
+      ...mapState({
+      registerMsg:'registerMsg',
+      color:'color',
+      show:'show',
+      loading:'loading',
+      user: 'user',
+      allProducts: 'allProducts',
+      myproducts:'myproducts',
+      Discounted:'Discounted',
+      userPhone: 'userPhone',
+       userDetails: 'userDetails',
+       userAcctStatus: 'userAcctStatus'
+      }),
+    userSales: {
+      get() {
+        return this.$store.state.userSales;
+      },
+      set(value) {
+        this.$store.commit('user_sales', value);
+      }
+    },
+    snackbar: {
+      get() {
+        return this.$store.state.snackbar;
+      },
+      set(value) {
+        this.$store.commit('snackbar', value);
+      }
+    },
+    loading: {
+      get() {
+        return this.$store.state.loading;
+      },
+      set(value) {
+        this.$store.commit('loading', value);
+      }
+    },
+    salesCount: function(){
+      return Object.keys(this.userSales).length;
+    },
+    myProfileImg: {
+    get: function() {
+      //concat using template literal
+      return userDetails.brand_image 
+    }
+  }
+    },
     data() {
       return {
+        disabled: false,
         nextPlanDate:'',
         embedcode: `<div class="mulaa_embed" data-src="https://mulaa.me/u/`+ this.$store.state.user +`" style="height:400px;width:680px;margin: 10px auto" data-responsive="true" data-img="https://shop.mulaa.co/shop_cover.png" data-css="background:url('//shop.mulaa.co/loading.gif') white center center no-repeat;border:0px;float:middle;" data-Id="mulaa-sdk" data-Class="mulaa-sdk" data-name="mulaa.co"></div>
         `+'<script src="https://shop.mulaa.co/async-iframe.js"',
         paid: false,
+        referred:false,
         subName: '',
         skk: process.env.VUE_APP_SECRET_KEY,
-        subOverlay:false,
+        subOverlay:true,
         infoMsg: '', 
         infoBar: false,
  valid:'',
@@ -406,13 +519,13 @@ export default {
           testingCodeToCopy.setAttribute('type', 'hidden')
           window.getSelection().removeAllRanges()
         },
-       doSubscription(level){
+       doSubscription(level, amnt){
             //console.log(level)
             this.subOverlay = !this.subOverlay
             //let skey = 'sk_live_01952d79b3b14815af91d560256959358299e123'
             let subData = {
-            email: this.userDetails.email,
-            amount: "500",
+            email: this.userDetails.user_email,
+            amount: amnt,
             currency: "NGN",
             callback_url: "http://shop.mulaa.co/settings/confirm",
             plan:level
@@ -491,9 +604,17 @@ const headers2 = {
           })
   },
 fetchUserData(){
-        this.$store.dispatch('loadUserDetails', this.user)
-       // console.log(this.userDetails)
-    },
+  //this.$store.dispatch('loadUserDetails', this.name)
+  console.log('fetch user')
+        this.$store.dispatch('loadUserDetails', this.user).then(resp => {
+          this.subOverlay = false
+          const response = resp.data[0]
+          //console.log(response)
+          //console.log('userDetail: '+response.acf.referal)
+        this.chkref()
+        }
+        )
+    },/*
     confirmSub(tranx){
       const config = {
             headers: {'Authorization': 'Bearer '+this.skk}
@@ -517,72 +638,45 @@ fetchUserData(){
             console.log(err)
             //reject(err)
           })
+    },*/
+    chkref : function () {
+       
+        //return Object.keys(this.myproducts).length;
+//console.log('chk rf')
+        if(this.userDetails.referal !=''){
+           this.referred = true
+           this.disabled = true
+          // console.log('ref: '+this.userDetails.referal)
+         }
+         return
     }
      },
      watch: {
-       userDetails(){
+       userDetails(val){
          //this.paid = true
          //console.log(this.userDetails.email)
-         console.log(this.userDetails.last_payment_date)
-         if(this.userDetails.paid_user == true){
+         //console.log(this.userDetails.last_payment_date)
+         if(this.userDetails.subscription_status == 'active'){
            //this.paid = true
            //console.log(this.userDetails.customer_code)
-           this.confirmSub(this.userDetails.customer_code)
-         }
+           //this.confirmSub(this.userDetails.customer_code)
+           //this.confirmSub()
+              this.paid = true
+              //this.nextPlanDate = trxData[0].next_payment_date//.toDateString()
+         }else{
+               this.paid = false
+              //return
+            }
+         /*if(this.userDetails.referal !=''){
+           this.referred = true
+         }*/
          this.subName = this.userDetails.subscription
+       },
+       referred(){
+         return
        }
      },
-  computed: {
-        ...mapGetters([
-             'renderUser'
-           ]),
-      ...mapState({
-      registerMsg:'registerMsg',
-      color:'color',
-      show:'show',
-      loading:'loading',
-      user: 'user',
-      allProducts: 'allProducts',
-      myproducts:'myproducts',
-      Discounted:'Discounted',
-      userPhone: 'userPhone',
-       userDetails: 'userDetails',
-       userAcctStatus: 'userAcctStatus'
-      }),
-    userSales: {
-      get() {
-        return this.$store.state.userSales;
-      },
-      set(value) {
-        this.$store.commit('user_sales', value);
-      }
-    },
-    snackbar: {
-      get() {
-        return this.$store.state.snackbar;
-      },
-      set(value) {
-        this.$store.commit('snackbar', value);
-      }
-    },
-    loading: {
-      get() {
-        return this.$store.state.loading;
-      },
-      set(value) {
-        this.$store.commit('loading', value);
-      }
-    },
-    salesCount: function(){
-      return Object.keys(this.userSales).length;
-    },
-    myProfileImg: {
-    get: function() {
-      //concat using template literal
-      return userDetails.brand_image 
-    }
-  }
-    }
+  
 }
 </script>
 <style>

@@ -10,8 +10,10 @@ const API_URL_USER = 'http://dev.mulaa.africa/admin/wp-json/wp/v2/users'
 */
 
 const BASEURL = 'https://shop.mulaa.co/api/wp-json'
+const MEDIAURL = '/wp/v2/media?parent='
 const API_URL = 'https://shop.mulaa.co/api/wp-json/wp/v2/product'
 const API_URL_USER = 'https://shop.mulaa.co/api/wp-json/wp/v2/users'
+const API_URL_USER_DATA = 'https://shop.mulaa.co/api/wp-json/mulaa-auth/v1/users'
 
 const Token_ENDPOINT = '/jwt-auth/v1/token'
 const Products_ENDPOINT = '/mulaa-auth/v1/products'
@@ -42,15 +44,19 @@ const vuexLocalStorage = new VuexPersist({
     Discounted: state.Discounted,
     Sales: state.Sales,
     userEmail: state.userEmail,
-    userAcctStatus: state.userAcctStatus
+    userAcctStatus: state.userAcctStatus,
+    theProductId: state.theProductId,
+    //pslides: state.pslides,
     // getRidOfThisModule: state.getRidOfThisModule (No one likes it.)
   })
 });
 
 export default new Vuex.Store({
   state: {
+    productListEnd: false,
     linkStat: [],
     status: '',
+    theProductId: '',
     token: localStorage.getItem('token') || '',
     user: '',
     productOwner: '',
@@ -84,6 +90,7 @@ export default new Vuex.Store({
     shortUrl: '',
     filteredLinks:'',
     userLinks: '',
+    pslides: [],
 
   },
   getters: {
@@ -179,16 +186,168 @@ export default new Vuex.Store({
     
         state.loading = false
     },
-    the_product (state, product) {
+    the_product (state, {theproduct, the_media}) {
        /*const Discounted = product.filter(function(item){
          return item.showDiscount == true; 
        });*/
        //state.userDiscounted = Discounted
-       state.theProduct = product.acf
-       //console.log(product.acf)
+       //console.log('the media', the_media)
+       //console.log('LOL',theproduct)
+       state.pslides = the_media 
+       state.theProduct = theproduct.acf
+       state.theProductId = theproduct.id
+       
+       
+       //Vue.set(state, 'items', [...items]);
+       //console.log(product.id)
        state.loading = false
        //console.log('the product: '+JSON.stringify(state.theProduct))
    },
+   the_product_single (state, theproduct) {
+    /*const Discounted = product.filter(function(item){
+      return item.showDiscount == true; 
+    });*/
+    //state.userDiscounted = Discounted
+    //console.log('the media', the_media)
+    //console.log('LOL',theproduct)
+    //state.pslides = the_media 
+    state.theProduct = theproduct.acf
+    state.theProductId = theproduct.id
+    
+    
+    //Vue.set(state, 'items', [...items]);
+    //console.log(product.id)
+    state.loading = false
+    //console.log('the product: '+JSON.stringify(state.theProduct))
+},
+   more_products (state, user_product) {
+     //console.log(state.userProducts.length)
+     
+    
+    //state.myproducts = user_product
+
+    Array.prototype.unique = function() {
+      var a = this.concat();
+      for(var i=0; i<a.length; ++i) {
+          for(var j=i+1; j<a.length; ++j) {
+              if(a[i] === a[j])
+                  a.splice(j--, 1);
+          }
+      }
+  
+      return a;
+  };
+
+  function arrayUnique(array) {
+    var a = array.concat();
+    for(var i=0; i<a.length; ++i) {
+        for(var j=i+1; j<a.length; ++j) {
+            if(a[i] === a[j])
+                a.splice(j--, 1);
+        }
+    }
+
+    return a;
+}
+
+const removeDuplicates = (array, key) => {
+  return array.reduce((arr, item) => {
+    const removed = arr.filter(i => i[key] !== item[key]);
+    return [...removed, item];
+  }, []);
+};
+    const old = state.userProducts
+    const neew = user_product //Object.values(user_product)
+    const nnew = old.concat(neew)//[...old,...neew]
+
+    if(user_product != 0){
+    state.userProducts = removeDuplicates(nnew, 'productID')
+
+    const Discounted = user_product.filter(function(item){
+      return item.show_discount === 1; 
+    });
+    state.userDiscounted = Discounted
+
+    }else{
+      state.productListEnd = true
+      state.userProducts
+      return
+    }
+    
+    /*const convertArrayToObject = (array, key) => {
+      const initialValue = {};
+      return array.reduce((obj, item) => {
+        return {
+          ...obj,
+          [item[key]]: item,
+        };
+      }, initialValue);
+    };*/
+    const convertArrayToObject = (array, key) => 
+   array.reduce((obj, item) => ((obj[[item[key]]] = item), obj), {});
+
+    //const oldd = old.concat(user_product)
+    //state.userProducts = old.concat(user_product)
+    //state.userProducts = user_product
+    //const result = Object.assign({}, ...nnew.map(object => ({[object.id]: object})))
+
+
+    //state.userProducts = nnew
+    
+    /*
+    var extend = function () {
+
+      // Variables
+      var extended = {};
+      var deep = false;
+      var i = 0;
+    
+      // Check if a deep merge
+      if (typeof (arguments[0]) === 'boolean') {
+        deep = arguments[0];
+        i++;
+      }
+    
+      // Merge the object into the extended object
+      var merge = function (obj) {
+        for (var prop in obj) {
+          if (obj.hasOwnProperty(prop)) {
+            if (deep && Object.prototype.toString.call(obj[prop]) === '[object Object]') {
+              // If we're doing a deep merge and the property is an object
+              extended[prop] = extend(true, extended[prop], obj[prop]);
+            } else {
+              // Otherwise, do a regular merge
+              extended[prop] = obj[prop];
+            }
+          }
+        }
+      };
+    
+      // Loop through each object and conduct a merge
+      for (; i < arguments.length; i++) {
+        merge(arguments[i]);
+      }
+    
+      return extended;
+    
+    }; */
+    
+//console.log(state.userProducts)
+//console.log(nnew)
+    //console.log(convertArrayToObject(nnew,'productID'))
+    //state.userProducts = convertArrayToObject(nnew,'productID')
+    //state.userProducts = Object.assign({},old, user_product)
+    //console.log(state.userProducts)
+    
+   // console.log('mutation: '+user_product)
+/*
+    state.Discounted = Discounted
+    state.allProducts = products
+    state.myproducts = filtered
+    console.log(state.myproducts)
+*/
+    state.loading = false
+},
     user_products (state, user_product) {
        
         const Discounted = user_product.filter(function(item){
@@ -210,7 +369,7 @@ export default new Vuex.Store({
     },
     dash_products (state, user_product) {
       //console.log(user_product)
-       
+      return new Promise((resolve, reject) => {
        const Discounted = user_product.filter(function(item){
          return item.show_discount === 1; 
        });
@@ -218,6 +377,10 @@ export default new Vuex.Store({
        state.myproducts = user_product
       
        state.loading = false
+       resolve();
+      }).catch(() => {
+        reject();
+      });
    },
    dash_links (state, user_links) {
        
@@ -253,36 +416,55 @@ export default new Vuex.Store({
     state.userAcctStatus = value
   },
     user_detail(state, value){
-      state.userDetails = value
-      //console.log(value)
-    state.userAcctStatus = ' '
-   //state.userEmail = value.email
-   state.userKey = value.payment_key
-   state.userDesc = value.business_description
-   state.userBusiness = value.business_name
-   state.userPhone = value.phone_number
-   state.userImage = value.brand_image
-  
+      return new Promise((resolve, reject) => {
+            state.userDetails = value
+            //console.log(value)
+            state.userAcctStatus = ' '
+            //state.userEmail = value.email
+            state.userKey = value.payment_key
+            state.userDesc = value.business_description
+            state.userBusiness = value.business_name
+            state.userPhone = value.phone_number
+            state.userImage = value.brand_image
+            resolve();
+      }).catch(() => {
+        reject();
+      });
       //console.log('user detail: '+ JSON.stringify(value))
     },
     profileid(state, value){
       state.profileID = value
     },
     save_stat(state, value){
+      return new Promise((resolve, reject) => {
       state.linkStat = value
+      resolve();
+    }).catch(() => {
+      
+      reject();
+    });
     }
   },
   actions: {
     linkStats ({commit, state}, data){
+
       //state.loading = true
         //console.log(data)
         if (data != ''){
           axios({ url: `${STAT_URL}`+data, method: 'GET' })
           .then(resp => { 
-            const linkData = resp.data.data
-           // const socialData = resp.data.socialCount
-           // console.log(resp.data.data)
-            commit('save_stat', linkData)
+            if(resp.data.error == 0){
+              const linkData = resp.data.data
+              // const socialData = resp.data.socialCount
+               //console.log('link data: '+resp.data)
+               commit('save_stat', linkData)
+            }else{
+              const linkData = '{"clicks":"0","uniqueClicks":"0"}'
+              // const socialData = resp.data.socialCount
+               //console.log('link data error 1: '+JSON.stringify(resp.data.data))
+               commit('save_stat', linkData)
+            }
+           
           })
           .catch(err => {
             const linkData = 0
@@ -292,6 +474,7 @@ export default new Vuex.Store({
             //reject(err)
           })
         }else {console.log('link not found')}
+
       },
     createProfile({ commit, state }, data) {
       return new Promise((resolve, reject) => {
@@ -364,6 +547,37 @@ export default new Vuex.Store({
           //reject(err)
         })
       }else {console.log('logout and login, user object not found')}
+    },
+    loadMoreProducts ({commit, state}, userdata){
+      state.loading = true
+      return new Promise((resolve, reject) => {
+    
+      //console.log(data) https://shop.mulaa.co/api/wp-json/mulaa-auth/v1/products
+      if (userdata != ''){ //http://dev.mulaa.africa/admin/wp-json/wp/v2/product?per_page=100
+        axios({ url: `${BASEURL}${Products_ENDPOINT}`+'?author='+userdata, method: 'GET' })
+        .then(resp => { 
+          if(resp.data.length > 0){
+            const user_products = resp.data
+            const authorID = resp.data.theAuthor
+            //$store.dispatch('getUser', authorID)
+            commit('more_products', user_products)
+            //console.log('action: '+resp.data)
+          }else {
+            //console.log('Store Empty')
+            //commit('showEmpty')
+            commit('more_products', 0)
+            return
+          }
+          
+          resolve(resp)
+        })
+        .catch(err => {
+          commit('load_error', err)
+          console.log(err)
+          reject(err)
+        })
+      }else {console.log('An error occured loading product data, try again later')}
+    })
     },
     loadUserProducts ({commit, state}, userdata){
       state.loading = true
@@ -489,10 +703,30 @@ export default new Vuex.Store({
         .then(resp => { 
           //console.log(userdata)
           if(resp.data.hidden == false || resp.data.hidden == null){//resp.data.acf.hidden 
-            const the_product = resp.data
+            const theproduct = resp.data
             //const authorID = resp.data.author
             //$store.dispatch('getUser', authorID)
-            commit('the_product', the_product) //resp.data.acf.hidden
+            axios({ url: `${BASEURL}`+`${MEDIAURL}`+userdata, method: 'GET' })
+            .then(media =>{
+              const media_count = media.data.length
+              //console.log(media_count)
+              //console.log(media.data)
+              //console.log(theproduct)
+              
+              if(media_count > 0 ){
+                //console.log(media_count)
+                const the_media = media.data
+                commit('the_product', {theproduct, the_media})
+              }
+              else{
+                //console.log(theproduct)
+                //const the_media = []
+                commit('the_product_single', theproduct)
+              }
+              
+             // return
+            })
+            //commit('the_product', the_product, ) //resp.data.acf.hidden
             //console.log("hidden: "+ JSON.stringify(resp.data))
          }else {
             console.log('Product not found')
@@ -512,7 +746,8 @@ export default new Vuex.Store({
     loadUserDetails({ commit }, user){
       if (user != ''){
       return new Promise((resolve, reject) => {
-        axios({ url: `${API_URL_USER}`+ '/?search='+ user, headers: {
+        //axios({ url: `${API_URL_USER}`+ '/?search='+ user, headers: {
+          axios({ url: `${API_URL_USER_DATA}`+ '/?term='+ user, headers: {
           'Content-Type':  'application/json',
         }, 
         method: 'GET' 
@@ -521,13 +756,15 @@ export default new Vuex.Store({
         resp => {
           if(resp.data[0]){
             //console.log(JSON.stringify(resp.data[0].acf))
-            commit('user_detail', resp.data[0].acf)
+            //commit('user_detail', resp.data[0].acf)
+            commit('user_detail', resp.data[0])
             //commit('auth_success_login', {token, user, userEmail})
 
             resolve(resp)
           }else{
             commit('user_detail_blank', 'Your store account is not activated yet')
            // console.log('user acct not activated')
+           resolve(resp)
           }
             
         }

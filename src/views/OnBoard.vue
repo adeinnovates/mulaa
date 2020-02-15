@@ -539,13 +539,16 @@ export default {
       if(this.$store.getters.isLoggedIn=== true){
        // this.$router.push('/') //this.$store.getters.isLoggedIn
       }
-      //console.log('email: '+this.userEmail)
+      console.log('email: '+this.user)
       
     },
     mounted() {
   this.dateFunction;
   this.confirmUpdate();
-  
+  let chatScript = document.createElement('script')
+    chatScript.setAttribute('src', '//code.tidio.co/dh6fwddvbrzinw01vijt0tzc0334bi1d.js')
+    chatScript.setAttribute('async', 'true')
+    document.head.appendChild(chatScript)
   },
     computed: {
       ...mapState({
@@ -775,7 +778,7 @@ const headers2 = {
                 customer_id: cust_id,
                 first_name: this.fname,
                 last_name: this.lname,
-                referral: this.referral,
+                referal: this.referral,
                 legalid:this.legalID,
                 subaccount: this.subaccount,
                 subaccount_code: this.subaccount_code,
@@ -818,6 +821,14 @@ const headers2 = {
                 )
                // .then(([respA,response]) => {
                   .then(response => {
+                     const metricOps = {
+        namespace: this.user+'.mulaa.store', //this.nname
+        key: this.userDetails.customer_code,
+        enable_reset: 1,
+}
+countapi.create(metricOps).then((result) => { 
+  console.log(result);
+ });
                 this.loading = false;
                 //this.clear()
                 //this.loadProducts()

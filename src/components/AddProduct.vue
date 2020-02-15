@@ -24,7 +24,7 @@
      class="mx-auto teal lighten-5 mb-0"
             >
              <v-snackbar v-model=infoBar :timeout="10000" top right :color="color" :value=infoMsg>
-  <span style="color:#fff">{{infoMsg}}</span>
+  <span style="color:#000028">{{infoMsg}}</span>
 </v-snackbar>
 
  <v-card-title>
@@ -52,9 +52,10 @@
       ref="uploadForm"
     >
     <v-row>
-        <v-col>
+        <v-col cols="12" md="12" sm="12">
              <v-card-text class="pt-0">
              <p class="mb-3 mt-2 overline">upload product image</p>
+             <!--
   <img-inputer accept="image/*" 
             v-model="imageFile"
             icon="img"
@@ -72,14 +73,43 @@
             ref="imgUploader"
             
             />
-             </v-card-text>
-        </v-col>
-        
-        <v-col class="pt-0">
-          
+            -->
+             
+<!--
+             <v-file-input small-chips multiple label="File input"
+             prepend-icon="mdi-camera"
+             v-model="imgslides"
+             ref="file"
+             ></v-file-input>-->
+<v-progress-linear
+                            :active=loading
+                            indeterminate
+                            color="green"
+                            ></v-progress-linear>       
+<vue-upload-multiple-image
+@upload-success="uploadImageSuccess"
+@before-remove="beforeRemove"
+@edit-image="editImage"
+:data-images="images"
+@data-change="dataChange"
+dragText="your product images"
+browseText="tap to upload"
+primaryText="product"
+popupText="-"
+markIsPrimaryText="0"
+class="imgBox"
+ref="imgBox"
+>
+</vue-upload-multiple-image>
 
-            <v-card-text class="py-0">
-                
+</v-card-text>
+             
+        </v-col>
+    </v-row>
+    <v-row class="px-8">
+        
+        <v-col cols="12" lg="6" md="6" sm="12">
+            
            <v-text-field
            class="teal--text form-field mt-3"
             v-model="title"
@@ -88,98 +118,167 @@
             outlined
             color="teal lighten-3"
             :rules="[nurules.required]"
+            :hide-details=true
           ></v-text-field>
           <v-textarea
-          class="teal--text form-field my-0"
+          class="teal--text form-field my-2"
           v-model="description"
           outlined
           label="Description"
-        
+        :hide-details=true
           color="teal lighten-3"
         ></v-textarea>
-
-        <v-row>
-            <v-col>
-<v-text-field
-           class="teal--text form-field ma-0"
-            v-model="price"
-            label="price"
-            placeholder="base price"
-            type="number"
-            prepend-inner-icon="mdi-currency-ngn"
+        <!--<v-text-field
+           class="teal--text form-field mt-3"
+            v-model="deliveryLocations"
+            label="delivery Locations"
+            placeholder="Seperate each location with a comma"
             outlined
             color="teal lighten-3"
+            hint="If you deliver everywhere, enter 'ALL' or seperate each location with a comma"
+            persistent-hint
             :rules="[nurules.required]"
-          ></v-text-field>
-            </v-col>
-            <v-col>
-<v-text-field
-           class="teal--text form-field ma-0"
-            v-model="discount"
-            label="discount"
-            type="number"
-            placeholder="discount price"
-            prepend-inner-icon="mdi-currency-ngn"
-            outlined
-            color="teal lighten-3"
-          ></v-text-field>
-            </v-col>
+          ></v-text-field> -->
 
-        </v-row>
-         <v-row>
-            <v-col>
-<v-text-field
-           class="teal--text form-field ma-0"
-            v-model="stock"
-            label="Available in Stock"
-            placeholder="Total Stock"
-            type="number"
-            prepend-inner-icon="mdi-counter"
-            outlined
-            color="teal lighten-3"
-            :disabled=disableStock
-            
-          ></v-text-field>
-            </v-col>
-            <v-col>
-                <v-switch 
-                v-model="madetoorder" 
-                label="custom-made ?" 
-                class="mt-5"
-                color="#23d2aa"
-                inset
-                >
-                </v-switch>
-            </v-col>
+          <v-combobox multiple
+                    v-model="selectLocation" 
+                    label="Delivery Locations" 
+                    append-icon
+                    chips
+                    deletable-chips
+                    class="tag-input"
+                    hint="If you deliver everywhere, enter 'ALL' or enter each location seperately"
+            persistent-hint
+                    :search-input.sync="search" 
+                    @keyup.tab="updateTags"
+                    @paste="updateTags">
+          </v-combobox>
+           
+        </v-col>
 
-        </v-row>
+    <v-col cols="12" lg="6" md="6" sm="12">
+       
+            <v-row>
+                  <v-col>
+              <v-text-field
+                        class="teal--text form-field ma-0"
+                          v-model="price"
+                          label="price"
+                          placeholder="base price"
+                          type="number"
+                          prepend-inner-icon="mdi-currency-ngn"
+                          outlined
+                          color="teal lighten-3"
+                          :rules="[nurules.required]"
+                          :hide-details=true
+                        ></v-text-field>
+                  </v-col>
+                <v-col>
+        <v-text-field
+                class="teal--text form-field ma-0"
+                v-model="discount"
+                label="discount"
+                type="number"
+                placeholder="discount price"
+                prepend-inner-icon="mdi-currency-ngn"
+                outlined
+                color="teal lighten-3"
+                :hide-details=true
+              ></v-text-field>
+                </v-col>
 
-        <v-switch 
+            </v-row>
+            <v-row >
+            <v-col class="pt-n4">
+            <v-text-field
+              class="teal--text form-field ma-0"
+              v-model="stock"
+              label="in Stock"
+              placeholder="Total Stock"
+              type="number"
+              prepend-inner-icon="mdi-counter"
+              outlined
+              color="teal"
+              :disabled=disableStock
+              
+            ></v-text-field>
+            </v-col>
+            </v-row>
+
+            <v-expansion-panels class="mt-n5 mb-5"
+            :hover=true
+            >
+            <v-expansion-panel>
+            <v-expansion-panel-header class="caption teal--text">Is this a digital product?</v-expansion-panel-header>
+            <v-expansion-panel-content>
+    <v-switch 
+            v-model="eproduct" 
+            label="Yes, e-product" 
+            class="mt-n1"
+            color="#23d2aa"
+            inset
+            :disabled=true
+            >
+            </v-switch>
+
+            <v-text-field
+            v-show="this.eproduct != ''"
+              class="teal--text form-field ma-0"
+                v-model="eproductLink"
+                label="product url"
+                placeholder="url"
+                hint="Type or paste a link to your digital product (gdrive, dropbox, etc) or membership page (teachable, etc)"
+                type="text"
+                outlined
+                color="teal lighten-3"
+                :rules="[nurules.required, nurules.url]"
+              ></v-text-field>
+              <!--upload digital media-->
+            </v-expansion-panel-content>
+            </v-expansion-panel>
+            </v-expansion-panels>
+
+        </v-col>   
+    </v-row>
+ 
+    <!-- lower segment-->
+    <v-row 
+    class="teal lighten-5 mb-n2"
+    >
+        <v-col 
+        class="pa-5 border-right"
+        col="6"
+        sm="6"
+        xs="12"
+        >
+          <p class="body-1 teal--text">Product Options</p>
+         
+<v-switch 
         v-model="discountEnable" 
         label="Show Discount?" 
-        class="mt-0"
+        class="mt-n1"
         color="#23d2aa"
         inset
         >
         </v-switch>
-            </v-card-text>
-           
+
+        <v-switch 
+                v-model="madetoorder" 
+                label="custom made / made to order ?" 
+                class="mt-1"
+                color="#23d2aa"
+                inset
+                >
+                </v-switch>
+
         </v-col>
-         
-    </v-row>
-
-  <!---  
- <v-card
-    class="mx-auto mb-5"
-    max-width="90%"
-    outlined
-  >
-     <v-card-title class="overline">Delivery [+] charges</v-card-title>
-<v-card-text>
-
-</v-card-text>
-  </v-card>
-  -->
+        <v-col
+         class="pa-5"
+         col="6"
+        sm="6"
+        xs="12"
+        >
+           <p class="body-1 teal--text">Product Variations</p>
 
   <v-expansion-panels popout>
       <v-expansion-panel>
@@ -248,6 +347,23 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
   </v-expansion-panels>
+
+
+        </v-col>
+    </v-row>
+
+  <!---  
+ <v-card
+    class="mx-auto mb-5"
+    max-width="90%"
+    outlined
+  >
+     <v-card-title class="overline">Delivery [+] charges</v-card-title>
+<v-card-text>
+
+</v-card-text>
+  </v-card>
+  -->
 
    </v-form>
 </div>
@@ -375,11 +491,24 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 import axios from 'axios'
+import VueUploadMultipleImage from 'vue-upload-multiple-image'
 //import EmojiPicker from 'vue-emoji-picker'
 
 export default {
     data(){
         return{
+          disabled: true,
+          selectLocation: ['add-each-location', 'then press enter', 'or tab key'],
+           search: "", //sync search
+           items: [],
+           infoBar: true,
+        infoMsg: 'Product Successfully Saved', 
+        color: '',
+          postid: null,
+          images: [],
+          imgslides: null,
+          eproduct: '',
+          eproductLink:'',
           disableStock: false,
           madetoorder: false,
           stock:1,
@@ -408,9 +537,6 @@ export default {
         },
             imgUrl: '',
             uploadMsg: '',
-            infoBar: false,
-        infoMsg: '', 
-        color: '',
         date: this.dateFunction(),
         owner: this.$store.state.userId,
         options: [
@@ -421,7 +547,220 @@ export default {
         ]
         }
     },
+    components: {
+    VueUploadMultipleImage
+  },
+  mounted(){
+
+  },
     methods: {
+      updateTags() {
+      this.$nextTick(() => {
+        this.selectLocation.push();//...this.search.split(",")
+        //this.tester = JSON.stringify(this.selectLocation)
+        //this.deliveryLocation = JSON.parse(tester)
+        this.$nextTick(() => {
+          this.search = "";
+        });
+      });
+    },
+      dataChange(index, done, fileList){
+//console.log('the index',index)
+      },
+      uploadImageSuccess(formData, index, fileList) {
+        this.loading = true;
+       
+      //console.log('file', formData, index, fileList)
+
+       
+        //return
+      // Upload image api
+      // axios.post('http://your-url-upload', formData).then(response => {
+      //   console.log(response)
+      // })
+      //console.log(formData)
+
+      //create draft product post first if it doesn't exist
+      if(this.postid == null){
+        this.loading = true;
+        //const label = this.$refs.imgBox.querySelector('.cursor-pointer')
+       
+       /*
+       const label = document.querySelectorAll('.imgBox label')
+        //label.style.display = "none"
+        console.log(label)
+        */
+//console.log(this.token)
+        this.loading = true;
+        this.$http.post('/product', {
+                title: this.title, // + '-' + this.user,
+                content: ' ',
+                 status: "draft"
+                }).then((response) => {
+                  //console.log('label: ', label)
+                    //console.log(response)
+                    this.postid = response.data.id
+                    this.loading = false;
+                    this.processFile(formData, index, fileList)
+                }).catch((e) => {
+                this.loading = false;
+                console.error(e)
+                })
+      }
+      const token = localStorage.getItem('token')
+const config = {
+            headers: {
+              'Authorization': 'Bearer '+`${token}`, //localStorage.getItem('token')
+              'Content-Type': 'image/png',
+              'Content-Disposition': 'form-data'
+              }
+            }
+           if(this.postid != null) {
+             //const label = document.querySelectorAll('.display-block.full-width.full-height.cursor-pointer')
+             const label = document.querySelectorAll('.image-list-container.display-flex.flex-wrap')
+             const labelIcon = document.querySelectorAll('.image-list-item.cursor-pointer svg')
+        label[0].style.cursor = "not-allowed"
+        label[0].style.opacity = 0.1
+        labelIcon[0].style.display = "none"
+        //label[0].style.display = "none"
+        //console.log(label[0])
+
+             this.loading = true
+formData.append("post", this.postid);
+     
+axios
+  .post("https://shop.mulaa.co/api/wp-json/wp/v2/media/", formData, config) //http://dev.mulaa.africa/admin/ */
+  //this.$http.post('/media/',formData, config)
+  .then(response => {
+/*
+    this.images.push(
+                    {
+                        path: response.data.source_url,
+                        default: index,
+                        highlight: index,
+                        caption: response.data.slug
+                    }
+                );
+                */
+               this.imgUrl = response.data.source_url
+               //console.log('icon ', labelIcon[0])
+               labelIcon[0].style.display = "block"
+                this.loading = false;
+                label[0].style.cursor = "pointer"
+              label[0].style.opacity = 1
+        
+      console.log("Success!");
+      //console.log({ response }); //response.data.source_url / response.data.id / response.data.slug
+  })
+  .catch(error => {
+      console.log({ error });
+      this.loading = false;
+  });
+  
+           }else{
+             //console.log('post id not created yet')
+             this.loading = false;
+           }
+      
+    },
+    beforeRemove (index, done, fileList) {
+      //console.log('index', index, fileList)
+      var r = confirm("remove image")
+      if (r == true) {
+        done()
+      } else {
+      }
+    },
+    editImage (formData, index, fileList) {
+      //console.log('edit data', formData, index, fileList)
+    },
+      processFile(formData, index, fileList) {
+         const label = document.querySelectorAll('.display-block.full-width.full-height.cursor-pointer')
+        label[0].style.cursor = "default"
+        const labelIcon = document.querySelectorAll('.image-list-item.cursor-pointer svg')
+        labelIcon[0].style.display = "none"
+        //console.log(label[0])
+//console.log(formData)
+const config = {
+            headers: {
+              'Authorization': 'Bearer '+localStorage.getItem('token'),
+              'Content-Type': 'image/png',
+              'Content-Disposition': 'form-data'
+              }
+            }
+           if(this.postid != null) {
+             this.loading = true
+formData.append("post", this.postid);
+            
+axios
+  .post("https://shop.mulaa.co/api/wp-json/wp/v2/media/", formData, config)
+  .then(response => {
+/*
+    this.images.push(
+                    {
+                        path: response.data.source_url,
+                        default: index,
+                        highlight: index,
+                        caption: response.data.slug
+                    }
+                );
+                */
+               this.imgUrl = response.data.source_url
+               label[0].style.cursor = "pointer"
+               labelIcon[0].style.display = "block"
+        //label[0].style.display = "block"
+        label[0].style.opacity = 1
+                this.loading = false;
+      console.log("Success!");
+      //console.log({ response }); //response.data.source_url / response.data.id / response.data.slug
+  })
+  .catch(error => {
+      console.log({ error });
+      this.loading = false;
+  });
+  
+           }else{
+             console.log('post id not created yet')
+             this.loading = false;
+           }
+        /*
+    //this.imgslides = event.target.files[0]
+    if (this.imgslides) {
+        let formData = new FormData();
+
+        
+
+        // files
+        
+        for (let file of this.imgslides) {
+            formData.append("file", file, file.name);
+        }
+        
+
+        // additional data
+        //formData.append("test", "foo bar");
+        console.log(formData)
+        const config = {
+            headers: {
+              'Authorization': 'Bearer '+localStorage.getItem('token'),
+              'Content-Type': 'image/png',
+              'Content-Disposition': 'form-data'
+              }
+            }
+        axios
+            .post("http://dev.mulaa.africa/admin/wp-json/wp/v2/media/", formData, config)
+            .then(response => {
+                console.log("Success!");
+                console.log({ response });
+            })
+            .catch(error => {
+                console.log({ error });
+            });
+    } else {
+        console.log("there are no files.");
+    }
+    */
+  },
       add(index) {
             this.options.push({ name: '' });
         },
@@ -473,22 +812,24 @@ export default {
     postProduct:  function() {
       //console.log(JSON.stringify(this.options))
                 this.loading = true;
-                this.$http.post('/product', {
+                this.$http.put('/product/'+this.postid, {
                 title: this.title, // + '-' + this.user,
                 content: this.description,
                 fields : {
-                  title: this.title,
+                title: this.title,
                 description: this.description,
                 price: this.price,
                 discount_price: this.discount,
                 show_discount: this.discountEnable,
-                delivery_locations: this.deliveryLocations,
+                delivery_locations: JSON.stringify(this.selectLocation),
                 image: this.imgUrl,
                 owner : this.owner,
                 date_posted: this.date,
                 product_options: JSON.stringify(this.options),
                 stock: this.stock,
-                madetoorder: this.madetoorder
+                madetoorder: this.madetoorder,
+                eproduct: this.eproduct,
+                eproductlink: this.eproductLink
                 },
                  status: "publish"
                 }).then((response) => {
@@ -497,10 +838,10 @@ export default {
                 //this.loadProducts()
                 //console.log(response)
                 //this.$store.dispatch('loadAllProducts', 'top')
-                this.$store.dispatch('loadDashboardProducts', this.user)
+                //this.$store.dispatch('loadDashboardProducts', this.user)
                 this.color = 'green lighten-1'
                 this.infoBar = true
-              this.infoMsg = 'Product Successfully saved'
+              this.infoMsg = 'Product Successfully Saved'
               this.fetchData()
             this.resetForm()
            // dialog = false
@@ -557,21 +898,21 @@ this.$refs.linkForm.reset()
                 this.loading = false;
             })
                 
-               
   }
   },
   computed: {
       ...mapState({
       registerMsg:'registerMsg',
-      user:'user'
+      user:'user',
       }),
-     disabled() {
-       if (this.imageFile.length < 1 || this.title == ' '){
+    /* disabled() {
+       //if (this.imageFile.length < 1 || this.title == ' '){
+         if (this.images == [] && this.title == ''){
          return true
        }
        return false
-        //return this.imageFile.length < 1; // or === 0   
-    },
+        
+    }, */
     /*dateFunction() {
    
             var currentDate = new Date();
@@ -588,6 +929,18 @@ this.$refs.linkForm.reset()
            this.stock = 0
            this.disableStock = !this.disableStock
          }
+       },
+       images(val){
+         if(val.length > 0){
+           this.disabled=false
+         }
+         return
+       },
+       title(val){
+if(val != ''){
+           this.disabled=false
+         }
+         return
        }
      }
 }
@@ -604,4 +957,48 @@ this.$refs.linkForm.reset()
     .img-inputer__preview-box.clear{
         display: none !important;
     }
+    .border-right{
+      border-right:1px dotted teal;
+    }
+    .imgBox .image-container{
+      width:100%;
+      height:250px;
+    }
+    .imgBox .preview-image{
+      height:180px;
+    }
+    .imgBox .image-list{
+      border: 1px solid rgba(178, 223, 219, 0.54) !important;
+      background-color: rgba(224, 242, 241, 0.24)!important;
+    }
+
+    .tag-input span.chip {
+  background-color:teal !important;
+  color: #fff;
+  font-size: 1em;
+}
+
+.tag-input span.v-chip {
+  background-color: teal !important;
+  color: #fff;
+  font-size:.8em;
+  padding-left:7px;
+}
+
+.tag-input span.v-chip::before {
+    content: "label";
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+}
 </style>

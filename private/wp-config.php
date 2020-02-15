@@ -83,6 +83,7 @@ define('SIMPLE_JWT_AUTHENTICATION_CORS_ENABLE', true);
 /** remove on production **/
 
 define('FS_METHOD', 'direct');
+define('WP_DEBUG', true);
 
 /*remove above***/
 

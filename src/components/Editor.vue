@@ -20,11 +20,12 @@
   <span style="color:#000028">{{infoMsg}}</span>
   <!--<v-btn flat color="white" @click="snackbar = false">close</v-btn>-->
 </v-snackbar>
-            <v-card-title><span class="caption teal--text">Update: {{this.title}}</span></v-card-title>
+            <v-card-title><span class="body-1 teal--text">Update: {{this.title}}</span></v-card-title>
             <v-card-text>
-                <p>
-                Edit details about your product // {{this.hidethis}}
+                <!--<p>
+                Edit details about your product 
                 </p>
+                -->
           
           <v-text-field
            class="teal--text form-field mt-3"
@@ -44,7 +45,7 @@
         ></v-textarea>
 
         <v-row>
-            <v-col>
+            <v-col class="py-0">
 <v-text-field
            class="teal--text form-field ma-0"
             v-model="price"
@@ -54,7 +55,7 @@
             color="teal lighten-3"
           ></v-text-field>
             </v-col>
-            <v-col>
+            <v-col class="py-0">
 <v-text-field
            class="teal--text form-field ma-0"
             v-model="discount"
@@ -68,7 +69,7 @@
         </v-row>
 
         <v-row>
-                    <v-col>
+                    <v-col class="pt-0">
         <v-text-field
                   class="teal--text form-field ma-0"
                     v-model="stock"
@@ -84,8 +85,8 @@
 
           </v-row>
 
-        <v-row>
-          <v-col>
+        <v-row class="py-0">
+          <v-col class="py-0">
 <v-switch 
         v-model="discountEnable" 
         label="Enable Discount?" 
@@ -95,7 +96,7 @@
         >
         </v-switch>
           </v-col>
-          <v-col>
+          <v-col class="py-0">
 <v-switch 
         v-model="hidethis" 
         label="hide?" 

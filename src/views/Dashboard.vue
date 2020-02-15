@@ -41,16 +41,17 @@ v-show="showWidget"
                                     mdi-link
                                     </v-icon>  
                                 </v-avatar>-->
-                                    Total Clicks 
+                                   Total Clicks 
                                     
                                     <v-avatar right
                                     class="teal darken-1 white--text"
                                     >
-                                    {{linkStat.clicks}}
+                                    {{this.hitStat}} <!--Total Clicks {{linkStat.clicks}}-->
                                      </v-avatar>
                                 </v-chip>
                                
                            </v-flex>
+                           <!--
                            <v-flex xs6 sm6 md3 lg3>
                                 <v-chip
                                 class="ma-2 teal lighten-4 caption"
@@ -66,7 +67,7 @@ v-show="showWidget"
                                      </v-avatar>
                                 </v-chip>
                            </v-flex>
-
+-->
                           
                     </v-layout>
                     <v-layout row wrap pt-2>
@@ -131,6 +132,7 @@ v-show="showWidget"
                     </v-layout>
 
                    <EmptyState v-if="counted < 1"></EmptyState>
+                  
                    <div v-else>
                        <!-- <div class="text-center mt-5 pt-4">
                             <v-sheet color="transparent">Add a new product</v-sheet>
@@ -140,7 +142,7 @@ v-show="showWidget"
                             </v-btn>
                         </div>-->
                         <AddProduct></AddProduct>
-<v-sheet class="mb-3 pa-3 rounded body-1" color="orange lighten-4" style="color:#000028" elevation="1" :v-show="showNotice">
+<v-sheet class="mb-3 pa-3 rounded body-2" color="orange lighten-4" style="color:#000028" elevation="1" :v-if="userDetails.subscription_status != active">
 You don't have an active mulaa subscription plan. 
 <v-btn 
 text
@@ -383,7 +385,6 @@ class="mx-10"
               </v-responsive>
               <v-card-text class="pb-0">
                 <div class="subheading text-truncate">
-           
  {{product.title}}
                 </div>
                 <div class="grey--text text-truncate small"> {{product.description}}</div>
@@ -522,6 +523,7 @@ import Editor from '@/components/Editor'
 import anime from 'animejs';
 import axios from 'axios'
 import Widget from '@/components/GetWidget'
+import countapi from 'countapi-js';
 
 import { mapState, mapGetters } from 'vuex'
 
@@ -537,6 +539,7 @@ export default {
   },
     data(){
         return{
+          hitStat: '',
           showWidget: true,
           mounted:'',
           showStat: false,
@@ -601,6 +604,7 @@ export default {
         */
       
        // return this.fetchData()
+  
         
     },
     /* watch: {
@@ -769,10 +773,19 @@ return 0;
         //this.$store.dispatch('loadAllProducts', 'top')
          this.$store.dispatch('loadUserSales', this.user)
          this.$store.dispatch('loadUserDetails', this.user)
-         this.$store.dispatch('loadDashboardProducts', this.user)
-          this.$store.dispatch('linkStats', this.user)
+         this.$store.dispatch('loadDashboardProducts', this.user).then(resp => {
+//console.log('current prod')
+return this.currentUserProd
+         }
+         )
+          this.$store.dispatch('linkStats', this.user).then(resp => {
+//console.log(resp)
+
+         }
+         )
           this.$store.dispatch('loadDashboardLinks', this.user)
          
+         return this.counted
          //console.log(JSON.stringify(this.userDetails))
        // this.$store.dispatch('getUser', this.user)
        //this.reload()
@@ -783,6 +796,21 @@ return 0;
     this.mounted='yes'
     //this.fetchData()
       //this.$store.dispatch('loadUserProducts', this.user)
+
+      let chatScript = document.createElement('script')
+    chatScript.setAttribute('src', '//code.tidio.co/dh6fwddvbrzinw01vijt0tzc0334bi1d.js')
+    chatScript.setAttribute('async', 'true')
+    document.head.appendChild(chatScript)
+
+       const metricOps = {
+        namespace: this.user+'.mulaa.store', //this.nname
+        key: this.userDetails.customer_code,
+}
+  
+ countapi.info(metricOps.namespace, metricOps.key).then((result) => { 
+   //console.log(result); //.value
+   this.hitStat = result.value
+  });
     },
   computed: {
         ...mapGetters([
@@ -856,6 +884,7 @@ return 0;
     },
     counted : function () {
         //return Object.keys(this.userProducts).length;
+        //console.log('counted ping')
         return Object.keys(this.myproducts).length;
     },
     countApproved: function () {
@@ -904,6 +933,7 @@ return 0;
        this.fetchData()
       }*/
       this.fetchData()
+
     }
     }
 }

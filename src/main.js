@@ -11,7 +11,12 @@ import VueCurrencyFilter from 'vue-currency-filter'
 
 import vueCustomElement from 'vue-custom-element'
 
+import VueLazyload from 'vue-lazyload'
+ 
+Vue.use(VueLazyload)
+
 import VueAnalytics from 'vue-analytics'
+//import countapi from 'countapi-js';
 
 //Vue.use(require('vue-moment'));
 
@@ -72,7 +77,7 @@ const token = localStorage.getItem('token')
 
 //Vue.use(VueFirestore)
 const base = axios.create({
-  //baseURL: 'http://dev.mulaa.africa/private/wp-json/wp/v2', //http://res189.servconfig.com/~hosted5/kboom/private/
+  //baseURL: 'http://dev.mulaa.africa/admin/wp-json/wp/v2', //http://res189.servconfig.com/~hosted5/kboom/private/
   baseURL: 'https://shop.mulaa.co/api/wp-json/wp/v2',
   headers: {
     'Authorization': 'Bearer '+`${token}`,
