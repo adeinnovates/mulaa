@@ -388,13 +388,8 @@ powered by <img :src="require('../assets/mulaalogo.png')" alt="" style="max-widt
        </v-row>
 
        <v-bottom-sheet v-model="sheet">
-      <v-sheet class="" height="200px">
-        <v-progress-linear
-          :value="50"
-          class="my-0"
-          height="3"
-          color="teal"
-        ></v-progress-linear>
+      <v-sheet class=""  height="300px" style="border-radius: 20px 20px 0 0" :elevation=5>
+        <div class="pa-5 grey--text text--darken-3 font-weight-bold">REVIEW/CONFIRM YOUR ORDER</div>
 
        <!-- <v-btn
           class="mt-4"
@@ -403,9 +398,14 @@ powered by <img :src="require('../assets/mulaalogo.png')" alt="" style="max-widt
           @click="sheet = !sheet"
         >close</v-btn>-->
 <v-list-item three-line>
-      <v-list-item-content>
-        <div class="overline mb-0">Order Confirmation - REVIEW YOUR ORDER</div>
-        <v-list-item-title class="title mb-0 teal--text text--darken-4"><span class="overline">Total:</span><br> {{newAmount | currency}}</v-list-item-title>
+  <v-list-item-content>
+      <v-list-item-title class="title mb-0 teal--text text--darken-4">
+          <div style="font-size:10px">{{buyerEmail}} // {{buyerPhone}}</div>
+          <div class="py-2" style="border-bottom:1px dotted #ccc;line-height:1px;">
+          <p class="my-0 " style="font-size:10px"><span class="overline my-0 py-0">Sub-total:</span> {{newAmount | currency}} </p>
+          <p class="my-0" style="font-size:10px"><span class="overline my-0 py-0">Delivery:</span> {{this.userDetails.delivery_fee | currency}} </p>
+          </div>
+          <span class="overline">Total:</span><br> {{this.amount2()/100  | currency}}</v-list-item-title> <!-- newAmount -->
         <v-list-item-subtitle>{{this.title}}
 <div v-for="(option,i) in Options" :key="i" class="mt-1">
 <v-chip
@@ -426,7 +426,7 @@ class="my-0 d-inline green lighten-5 font-weight-light ml-n2"
                 Checkout
              </v-btn>
           </v-list-item-subtitle>-->
-      </v-list-item-content>
+    </v-list-item-content>
 
       <v-list-item-avatar
         tile
@@ -569,7 +569,9 @@ export default {
  data(){
         return {
           //raveKey: "FLWPUBK-xxxxxxxxxxxxxxxxxx-X",
-          delivery_locations: [],
+          totalPrice:0,
+          delivery_locations: [], //JSON.parse(this.theProduct.delivery_locations)
+          delivery_locations_obj: null,
           nname: '',
           craaccount: '',
           show2: false,
@@ -807,7 +809,7 @@ const salesData = {
           //console.log(this.theProduct.price)
             if(this.theproducts === undefined){
                 console.log('refreshed')
-                this.delivery_locations = JSON.parse(this.theProduct.delivery_locations)
+                this.delivery_locations = this.theProduct.delivery_locations
                 this.title = this.theProduct.title
             this.hidethis = this.theProduct.hidden
             this.datePosted = this.theProduct.date_posted
@@ -825,7 +827,7 @@ const salesData = {
             }else{
                 //console.log('valid click')
                 //console.log(this.theproducts)
-                this.delivery_locations = JSON.parse(this.theproducts.delivery_locations)
+                this.delivery_locations = this.theproducts.delivery_locations
                 this.title = this.theproducts.title
             this.hidethis = this.theproducts.hidden
             this.datePosted = this.theproducts.date_posted
@@ -843,14 +845,29 @@ const salesData = {
         },
         amount2(){
           if(this.discounted == true){
-              let amount = this.discountPrice * 100
-              
-              console.log('discount price: '+ amount)
-              return amount
+              let amount = this.discountPrice //* 100
+              if(this.userDetails.delivery_fee){
+               let charge = this.userDetails.delivery_fee// * 100
+               let amount2 = parseInt(amount) + parseInt(charge)
+               
+               this.totalPrice = amount2
+               //console.log('full price: '+amount2+" delivery: "+charge+" total "+this.totalPrice)
+               return amount2 * 100
+              }
+              //console.log('discount price: '+ amount)
+              return amount * 100
           }else {
-              let amount = this.price * 100
-              console.log('full price: '+this.price)
-              return amount
+              let amount = this.price //* 100
+              if(this.userDetails.delivery_fee){
+               let charge = this.userDetails.delivery_fee// * 100
+               let amount2 = parseInt(amount) + parseInt(charge)
+               
+                this.totalPrice = amount2
+                //console.log('full price: '+amount2+" delivery: "+charge+" total "+this.totalPrice)
+               return amount2 * 100
+              }
+              //console.log('full price: '+this.price+" delivery: "+charge)
+              return amount * 100
           }
       },
       resetForm () {
@@ -1028,6 +1045,18 @@ this.loading = false
         //console.log('length',this.pslides.length)
         //this.$refs.slider.glide.go(">");
       }
+      ,
+      delivery_locations(val){
+        console.log('location value ',val)
+        if(this.delivery_locations == ''){
+        return
+      }else{
+console.log('not null', val)
+        return this.delivery_locations_obj = JSON.parse(this.delivery_locations)
+      }
+      return
+      },
+     
     }
 }
 </script>

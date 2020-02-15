@@ -542,16 +542,10 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
       return bottomOfPage || pageHeight < visible
     },
       userLimit(){
-       
-const config = {
-            headers: {'Authorization': 'Bearer '+this.skk}
-            }
-            let cus_code = this.userDetails.customer_code
-            let exclude_transactions = true
+let exclude_transactions = true
          if(this.userDetails.paid_user != true){ 
             this.limitVal = 1
             this.contentloaded = false
-
              if(this.userDetails.trial == true){
                 this.limitVal = 65
                 this.showSearch = true 
@@ -559,10 +553,7 @@ const config = {
               }
             //console.log('base: '+this.userDetails.subscription)
           }else {
-            axios.get('https://api.paystack.co/customer/'+cus_code, config)
-        .then(resp => { 
-            const trxData = resp.data.data//.subscriptions
-            if(trxData.subscriptions[0] != undefined){
+               if(this.userDetails.subscription_status != undefined){
               this.contentloaded = false
               this.limitVal = 65
               this.showSearch = true
@@ -570,7 +561,7 @@ const config = {
             }else{
               this.contentloaded = false
               this.limitVal = 3
-              //console.log(this.nname)
+              //console.log(this.name)
               //if(this.name = 'foodfashionplug'){
                 if(this.userDetails.trial == true){
                 this.limitVal = 65
@@ -578,21 +569,8 @@ const config = {
               }
               //console.log(trxData.subscriptions[0])
             }
-            //console.log(trxData)
-             /*
-             if(trxData[0].status == 'active'){
-                this.limitVal = 65
-             }
-             else {
-               this.limitVal = 3
-             }
-             */
-        }).catch(err => {
-          this.contentloaded = false
-            console.log(err)   
-            })
           }
-return
+          return;
     },
        isPageOwner: function(){
        if (this.$store.getters.isLoggedIn != true){
