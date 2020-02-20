@@ -231,7 +231,7 @@ style="border-radius:10px;"
               Delivery Location(s): 
               </span>
               </p>
-          <v-chip v-for="tag in delivery_locations" x-small class="mb-2 mr-1 red lighten-5" :key="tag">
+          <v-chip v-for="tag in delivery_locations_obj" x-small class="mb-2 mr-1 red lighten-5" :key="tag">
                     {{tag}}
                       </v-chip> 
           </v-col>
