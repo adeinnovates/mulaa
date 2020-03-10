@@ -487,17 +487,15 @@ export default {
         this.fetchData()
        // console.log('name: '+ this.name)
        
-       const metricOps = {
+     /*  const metricOps = {
         namespace: this.name+'.mulaa.store', //this.nname
         key: this.userDetails.customer_code,
-}
+} */
 /*
 countapi.create(metricOps).then((result) => { 
   console.log(result);
  });*/
- countapi.hit(metricOps.namespace, metricOps.key).then((result) => { 
-   console.log(result.value);
-  });
+ 
   /*
  countapi.info(metricOps.namespace, metricOps.key).then((result) => { 
    console.log(result); //.value

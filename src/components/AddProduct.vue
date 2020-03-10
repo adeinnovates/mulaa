@@ -121,7 +121,7 @@ ref="imgBox"
             :hide-details=true
           ></v-text-field>
           <v-textarea
-          class="teal--text form-field my-2"
+          class="teal--text form-field my-2 mb-4"
           v-model="description"
           outlined
           label="Description"
@@ -143,10 +143,11 @@ ref="imgBox"
           <v-combobox multiple
                     v-model="selectLocation" 
                     label="Delivery Locations" 
+                    color="teal lighten-3"
                     append-icon
                     chips
                     deletable-chips
-                    class="tag-input"
+                    class="tag-input mt-4"
                     hint="If you deliver everywhere, enter 'ALL' or enter each location seperately"
             persistent-hint
                     :search-input.sync="search" 
@@ -217,22 +218,38 @@ ref="imgBox"
             class="mt-n1"
             color="#23d2aa"
             inset
-            :disabled=true
+            :disabled=false
             >
             </v-switch>
 
-            <v-text-field
-            v-show="this.eproduct != ''"
-              class="teal--text form-field ma-0"
-                v-model="eproductLink"
-                label="product url"
-                placeholder="url"
-                hint="Type or paste a link to your digital product (gdrive, dropbox, etc) or membership page (teachable, etc)"
-                type="text"
-                outlined
-                color="teal lighten-3"
-                :rules="[nurules.required, nurules.url]"
-              ></v-text-field>
+
+
+<v-file-input
+small-chips
+label="Upload Digital Product"
+accept=".pdf,.doc,.docx,.xls"
+show-size
+color="teal lighten-3"
+counter
+prepend-icon="mdi-file-upload"
+solo
+@change="onFileChanged"
+v-model="eproductFile"
+:rules="fileRule"
+v-if="this.eproduct != ''"
+>
+</v-file-input>
+<v-sheet v-if="this.eproduct != ''" class="caption orange lighten-5 pa-2 rounded mb-2" style="color:#000028" elevation="0">
+upload your digital product (pdf, doc, xls)
+</v-sheet>
+
+<v-overlay
+:value="overlay"
+dark
+:z-index="9999">
+<v-progress-circular :value="this.progressValue"></v-progress-circular>
+</v-overlay>
+              
               <!--upload digital media-->
             </v-expansion-panel-content>
             </v-expansion-panel>
@@ -486,6 +503,89 @@ ref="imgBox"
             </v-card-actions>
  </v-card>
        
+<v-overlay
+:value="shareOverlay"
+color="green lighten-1"
+:opacity="0.8"
+:z-index="9999"
+light
+>
+        <div 
+        style="width:100%;"
+        >
+          <v-layout row wrap mx-auto>
+            
+            <v-flex xs10 sm9 md9 lg9>
+          <div class="headline font-weight-bold white--text">Congrats!!! 
+            <p class="font-weight-light">
+            Share on social media</p>
+            </div>
+            </v-flex>
+          <v-flex xs2 sm3 md3 lg3 text-right>
+              <v-btn
+          icon
+          @click="shareOverlay = false; resetForm(); dialog = false;"
+          >
+          <v-icon right>mdi-close</v-icon>
+          </v-btn>
+            </v-flex>
+          </v-layout>
+        </div>
+
+<v-layout row wrap mx-auto>
+  
+<v-flex xs10 sm9 md9 lg9>
+
+        <div class="mx-auto" style="max-width:490px;">
+        <v-img
+        :src="this.imgUrl"
+        lazy-src="https://picsum.photos/id/11/10/6"
+        width="400"
+        class="grey mb-3"
+        :contain="true"
+        >
+        </v-img>
+
+          </div>
+
+  </v-flex>
+</v-layout>
+
+
+<v-layout row wrap mx-auto style="width:100%;">
+  <v-flex xs3 sm3 md4 lg4>
+<p class="py-3">₦{{this.price}}</p>
+  </v-flex>
+ <v-flex xs9 sm9 md8 lg8>
+          <social-sharing :url=pageurl
+          :title=title
+          :description=description
+          :quote=description
+          hashtags="mulaa,buy,shop,share,deal"
+          inline-template>
+          <div class="grey--text text--darken-2 px-3 mt-1 social-btn">
+
+          <network network="facebook" class="caption pl-2 pr-3 mr-3 blue--text text--darken-2">
+          <i class="fa fa-facebook fa-lg"></i> 
+          </network>
+          <network network="sms" class="caption pl-2 pr-3 mr-3 blue--text">
+          <i class="fa fa-commenting-o fa-lg"></i>
+          </network>
+          <network network="twitter" class="caption pl-2 pr-3 mr-3 blue--text text--lighten-2">
+          <i class="fa fa-twitter fa-lg"></i>
+          </network>
+          <network network="whatsapp" class="caption pl-2 pr-3 mr-3 green--text">
+          <i class="fa fa-whatsapp fa-lg"></i>
+          </network>
+
+          </div>
+          </social-sharing>
+  </v-flex>
+</v-layout>
+  
+
+</v-overlay>
+
     </v-dialog>
 </template>
 <script>
@@ -497,6 +597,10 @@ import VueUploadMultipleImage from 'vue-upload-multiple-image'
 export default {
     data(){
         return{
+          pageurl: null,
+          progressValue:'',
+          overlay: false,
+          shareOverlay: false,
           disabled: true,
           selectLocation: ['add-each-location', 'then press enter', 'or tab key'],
            search: "", //sync search
@@ -508,6 +612,8 @@ export default {
           images: [],
           imgslides: null,
           eproduct: '',
+          eproductFile:null,
+          eproductFileName:null,
           eproductLink:'',
           disableStock: false,
           madetoorder: false,
@@ -528,6 +634,9 @@ export default {
             active: 0,
             dialog: false,
             loading: false,
+            fileRule: [
+      value => !value || value.size < 10000000 || 'Product size should be less than 10 MB!',
+    ],
             rules: [v => v.length <= 50 || 'Max 50 characters'],
             nurules: {
           required: value => !!value || 'Required.',
@@ -554,6 +663,60 @@ export default {
 
   },
     methods: {
+      formatBytes (a,b){if(0==a)return"0 Bytes";var c=1024,d=b||2,e=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],f=Math.floor(Math.log(a)/Math.log(c));return parseFloat((a/Math.pow(c,f)).toFixed(d))}, //+" "+e[f]},
+       onFileChanged (event) {
+    if(!event){
+      console.log("file change initiated")
+      return
+    }else{
+      this.eproductFile = event
+    console.log("event ", event.size, 10000000)
+    if(event.size < 10000000){
+      this.overlay = true
+      console.log("less than 10mb", this.user)
+       this.onUpload()
+    }else{
+      return
+    }
+    }
+  },
+  onUpload() {
+    // upload file
+    const formData = new FormData()
+    formData.append('product', this.eproductFile, this.eproductFile.name)
+    formData.append('username', this.user);
+    //console.log(...formData.values())
+//return
+const headers2 = {
+  'Content-Type': 'multipart/form-data'
+}
+    //axios.post(`//dev.mulaa.co/imgapi/files.php`, formData, {
+       axios.post(`//shop.mulaa.co/imgapi/files.php`, formData, {
+    headers: headers2,
+    onUploadProgress: progressEvent => {
+       this.progressValue = Math.round(progressEvent.loaded / progressEvent.total *100)
+     // console.log(Math.round(progressEvent.loaded / progressEvent.total *100) + '%')
+    }
+  })
+    .then(resp => {
+           console.log(resp.data)
+this.overlay = false
+this.eproductFileName = resp.data.url
+          /* this.userProfile.profileImg = resp.data.url
+            this.overlay = false
+            this.infoBar = true
+            this.infoMsg = 'profile image uploaded'
+            */
+            //resolve(resp)
+          })
+          .catch(err => {
+              console.log(err)
+              this.overlay = false
+              //this.infoBar = true
+              //this.infoMsg = 'profile image failed, try again'
+            //reject(err)
+          })
+  },
       updateTags() {
       this.$nextTick(() => {
         this.selectLocation.push();//...this.search.split(",")
@@ -568,29 +731,24 @@ export default {
 //console.log('the index',index)
       },
       uploadImageSuccess(formData, index, fileList) {
-        this.loading = true;
-       
-      //console.log('file', formData, index, fileList)
-
-       
-        //return
-      // Upload image api
-      // axios.post('http://your-url-upload', formData).then(response => {
-      //   console.log(response)
-      // })
-      //console.log(formData)
+        //console.log("working", formData)
+       // this.loading = true;
 
       //create draft product post first if it doesn't exist
-      if(this.postid == null){
-        this.loading = true;
-        //const label = this.$refs.imgBox.querySelector('.cursor-pointer')
+      if(!this.postid){ // if == null
        
-       /*
+        //const label = this.$refs.imgBox.querySelector('.cursor-pointer')
+       //console.log("No post id: ", this.postid)
+        this.loading = true
+        console.log("loading....", this.loading)
+       
        const label = document.querySelectorAll('.imgBox label')
         //label.style.display = "none"
-        console.log(label)
-        */
-//console.log(this.token)
+        label[0].style.opacity = 0.1
+        label[0].style.cursor = "not-allowed"
+        //console.log(label)
+        
+console.log(this.token)
         this.loading = true;
         this.$http.post('/product', {
                 title: this.title, // + '-' + this.user,
@@ -616,8 +774,10 @@ const config = {
               }
             }
            if(this.postid != null) {
+
              //const label = document.querySelectorAll('.display-block.full-width.full-height.cursor-pointer')
-             const label = document.querySelectorAll('.image-list-container.display-flex.flex-wrap')
+             //const label = document.querySelectorAll('.image-list-container.display-flex.flex-wrap') //imgBox
+             const label = document.querySelectorAll('.imgBox')
              const labelIcon = document.querySelectorAll('.image-list-item.cursor-pointer svg')
         label[0].style.cursor = "not-allowed"
         label[0].style.opacity = 0.1
@@ -627,7 +787,7 @@ const config = {
 
              this.loading = true
 formData.append("post", this.postid);
-     
+      //console.log("post id exist ", this.postid)
 axios
   .post("https://shop.mulaa.co/api/wp-json/wp/v2/media/", formData, config) //http://dev.mulaa.africa/admin/ */
   //this.$http.post('/media/',formData, config)
@@ -655,6 +815,14 @@ axios
   .catch(error => {
       console.log({ error });
       this.loading = false;
+      labelIcon[0].style.display = "block"
+                this.loading = false;
+                label[0].style.cursor = "pointer"
+              label[0].style.opacity = 1
+       console.log("Error Happened");
+       this.color = 'red lighten-1'
+                this.infoBar = true
+              this.infoMsg = 'An Error Happened, Please Refresh and Try Again'
   });
   
            }else{
@@ -675,8 +843,10 @@ axios
       //console.log('edit data', formData, index, fileList)
     },
       processFile(formData, index, fileList) {
-         const label = document.querySelectorAll('.display-block.full-width.full-height.cursor-pointer')
-        label[0].style.cursor = "default"
+        //console.log("process file upload...")
+        // const label = document.querySelectorAll('.display-block.full-width.full-height.cursor-pointer') //label[0].style.opacity = 0.1
+        const label = document.querySelectorAll('.imgBox')
+        label[0].style.opacity = 0.1 //label[0].style.cursor = "default"
         const labelIcon = document.querySelectorAll('.image-list-item.cursor-pointer svg')
         labelIcon[0].style.display = "none"
         //console.log(label[0])
@@ -829,27 +999,31 @@ axios
                 stock: this.stock,
                 madetoorder: this.madetoorder,
                 eproduct: this.eproduct,
-                eproductlink: this.eproductLink
+                eproductlink: this.eproductLink,
+                eproductfile: this.eproductFileName
                 },
                  status: "publish"
                 }).then((response) => {
                 this.loading = false;
+                this.pageurl = 'https://'+this.user+'.mulaa.store/'+this.postid
                 //this.clear()
                 //this.loadProducts()
                 //console.log(response)
+                //this.dialog = false
+                this.shareOverlay = true
                 //this.$store.dispatch('loadAllProducts', 'top')
                 //this.$store.dispatch('loadDashboardProducts', this.user)
                 this.color = 'green lighten-1'
                 this.infoBar = true
               this.infoMsg = 'Product Successfully Saved'
-              this.fetchData()
-            this.resetForm()
-           // dialog = false
+              //this.fetchData()
+            //this.resetForm()
+            
             //return
             })
             .catch((e) => {
                 this.loading = false;
-                console.error(e)
+                console.error('Error saving your product - ', e)
                 this.color = 'red darken-1'
                 this.infoBar = true
               this.infoMsg = 'Error saving your product'
@@ -924,6 +1098,10 @@ this.$refs.linkForm.reset()
     }*/
     },
      watch: {
+       loading(val){
+         console.log("loading...", val)
+         return val
+       },
        madetoorder(val){
          if(val == true){
            this.stock = 0
@@ -1000,5 +1178,17 @@ if(val != ''){
     direction: ltr;
     -webkit-font-feature-settings: 'liga';
     -webkit-font-smoothing: antialiased;
+}
+.social-btn span{
+  border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    display: inline-block;
+    background-color: #fff;
+    transition: all
+}
+.social-btn span:hover{
+  transform: scale(1.1,1.1);
+  cursor:pointer!important;
 }
 </style>

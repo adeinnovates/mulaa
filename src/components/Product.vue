@@ -224,8 +224,8 @@ style="border-radius:10px;"
            
             </v-col>
             </v-row>  
-            <v-row :v-if="delivery_locations_obj">
-         <v-col>
+            <v-row v-if="delivery_locations_obj">
+         <v-col v-if="this.eproduct == false || this.eproduct == 0">
            <p class="caption grey--text text--darken-2 mb-0">
             <span class="font-weight-bold">
               Delivery Location(s): 
@@ -234,6 +234,14 @@ style="border-radius:10px;"
  <v-chip v-for="tag in delivery_locations_obj" x-small class="mb-2 mr-1 red lighten-5" :key="tag">
                     {{tag}}
                      </v-chip> 
+         </v-col>
+         <v-col v-else> 
+           <v-chip small class="mb-2 mr-1 blue lighten-5">
+Digital Product
+           </v-chip>
+           <v-sheet v-if="this.eproduct == true || this.eproduct == 1" class="caption blue lighten-5 pa-2 rounded mb-2" style="color:#000028" elevation="0">
+This is a digital product, upon confirmation of payment an email will be sent to you to access <strong>{{this.title}}</strong>
+</v-sheet>
          </v-col>
          </v-row>
             </div>
@@ -323,7 +331,7 @@ type="number"
                 </v-col>
                 </v-row>
 
-<v-row>
+<v-row v-if="this.eproduct == false || this.eproduct == 0">
                 <v-col>
                 <v-text-field
                 class="teal--text form-field ma-0 pa-0 mb-5"
@@ -336,7 +344,6 @@ type="number"
                 ></v-text-field>
                 </v-col>
                 </v-row>
-
 
                 <v-card
     class="mx-auto"
@@ -552,6 +559,8 @@ export default {
     },
  data(){
         return {
+          eproductfile: '',
+          eproduct: '',
           totalPrice:0,
           delivery_locations: [], //JSON.parse(this.theProduct.delivery_locations)
           delivery_locations_obj: null,
@@ -801,6 +810,8 @@ const salesData = {
             this.newAmount = this.amount
             this.stock = this.theProduct.stock
             this.productOptions = this.theProduct.product_options
+            this.eproduct = this.theProduct.eproduct
+            this.eproductfile = this.theProduct.eproductfile
             //console.log(this.theProduct.productOptions)
              //console.log('refreshed amount '+this.newAmount) 
             }else{
@@ -821,6 +832,8 @@ const salesData = {
             this.productOptions = this.theproducts.productOptions
             this.newAmount = this.amount
             this.stock = this.theproducts.stock
+            this.eproduct = this.theproducts.eproduct
+            this.eproductfile = this.theproducts.eproductfile
             //console.log(this.newAmount)
             }
         },

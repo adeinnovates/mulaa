@@ -231,7 +231,7 @@ this.loading = true
     id: 'id'.replace(/,/g, ''), // remove commas to avoid errors
     title: "Title",
     description: "Description",
-    availability: "Availability",
+    availability: "Availability", 
     condition: "Condition",
     price: "Price".replace(/,/g, ''),
      image_link: "Image_link",

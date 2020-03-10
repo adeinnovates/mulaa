@@ -49,7 +49,7 @@
              Mulaa
           </v-list-item-title>
           <v-list-item-subtitle class="caption teal--text text--lighten-2">
-            one simple link to better sales
+            Digital retail enablement
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
@@ -103,7 +103,7 @@
 <template v-slot:append>
         <div class="pa-4 text-higlight">
           <p class="caption">
-            © Mulaa.co, <br>MVPSkool. 2019.
+            © Mulaa.co, <br>Mulaa Analytics 2019 - {{new Date().getFullYear()}}
           </p>
           <span class="caption">
             A mobile-first sales-enablement for creators, thought leaders and solopreneurs - enabling you monetise your audience and build your leads list with one link - no middleman or website needed 😎👌🏼.

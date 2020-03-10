@@ -4,16 +4,23 @@ import axios from 'axios'
 import VuexPersist from 'vuex-persist';
 //import { exists } from 'fs';
 
-/*const BASEURL = 'http://dev.mulaa.africa/admin/wp-json'
+/*
+const BASEURL = 'http://dev.mulaa.africa/admin/wp-json'
 const API_URL = 'http://dev.mulaa.africa/admin/wp-json/wp/v2/product'
 const API_URL_USER = 'http://dev.mulaa.africa/admin/wp-json/wp/v2/users'
+const API_URL_USER_DATA = 'http://dev.mulaa.africa/admin/wp-json/mulaa-auth/v1/users'
+const UPLOAD_API = 'http://dev.mulaa.africa/imgapi/prod.php'
 */
 
 const BASEURL = 'https://shop.mulaa.co/api/wp-json'
-const MEDIAURL = '/wp/v2/media?parent='
 const API_URL = 'https://shop.mulaa.co/api/wp-json/wp/v2/product'
 const API_URL_USER = 'https://shop.mulaa.co/api/wp-json/wp/v2/users'
 const API_URL_USER_DATA = 'https://shop.mulaa.co/api/wp-json/mulaa-auth/v1/users'
+const UPLOAD_API = 'https://shop.mulaa.co/imgapi/prod.php'
+
+
+const MEDIAURL = '/wp/v2/media?parent='
+
 
 const Token_ENDPOINT = '/jwt-auth/v1/token'
 const Products_ENDPOINT = '/mulaa-auth/v1/products'
@@ -192,10 +199,11 @@ export default new Vuex.Store({
        });*/
        //state.userDiscounted = Discounted
        //console.log('the media', the_media)
-       //console.log('LOL',theproduct)
+       console.log('LOL',theproduct.acf)
        state.pslides = the_media 
        state.theProduct = theproduct.acf
        state.theProductId = theproduct.id
+      
        
        
        //Vue.set(state, 'items', [...items]);
@@ -534,7 +542,7 @@ const removeDuplicates = (array, key) => {
     state.loading = true
       //console.log(data)
       if (data != ''){
-        axios({ url: `${API_URL}`, method: 'GET' })
+        axios({ url: `${API_URL}`, method: 'GET' }) //`${BASEURL}${Products_ENDPOINT}`+'?author='+userdata
         .then(resp => { 
           const all_products = resp.data
           commit('set_products', all_products)
@@ -615,7 +623,7 @@ const removeDuplicates = (array, key) => {
     
       //console.log(data) https://shop.mulaa.co/api/wp-json/mulaa-auth/v1/products
       if (userdata != ''){ //http://dev.mulaa.africa/admin/wp-json/wp/v2/product?per_page=100
-        axios({ url: `${BASEURL}${Products_ENDPOINT}`+'?author='+userdata, method: 'GET' })
+        axios({ url: `${BASEURL}${Products_ENDPOINT}`+'?author='+userdata+'&num=-1', method: 'GET' })
         .then(resp => { 
           if(resp.data.length > 0){
             const user_products = resp.data

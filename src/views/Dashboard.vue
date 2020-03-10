@@ -142,7 +142,7 @@ v-show="showWidget"
                             </v-btn>
                         </div>-->
                         <AddProduct></AddProduct>
-<v-sheet class="mb-3 pa-3 rounded body-2" color="orange lighten-4" style="color:#000028" elevation="1" :v-if="userDetails.subscription_status != active">
+<v-sheet class="mb-3 pa-3 rounded body-2" color="orange lighten-4" style="color:#000028" elevation="1" v-if="userDetails.subscription_status != 'active'">
 You don't have an active mulaa subscription plan. 
 <v-btn 
 text
@@ -152,6 +152,7 @@ color="error"
 
 >Click here</v-btn> to choose a plan and upgrade
 </v-sheet>
+<div id="linkwrap" v-if="this.userLinks !=''">
  <p class="overline mb-0">Your Links</p>
                           <div id="links" 
                           class="mb-4 mt-2 pa-3"
@@ -357,6 +358,8 @@ class="mx-10"
 
 </v-overlay>
 </div>
+</div>
+
                         <p class="overline mb-0">Your products</p>
                        <v-layout row wrap pt-2 mt-1>
                             <!--<v-progress-linear
