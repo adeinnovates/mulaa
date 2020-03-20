@@ -24,6 +24,7 @@ const MEDIAURL = '/wp/v2/media?parent='
 
 const Token_ENDPOINT = '/jwt-auth/v1/token'
 const Products_ENDPOINT = '/mulaa-auth/v1/products'
+const Downloads_ENDPOINT = '/mulaa-auth/v1/files'
 const Links_ENDPOINT = '/mulaa-link/v1/links'
 const STAT_URL = 'https://mulaa.me/u/api/details?key=P1fjdH02F3y2&alias='
 
@@ -98,6 +99,7 @@ export default new Vuex.Store({
     filteredLinks:'',
     userLinks: '',
     pslides: [],
+    downloadLink:''
 
   },
   getters: {
@@ -109,6 +111,9 @@ export default new Vuex.Store({
     renderUser: state => state.user,
   },
   mutations: {
+    get_download(state, {data}){
+state.downloadLink = data
+    },
     create_product(state, {data}){
 
     },
@@ -782,6 +787,24 @@ const removeDuplicates = (array, key) => {
       console.log('User not found here')
     }
     },
+    loadDownload ({commit, state}, data){
+      state.loading = true
+        //console.log(data)
+        if (data != ''){
+          axios({ url: `${BASEURL}${Downloads_ENDPOINT}`+'?key='+data, method: 'GET' }) //`${BASEURL}${Products_ENDPOINT}`+'?author='+userdata
+          .then(resp => { 
+            const all_products = resp.data
+            commit('get_download', all_products)
+            //console.log(resp.data)
+            //resolve(all_booms)
+          })
+          .catch(err => {
+            commit('load_error', err)
+            //console.log(err)
+            //reject(err)
+          })
+        }else {console.log('logout and login, user object not found')}
+      },
     logout({ commit }) {
       return new Promise((resolve, reject) => {
         commit('logout')
