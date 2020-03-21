@@ -837,7 +837,33 @@ const salesData = {
             //console.log(this.newAmount)
             }
         },
-        amount2(){
+        /*amount2(){
+          if(this.discounted == true){
+              let amount = this.discountPrice //* 100
+              if(this.userDetails.delivery_fee){
+               let charge = this.userDetails.delivery_fee// * 100
+               let amount2 = parseInt(amount) + parseInt(charge)
+               
+               this.totalPrice = amount2
+               console.log('full price: '+amount2+" delivery: "+charge+" total "+this.totalPrice)
+               return amount2 * 100
+              }
+              console.log('discount price: '+ amount)
+              return amount * 100
+          }else {
+              let amount = this.price //* 100
+              if(this.userDetails.delivery_fee){
+               let charge = this.userDetails.delivery_fee// * 100
+               let amount2 = parseInt(amount) + parseInt(charge)
+               
+                this.totalPrice = amount2
+                console.log('full price: '+amount2+" delivery: "+charge+" total "+this.totalPrice)
+               return amount2 * 100
+              }
+              console.log('full price: '+this.price+" delivery: "+charge)
+              return amount * 100
+          } */
+          amount2(){
           if(this.discounted == true){
               let amount = this.discountPrice //* 100
               if(this.userDetails.delivery_fee){
