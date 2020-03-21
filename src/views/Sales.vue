@@ -271,6 +271,7 @@ methods: {
     product: "Product",
     fullname: "Full name",
     delivery: "Delivery",
+    date: "Date",
 };
 
 // format the data
@@ -284,6 +285,7 @@ this.userSales.forEach((item) => {
     product: item.acf.product,
     fullname: item.acf.fullname,
     delivery: item.acf.location,
+    date: item.date,
     });
 });
 console.log(itemsFormatted)

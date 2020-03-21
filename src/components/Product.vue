@@ -924,6 +924,7 @@ return JSON.parse(this.theProduct.delivery_locations)
                     email: this.buyerEmail,
                     productID: this.productID,
                     phone: this.buyerPhone,
+                    address: this.buyerAddress
                 }
 
           this.loading = true
