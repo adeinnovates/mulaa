@@ -552,7 +552,7 @@ export default {
      components: {
         //paystack
         Callback: Callback,
-        MulaaPay: MulaaPay,
+        //MulaaPay: MulaaPay,
         [Glide.name]: Glide,
     [GlideSlide.name]: GlideSlide
         // Rave
