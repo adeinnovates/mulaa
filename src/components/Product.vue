@@ -742,6 +742,11 @@ this.title2 = productName
         salesRecord(response){
             //console.log("sales: "+response)
 
+            const host = window.location.host;
+const parts = host.split('.');
+//const domain = 'mulaa'
+const nname = parts[0]
+
 //axios.post(`//dev.mulaa.africa/admin/wp-json/jwt-auth/v1/token`, {
   axios.post(`https://shop.mulaa.co/api/wp-json/jwt-auth/v1/token`, {
     username: 'system',
@@ -769,7 +774,7 @@ const salesData = {
             customer_phone: this.buyerPhone,
             location: this.buyerAddress,
             transaction: response.transaction,
-            merchant: this.$route.params.name,
+            merchant: nname, //this.$route.params.name,
             delivery: this.buyerAddress,
             merchant_email: this.userDetails.email,
             others: this.Options
