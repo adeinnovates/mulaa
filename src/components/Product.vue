@@ -922,6 +922,7 @@ const salesData = {
                     email: this.buyerEmail,
                     productID: this.$route.params.id,//this.productID,
                     phone: this.buyerPhone,
+                    address: this.buyerAddress
                 }
           this.loading = true
           console.log(this.$route.params.id)
