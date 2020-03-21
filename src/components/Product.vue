@@ -535,7 +535,7 @@ class="my-0 d-inline green lighten-5 font-weight-light ml-n2"
     </div>
 </template>
 <script>
-import MulaaPay from '@/components/MulaaPay'
+//import MulaaPay from '@/components/MulaaPay'
 import banks from '@/data/banks.json'
 
 import { Glide, GlideSlide } from 'vue-glide-js'
