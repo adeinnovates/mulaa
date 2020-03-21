@@ -126,11 +126,12 @@ Download Records
         <th class="text-left">Ref Id</th>
         <th class="text-left">Amount</th>
          <th class="text-left">SKU</th>
+          <th class="text-left"><strong>Status</strong></th>
          <th class="text-left">Product Purchased</th>
         <th class="text-left">Fullname</th>
         <th class="text-left">Phone</th>
         <th class="text-left">Email</th>
-        <th class="text-left">Status</th>
+       
         <th class="text-left">Message</th>
         <th class="text-left">Delivery</th>
         <th class="text-left">Date</th>
@@ -143,11 +144,12 @@ Download Records
         <td :class="`caption ${item.acf.status}`">{{ item.refID }}</td>
         <td class="caption">{{ item.acf.amount | currency }}</td>
         <td class="caption">{{ item.acf.product_id }}</td>
+         <td class="caption"><strong :class="`${item.acf.status}-text`">{{ item.acf.status }}</strong></td>
         <td class="caption">{{ item.acf.product}}</td>
         <td class="caption">{{ item.acf.fullname }}</td>
         <td class="caption">{{ item.acf.customer_phone}}</td>
         <td class="caption">{{ item.acf.customer_email }}</td>
-        <td class="caption">{{ item.acf.status }}</td>
+       
         <td class="caption">{{ item.acf.message }}</td>
          <td class="caption">{{ item.acf.location }}</td>
          <td class="caption">{{ item.date }}</td>
@@ -262,25 +264,26 @@ methods: {
     const itemsFormatted = [];
 
     const headers = {
-    id: 'id'.replace(/,/g, ''), // remove commas to avoid errors
-    title: "Title",
-    description: "Description",
-    availability: "Availability",
-    condition: "Condition",
-    price: "Price".replace(/,/g, ''),
+    //ref: 'Ref'.replace(/,/g, ''), // remove commas to avoid errors
+    amount: "Amount".replace(/,/g, ''),
+    sku: "Sku",
+    status: "Status",
+    product: "Product",
+    fullname: "Full name",
+    delivery: "Delivery",
 };
 
 // format the data
 
 this.userSales.forEach((item) => {
     itemsFormatted.push({
-    id: item.id,
-    title: item.acf.transaction,
-    description: item.acf.product,
-    availability: item.acf.customer_phone,
-    condition: item.acf.fullname,
-    price: item.acf.amount.replace(/,/g, ''),
-        
+    //id: item.id,
+    amount: item.acf.amount.replace(/,/g, ''),
+    sku: item.acf.product_id,
+    status: item.acf.status,
+    product: item.acf.product,
+    fullname: item.acf.fullname,
+    delivery: item.acf.location,
     });
 });
 console.log(itemsFormatted)
@@ -376,5 +379,11 @@ return this.exportCSVFile(headers, itemsFormatted, fileTitle);
     }
     .Successful{
       border-left:4px solid #81C784;
+    }
+    .Pending-text{
+      color: #EF5350;
+    }
+    .Successful-text{
+      color: #81C784;
     }
 </style>
