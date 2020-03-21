@@ -987,7 +987,7 @@ return JSON.parse(this.theProduct.delivery_locations)
                     ref: this.reference,
                     callback: (response) => { //message: "Approved" reference: "rVZKHQSn6b" status: "success" trans: "256223954" transaction: "256223954" trxref: "rVZKHQSn6b"
                         this.callback(response)
-                        //this.showPopup(response)
+                        this.showPopup(response)
                     },
                     onClose: () => {
                         this.close()
