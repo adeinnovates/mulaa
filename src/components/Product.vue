@@ -23,7 +23,7 @@
                     :src="image"
                     lazy-src="https://picsum.photos/id/11/10/6"
                     aspect-ratio="1"
-                    class="grey lighten-2 mb-3"
+                    class="grey lighten-2 mb-3 cursor"
                     max-width="500"
                     max-height="300"
                     @click="overlay = !overlay"
@@ -62,6 +62,7 @@
 </v-row>
 
                     </v-img>
+
 <v-overlay 
 :value="overlay"
 :opacity="0.9"
@@ -197,7 +198,6 @@ style="border-radius:10px;"
 </v-layout>
 
 </v-overlay>
-
 </v-row>
 
                <!-- <v-card-title>-->
@@ -224,19 +224,26 @@ style="border-radius:10px;"
            
             </v-col>
             </v-row>  
-          <v-row v-if="delivery_locations">
-          <v-col>
-            <p class="caption grey--text text--darken-2 mb-0">
+            <v-row v-if="delivery_locations_obj">
+         <v-col v-if="this.eproduct == false || this.eproduct == 0">
+           <p class="caption grey--text text--darken-2 mb-0">
             <span class="font-weight-bold">
               Delivery Location(s): 
               </span>
               </p>
-          <v-chip v-for="tag in delivery_locations_obj" x-small class="mb-2 mr-1 red lighten-5" :key="tag">
+ <v-chip v-for="tag in delivery_locations_obj" x-small class="mb-2 mr-1 red lighten-5" :key="tag">
                     {{tag}}
-                      </v-chip> 
-          </v-col>
-          </v-row>
-
+                     </v-chip> 
+         </v-col>
+         <v-col v-else> 
+           <v-chip small class="mb-2 mr-1 blue lighten-5">
+Digital Product
+           </v-chip>
+           <v-sheet v-if="this.eproduct == true || this.eproduct == 1" class="caption blue lighten-5 pa-2 rounded mb-2" style="color:#000028" elevation="0">
+This is a digital product, upon confirmation of payment an email will be sent to you to access <strong>{{this.title}}</strong>
+</v-sheet>
+         </v-col>
+         </v-row>
             </div>
             </v-card-text>
 
@@ -253,16 +260,16 @@ style="border-radius:10px;"
     <p v-else class="headline font-weight-light mb-0 teal--text pl-3">
        {{newAmount | currency}}
         </p>
-              <v-btn
-             
-             @click="sheet = true"
-             color="green" 
+             <v-btn
+             text
+             @click.stop="sheet = true"
+             color="#23d2aa" 
              class="ml-10"
              :disabled=disabled :loading="loading"
              v-show="this.stock > 0"
              >
               <v-icon small left>mdi-cash</v-icon>
-                pay now
+                CheckOut
              </v-btn>
              <v-chip outlined 
              color='red'
@@ -290,7 +297,7 @@ style="border-radius:10px;"
 
  <v-card-text class="">
      <div class="px-4">
-                <v-row>
+  <v-row>
                 <v-col>
                 <v-text-field
                 class="teal--text form-field ma-0 pa-0"
@@ -324,12 +331,12 @@ type="number"
                 </v-col>
                 </v-row>
 
-<v-row>
+<v-row v-if="this.eproduct == false || this.eproduct == 0">
                 <v-col>
                 <v-text-field
                 class="teal--text form-field ma-0 pa-0 mb-5"
                 v-model="buyerAddress"
-                label="Delivery Address"
+                label="Enter Delivery Address"
                 placeholder="Your Location"
                 hint="Enter your delivery address in full with closest landmark"
             persistent-hint
@@ -337,7 +344,6 @@ type="number"
                 ></v-text-field>
                 </v-col>
                 </v-row>
-
 
                 <v-card
     class="mx-auto"
@@ -388,9 +394,8 @@ powered by <img :src="require('../assets/mulaalogo.png')" alt="" style="max-widt
        </v-row>
 
        <v-bottom-sheet v-model="sheet">
-      <v-sheet class=""  height="300px" style="border-radius: 20px 20px 0 0" :elevation=5>
-        <div class="pa-5 grey--text text--darken-3 font-weight-bold">REVIEW/CONFIRM YOUR ORDER</div>
-
+      <v-sheet class="" height="300px" style="border-radius: 20px 20px 0 0" :elevation=5>
+ <div class="pa-5 grey--text text--darken-3 font-weight-bold">REVIEW/CONFIRM YOUR ORDER</div>
        <!-- <v-btn
           class="mt-4"
           text
@@ -398,8 +403,9 @@ powered by <img :src="require('../assets/mulaalogo.png')" alt="" style="max-widt
           @click="sheet = !sheet"
         >close</v-btn>-->
 <v-list-item three-line>
-  <v-list-item-content>
-      <v-list-item-title class="title mb-0 teal--text text--darken-4">
+      <v-list-item-content>
+       
+        <v-list-item-title class="title mb-0 teal--text text--darken-4">
           <div style="font-size:10px">{{buyerEmail}} // {{buyerPhone}}</div>
           <div class="py-2" style="border-bottom:1px dotted #ccc;line-height:1px;">
           <p class="my-0 " style="font-size:10px"><span class="overline my-0 py-0">Sub-total:</span> {{newAmount | currency}} </p>
@@ -426,15 +432,16 @@ class="my-0 d-inline green lighten-5 font-weight-light ml-n2"
                 Checkout
              </v-btn>
           </v-list-item-subtitle>-->
-    </v-list-item-content>
+      </v-list-item-content>
 
       <v-list-item-avatar
         tile
         size="150"
         color="transparent"
       >
-      <!--<v-icon dark>mdi-cart</v-icon>-->
-      <v-btn
+      <!--<v-icon dark>mdi-cart</v-icon> payWithPaystack-->
+          
+            <v-btn
             @click.stop="payWithMulaa"
             color="green" 
             class="mt-3 white--text"
@@ -442,8 +449,10 @@ class="my-0 d-inline green lighten-5 font-weight-light ml-n2"
             :disabled=disabled :loading="loading"
             >
             <v-icon x-small left>mdi-cash</v-icon>
-            Confirm
+            Pay Now
             </v-btn>
+        
+          <!--<MulaaPay></MulaaPay>-->
       </v-list-item-avatar>
     </v-list-item>
 
@@ -474,7 +483,7 @@ class="my-0 d-inline green lighten-5 font-weight-light ml-n2"
                 
             <v-card-text class="pa-5 text-center">
               <p class="headline">
-                Payment of <strong>{{newAmount | currency}}</strong>
+                Payment of <strong>{{totalPrice| currency}}</strong>
                 </p>
                 <div v-show="!show2">
             <span class="subtitle-1 text-center font-weight-light">
@@ -501,7 +510,7 @@ class="my-0 d-inline green lighten-5 font-weight-light ml-n2"
                             </div>
                   <div v-show="show2">
                     <p class="subtitle-1">Make an Internet Transfer as payment for your transaction.</p>
-                    <h4 class="title">Account Number: {{craaccount}} <br> Bank Name: Highstreet MFB</h4>
+                    <h4 class="title">Account Number: {{craaccount}} <br> Bank Name: Rubies MFB</h4>
                     <p class="text--teal caption">transaction expires in 30mins</p>
                     </div>
             </v-card-text>
@@ -510,7 +519,7 @@ class="my-0 d-inline green lighten-5 font-weight-light ml-n2"
              <v-card-actions class="pr-7">
                <v-btn text color="teal lighten-3 overline" @click="mulaapaydialog = false">
               <v-icon right-3 color="teal lighten-3" class="mr-2">mdi-cancel</v-icon>
-             Cancel
+                Cancel
               </v-btn>
 
               <v-row
@@ -523,56 +532,38 @@ class="my-0 d-inline green lighten-5 font-weight-light ml-n2"
             </v-card-actions>
             </v-card>
 </v-dialog>
-
     </div>
 </template>
 <script>
+import MulaaPay from '@/components/MulaaPay'
 import banks from '@/data/banks.json'
-import { mapState, mapGetters } from 'vuex'
-import axios from 'axios'
 
 import { Glide, GlideSlide } from 'vue-glide-js'
+
+import { mapState, mapGetters } from 'vuex'
+import axios from 'axios'
 
 //import Rave from 'vue-ravepayment';
 //import paystack from 'vue-paystack';
 import Callback from '@/components/Callback'
 const mulaa_key = 'pk_live_d2ea70959fc4383baf5844b947709e17db19b1d0'
-export default { 
-  metaInfo() {
-    let pageTitle = this.title
-    return {
-      title: pageTitle ? pageTitle : this.getMerchant,
-      titleTemplate: '%s - mulaa.co',
-      htmlAttrs: {
-        lang: 'en',
-        amp: true
-      },
-      
-      meta: [
-     {property: 'og:title', content: this.getMerchant},
-     {property: 'og:type', content: this.getMerchantInfo.business_name},
-     {property: 'og:url', content: this.pagePath},
-     {property: 'og:image', content: this.getMerchantInfo.brand_image},
-     {property: 'og:description', content: this.getMerchantInfo.business_description},
-      ]
-    }
-    },
+export default {
     props: ['name','theproducts'],
      components: {
         //paystack
         Callback: Callback,
-        //MulaaPay: MulaaPay,
+        MulaaPay: MulaaPay,
         [Glide.name]: Glide,
     [GlideSlide.name]: GlideSlide
         // Rave
     },
  data(){
         return {
-          //raveKey: "FLWPUBK-xxxxxxxxxxxxxxxxxx-X",
+          eproductfile: '',
+          eproduct: '',
           totalPrice:0,
           delivery_locations: [], //JSON.parse(this.theProduct.delivery_locations)
           delivery_locations_obj: null,
-          nname: '',
           craaccount: '',
           show2: false,
           bank: null,
@@ -638,8 +629,9 @@ pageurl: 'https://shop.mulaa.co'+this.$route.path,
       loading:'loading',
       userKey:'userKey',
       theProduct:'theProduct',
-      userBusiness:'userBusiness',
-      userDetails:'userDetails'
+      userDetails:'userDetails',
+      theProductId: 'theProductId',
+      //pslides: 'pslides'
       }),
       loading: {
       get() {
@@ -669,17 +661,26 @@ pageurl: 'https://shop.mulaa.co'+this.$route.path,
       amount(){
           if(this.discounted == false || this.discounted == undefined){
               let amount = this.price
+              /*
+ if(this.userDetails.delivery_fee){
+               let charge = this.userDetails.delivery_fee// * 100
+               let amount2 = parseInt(amount) + parseInt(charge)
+               return amount2
+              }
+             */
               //console.log(this.discounted)
              // console.log('amount: '+ amount)
 
               return amount
           }else {
               //this.hide = true
-              //console.log(this.discounted)
+              console.log(this.discounted)
               let amount = this.discountPrice
+              
               return amount
           }
       },
+      
        disabled() {
        if (this.buyerName.length < 1 || this.buyerEmail == ' '){
            this.infoBar = true
@@ -715,15 +716,6 @@ pageurl: 'https://shop.mulaa.co'+this.$route.path,
         this.fetchData()
         this.updateData()
         this.toUrlString(this.title)
-
-         const host = window.location.host;
-const parts = host.split('.');
-const domain = 'mulaa'
-this.nname = parts[0]
-       //console.log('name created: '+parts[0])
-        //this.fetchData(parts[0])
-       // console.log('name: '+ this.name)
-       
 /*
         const script = document.createElement('script')
         script.src = 'https://api.ravepay.co/flwv3-pug/getpaidx/api/flwpbf-inline.js'
@@ -733,12 +725,6 @@ this.nname = parts[0]
 //console.log(this.theProduct)
     },
     methods: {
-       getMerchant(){
-      return this.userBusiness
-    },
-    getMerchantInfo(){
-      return this.userDetails
-    },
       addOption(index,name,price) {
         console.log(name)
         this.loader = 'btnloading'
@@ -759,7 +745,7 @@ this.title2 = productName
 //axios.post(`//dev.mulaa.africa/admin/wp-json/jwt-auth/v1/token`, {
   axios.post(`https://shop.mulaa.co/api/wp-json/jwt-auth/v1/token`, {
     username: 'system',
-    password: 'letmein2020()' 
+    password: 'letmein2020()'
   }
 ).then(resp => {
            //console.log(resp.data.token)
@@ -808,8 +794,10 @@ const salesData = {
         updateData(){
           //console.log(this.theProduct.price)
             if(this.theproducts === undefined){
-                console.log('refreshed')
+                //console.log('refreshed')
+                //console.log(this.theProduct)
                 this.delivery_locations = this.theProduct.delivery_locations
+                this.productID = this.theProductId
                 this.title = this.theProduct.title
             this.hidethis = this.theProduct.hidden
             this.datePosted = this.theProduct.date_posted
@@ -822,12 +810,16 @@ const salesData = {
             this.newAmount = this.amount
             this.stock = this.theProduct.stock
             this.productOptions = this.theProduct.product_options
-            console.log(this.theProduct.productOptions)
+            this.eproduct = this.theProduct.eproduct
+            this.eproductfile = this.theProduct.eproductfile
+            //console.log(this.theProduct.productOptions)
              //console.log('refreshed amount '+this.newAmount) 
             }else{
                 //console.log('valid click')
                 //console.log(this.theproducts)
+                //this.delivery_locations = JSON.parse(this.theproducts.delivery_locations)
                 this.delivery_locations = this.theproducts.delivery_locations
+                this.productID = this.theproducts.productID
                 this.title = this.theproducts.title
             this.hidethis = this.theproducts.hidden
             this.datePosted = this.theproducts.date_posted
@@ -840,6 +832,8 @@ const salesData = {
             this.productOptions = this.theproducts.productOptions
             this.newAmount = this.amount
             this.stock = this.theproducts.stock
+            this.eproduct = this.theproducts.eproduct
+            this.eproductfile = this.theproducts.eproductfile
             //console.log(this.newAmount)
             }
         },
@@ -851,10 +845,10 @@ const salesData = {
                let amount2 = parseInt(amount) + parseInt(charge)
                
                this.totalPrice = amount2
-               //console.log('full price: '+amount2+" delivery: "+charge+" total "+this.totalPrice)
+               console.log('full price: '+amount2+" delivery: "+charge+" total "+this.totalPrice)
                return amount2 * 100
               }
-              //console.log('discount price: '+ amount)
+              console.log('discount price: '+ amount)
               return amount * 100
           }else {
               let amount = this.price //* 100
@@ -863,13 +857,21 @@ const salesData = {
                let amount2 = parseInt(amount) + parseInt(charge)
                
                 this.totalPrice = amount2
-                //console.log('full price: '+amount2+" delivery: "+charge+" total "+this.totalPrice)
+                console.log('full price: '+amount2+" delivery: "+charge+" total "+this.totalPrice)
                return amount2 * 100
               }
-              //console.log('full price: '+this.price+" delivery: "+charge)
+              console.log('full price: '+this.price+" delivery: "+charge)
               return amount * 100
           }
       },
+     /* pushDelivery(){
+        console.log(this.theProduct.delivery_locations)
+        if(!this.theProduct.delivery_locations){
+          return null
+        }else{
+return JSON.parse(this.theProduct.delivery_locations)
+        }
+      }, */
       resetForm () {
         this.$refs.buyForm.reset()
       },
@@ -897,7 +899,7 @@ const salesData = {
     },
     fetchData(){
         this.$store.dispatch('loadProduct', this.$route.params.id)
-        this.$store.dispatch('loadUserDetails', this.nname)
+        this.$store.dispatch('loadUserDetails', this.name)
         //console.log("product id: "+this.$route.params.id)
     },
   callback: function(response){
@@ -920,12 +922,12 @@ const salesData = {
         const payOptions = {
                     key: this.reference,
                     email: this.buyerEmail,
-                    productID: this.$route.params.id,//this.productID,
+                    productID: this.productID,
                     phone: this.buyerPhone,
                     address: this.buyerAddress
                 }
+
           this.loading = true
-          console.log(this.$route.params.id)
           axios.get('https://shop.mulaa.co/api/wp-json/mulaapay/v1/tranx', {
             params: payOptions
             })
@@ -944,15 +946,16 @@ const salesData = {
         //this.sheet = false
         this.loading = false
         
-        if(this.userDetails.bank_payment_option != true){
+        if(this.userDetails.bank_payment_option !=true){
           this.payWithPaystack()
           console.log(this.userDetails.bank_payment_option)
-          console.log(this.name)
         }else{
           this.mulaapaydialog = true
          console.log('mulaapay') 
         }
         
+
+
         //console.log(this.mulaapaydialog)
         
                 
@@ -984,7 +987,7 @@ const salesData = {
                     ref: this.reference,
                     callback: (response) => { //message: "Approved" reference: "rVZKHQSn6b" status: "success" trans: "256223954" transaction: "256223954" trxref: "rVZKHQSn6b"
                         this.callback(response)
-                        //this.showPopup(response)
+                        this.showPopup(response)
                     },
                     onClose: () => {
                         this.close()
@@ -1003,7 +1006,7 @@ const salesData = {
                     ref: this.reference,
                     callback: (response) => { //message: "Approved" reference: "rVZKHQSn6b" status: "success" trans: "256223954" transaction: "256223954" trxref: "rVZKHQSn6b"
                         this.callback(response)
-                        //this.showPopup(response)
+                        this.showPopup(response)
                     },
                     onClose: () => {
                         this.close()
@@ -1023,7 +1026,7 @@ this.loading = false
     let paystackScript = document.createElement('script')
     paystackScript.setAttribute('src', 'https://js.paystack.co/v1/inline.js')
     document.head.appendChild(paystackScript)
-
+    //console.log(this.pslides)
 //let phpUrl = document.createElement('iframe')
 //phpUrl.setAttribute('src', 'https://shop.mulaa.co/api/product/the-uju-set')
 //document.body.appendChild(phpUrl)
@@ -1032,6 +1035,7 @@ this.loading = false
             oLuanchBtn.style.display = 'none';
          // this.showPopup()   
           //console.log('userdetails: '+JSON.stringify(this.userDetails))  
+          //this.amount2()
   },
   watch: {
       loader () {
@@ -1045,8 +1049,7 @@ this.loading = false
       pslides(){
         //console.log('length',this.pslides.length)
         //this.$refs.slider.glide.go(">");
-      }
-      ,
+      },
       delivery_locations(val){
         console.log('location value ',val)
         if(this.delivery_locations == ''){
@@ -1066,6 +1069,10 @@ console.log('not null', val)
         background-color:#000028;
     }
     .theme--dark .card__title{
+
+    }
+    .cursor{
+      cursor: move
     }
 </style>
 <style>
