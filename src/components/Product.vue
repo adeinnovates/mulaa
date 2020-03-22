@@ -600,6 +600,7 @@ export default {
     },
  data(){
         return {
+          paywithbank: null,
           eproductfile: '',
           eproduct: '',
           totalPrice:0,
@@ -1018,8 +1019,8 @@ return JSON.parse(this.theProduct.delivery_locations)
       payWithMulaa(){
         //this.sheet = false
         this.loading = false
-        console.log('check pay option', this.userDetails.bank_payment_option)
-        if(this.userDetails.bank_payment_option != true){
+        console.log('check pay option', this.paywithbank) //this.userDetails.bank_payment_option
+        if(this.paywithbank != true){
           this.payWithPaystack()
           console.log(this.userDetails.bank_payment_option)
         }else{
@@ -1118,7 +1119,8 @@ return JSON.parse(this.theProduct.delivery_locations)
       }
   },
   mounted() {
-     //console.log(this.userDetails.subaccount_code)
+     console.log('payment mode ',this.userDetails.bank_payment_option)
+     this.paywithbank = this.userDetails.bank_payment_option
 this.loading = false
     let paystackScript = document.createElement('script')
     paystackScript.setAttribute('src', 'https://js.paystack.co/v1/inline.js')
