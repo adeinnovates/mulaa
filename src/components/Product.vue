@@ -1019,7 +1019,7 @@ return JSON.parse(this.theProduct.delivery_locations)
       payWithMulaa(){
         //this.sheet = false
         this.loading = false
-        console.log('check pay option', this.paywithbank) //this.userDetails.bank_payment_option
+        //console.log('check pay option', this.paywithbank) //this.userDetails.bank_payment_option
         if(this.paywithbank != true){
           this.payWithPaystack()
           console.log(this.userDetails.bank_payment_option)
