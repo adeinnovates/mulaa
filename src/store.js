@@ -204,7 +204,7 @@ state.downloadLink = data
        });*/
        //state.userDiscounted = Discounted
        //console.log('the media', the_media)
-       console.log('LOL',theproduct.acf)
+       //console.log('LOL',theproduct.acf)
        state.pslides = the_media 
        state.theProduct = theproduct.acf
        state.theProductId = theproduct.id
@@ -415,6 +415,7 @@ const removeDuplicates = (array, key) => {
         return item.merchant == state.user; 
       });
       //console.log('user sales: ' + JSON.stringify(userSale[0]))
+      //console.log(userSale)
       state.userSales = userSale
       //state.userProducts = products
 /*
@@ -686,10 +687,12 @@ const removeDuplicates = (array, key) => {
       state.loading = true
         //console.log(data)
         if (userdata != ''){ //http://dev.mulaa.africa/admin/wp-json/wp/v2/product?search=userdata&per_page=100
-          axios({ url: `${BASEURL}`+'/wp/v2/sale', method: 'GET' })
+          axios({ url: `${BASEURL}`+'/wp/v2/sale?per_page=100', method: 'GET' })
           .then(resp => { 
             if(resp.data.length > 0){
               const allSales = resp.data
+
+              //console.log(resp.data)
               //const userID = resp.data.acf.merchant
               //$store.dispatch('getUser', authorID)
              commit('user_sales', allSales) //{allSales, userID}

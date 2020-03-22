@@ -25,7 +25,94 @@
                             color="green"
                             ></v-progress-linear> 
                            <v-flex xs6 sm6 md4 lg4 v-for="product in filteredProducts" :key="product.productID">
+           <v-card flat hover class="text-xs-center ma-2">
+              <div v-if="product.hidden == 1" class="hiddenProd">
+            <v-chip
+            class="ma-2 point"
+            color="red"
+            label
+            x-small
+            text-color="white"
+            >
+            <v-icon x-small left>mdi-close</v-icon>
+            hidden
+            </v-chip>
+              <v-responsive class="pt-0">
+                <v-img
+          :src="product.image"
+          aspect-ratio="1"
+         ></v-img>
+              </v-responsive>
+              <v-card-text class="pb-0">
+                <div class="subheading text-truncate">
+ {{product.title}}
+                </div>
+                <div class="grey--text text-truncate small"> {{product.description}}</div>
+                <v-chip outlined x-small>
+                  SKU {{product.productID}}
+                  </v-chip>
+              </v-card-text>
+              <v-card-actions>
+               <!-- <v-btn text color="#23d2aa" :to="{name:'product',params: {
+                    id: product.id
+                  }}">
+                  <v-icon small left>mdi-square-edit-outline</v-icon>
+                  
+                </v-btn>-->
+                <Editor :theproducts="product"></Editor>
+                <v-spacer></v-spacer>
+                <div class="grey--text small"> ₦{{product.price}}</div>
+              </v-card-actions>
+              </div>
+              
+               <div v-else class="visibleProd">
+                  <v-chip
+                  class="ml-5 mt-4 point"
+                  color="white"
+                  text-color="grey darken-1"
+                  small
+                  >
+                  <v-avatar
+                  left
+                  class="ml-n4 grey lighten-4"
+                  small
+                  >
+                  {{product.pageView}}
+                  </v-avatar>
+                  <v-icon small color="grey lighten-2">mdi-eye</v-icon>
+                  </v-chip>
+              <v-responsive class="pt-0">
+                <v-img
+          :src="product.image"
+          aspect-ratio="1"
+         ></v-img>
+              </v-responsive>
+              <v-card-text class="pb-0">
+                <div class="subheading text-truncate">
+                  {{product.title}}
+                </div>
+                <div class="grey--text text-truncate small"> {{product.description}}</div>
+                <v-chip outlined x-small>
+                  SKU {{product.productID}}
+                  </v-chip>
+              </v-card-text>
+              <v-card-actions>
+               <!-- <v-btn text color="#23d2aa" :to="{name:'product',params: {
+                    id: product.id
+                  }}">
+                  <v-icon small left>mdi-square-edit-outline</v-icon>
+                  
+                </v-btn>-->
+                <Editor :theproducts="product"></Editor>
+                <v-spacer></v-spacer>
+                <div class="grey--text small mr-2"> ₦{{product.price}}</div>
+              </v-card-actions>
+              </div>
+
+              </v-card>
+           <!--
             <v-card flat hover class="text-xs-center ma-2">
+              
               <v-responsive class="pt-0">
                 <v-img
           :src="product.image"
@@ -43,17 +130,13 @@
                 
               </v-card-text>
               <v-card-actions>
-               <!-- <v-btn text color="#23d2aa" :to="{name:'product',params: {
-                    id: product.id
-                  }}">
-                  <v-icon small left>mdi-square-edit-outline</v-icon>
-                  
-                </v-btn>-->
+             
                 <Editor :theproducts="product"></Editor>
                 <v-spacer></v-spacer>
                 <div class="grey--text small"> ₦{{product.price}}</div>
               </v-card-actions>
               </v-card>
+              -->
         </v-flex>
                        </v-layout>
 

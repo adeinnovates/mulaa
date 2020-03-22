@@ -477,16 +477,54 @@ class="my-0 d-inline green lighten-5 font-weight-light ml-n2"
             >
             <v-card-title class="teal lighten-2">
                 <span class="headline text-center font-weight-light">
-                    Pay with Bank  Transfer
+                    <!--Pay with Bank  Transfer-->
+                    Payment Options
                 </span>
             </v-card-title>
-                
             <v-card-text class="pa-5 text-center">
-              <p class="headline">
+               <!--<p class="headline text-center"> Pay with Paystack </p>-->
+              <div style="display:block"
+               v-show="!show2"
+              > 
+                <v-chip
+      class="ma-2 text-center"
+      x-small
+    >
+      1. Card Payment
+    </v-chip>
+    </div>
+
+                
+                  <v-btn
+             @click="payWithPaystack"
+             color="green" 
+             class="mt-3 headline mb-5"
+             :disabled=disabled :loading="loading"
+             v-show="!show2"
+             >
+Paystack
+                   </v-btn>
+            </v-card-text>
+
+            <v-divider></v-divider>
+ 
+            <v-card-text class="pa-5 text-center">
+<div style="display:block;" class="mt-2"> 
+<v-chip
+class="ma-2 text-center"
+x-small
+>
+2. Bank Transfer
+</v-chip>
+</div>
+       <span class="subtitle-2 text-center font-weight-light">
+         From your Banking App
+       </span>
+              <p class="title">
                 Payment of <strong>{{totalPrice| currency}}</strong>
                 </p>
                 <div v-show="!show2">
-            <span class="subtitle-1 text-center font-weight-light">
+            <span class="subtitle-2 text-center font-weight-light">
             Select your bank below
             </span>
             <v-select
@@ -500,6 +538,7 @@ class="my-0 d-inline green lighten-5 font-weight-light ml-n2"
           background-color="#19193d"
          return-object
          single-line
+         small
          v-on:change="showAcct"
         ></v-select>
                  <v-progress-linear
@@ -509,15 +548,15 @@ class="my-0 d-inline green lighten-5 font-weight-light ml-n2"
                             ></v-progress-linear> 
                             </div>
                   <div v-show="show2">
-                    <p class="subtitle-1">Make an Internet Transfer as payment for your transaction.</p>
-                    <h4 class="title">Account Number: {{craaccount}} <br> Bank Name: Rubies MFB</h4>
-                    <p class="text--teal caption">transaction expires in 30mins</p>
+                    <p class="subtitle-2">Make an Internet Transfer as payment for your transaction.</p>
+                    <h4 class="title green">Account Number: {{craaccount}} <br> Bank Name: Rubies MFB</h4>
+                    <p class="text--teal caption mt-1">transaction expires in 12hrs</p>
                     </div>
             </v-card-text>
            
          
              <v-card-actions class="pr-7">
-               <v-btn text color="teal lighten-3 overline" @click="mulaapaydialog = false">
+               <v-btn text color="teal lighten-3 overline" @click="mulaapaydialog = false; show2 = false">
               <v-icon right-3 color="teal lighten-3" class="mr-2">mdi-cancel</v-icon>
                 Cancel
               </v-btn>
@@ -771,7 +810,7 @@ const salesData = {
             transaction: response.transaction,
             merchant: this.$route.params.name,
             delivery: this.buyerAddress,
-            merchant_email: this.userDetails.email,
+            merchant_email: this.userDetails.user_email,
             others: this.Options
                 },
                  status: "publish"
@@ -973,6 +1012,7 @@ return JSON.parse(this.theProduct.delivery_locations)
 */
       },
       payWithPaystack() {
+        //console.log('email, ',this.userDetails.user_email+business_name)
         if(this.userDetails.subaccount_code !='' || this.userDetails.subaccount_code !=null)
         {
           //console.log('use subaccount '+ mulaa_key)
@@ -984,6 +1024,30 @@ return JSON.parse(this.theProduct.delivery_locations)
                     subaccount: this.userDetails.subaccount_code,
                     transaction_charge: 0,
                     bearer: 'subaccount',
+                    metadata: {
+         custom_fields: [
+            {
+                display_name: "Mobile Number",
+                variable_name: "mobile_number",
+                value: "+2348012345678"
+            },
+            {
+                display_name: "Full Name",
+                variable_name: "full_name",
+                value: this.buyerName
+            },
+            {
+                display_name: "Delivery",
+                variable_name: "delivery",
+                value: this.buyerAddress
+            },
+            {
+                display_name: "Merchant",
+                variable_name: "merchant",
+                value: this.userDetails.business_name
+            }
+         ]
+      },
                     ref: this.reference,
                     callback: (response) => { //message: "Approved" reference: "rVZKHQSn6b" status: "success" trans: "256223954" transaction: "256223954" trxref: "rVZKHQSn6b"
                         this.callback(response)
