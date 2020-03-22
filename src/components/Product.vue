@@ -1018,8 +1018,8 @@ return JSON.parse(this.theProduct.delivery_locations)
       payWithMulaa(){
         //this.sheet = false
         this.loading = false
-        
-        if(this.userDetails.bank_payment_option !=true){
+        console.log('check pay option', this.userDetails.bank_payment_option)
+        if(this.userDetails.bank_payment_option != true){
           this.payWithPaystack()
           console.log(this.userDetails.bank_payment_option)
         }else{
