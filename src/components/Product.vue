@@ -816,9 +816,9 @@ const salesData = {
             customer_phone: this.buyerPhone,
             location: this.buyerAddress,
             transaction: response.transaction,
-            merchant: nname, //this.$route.params.name,
+            merchant: this.userDetails.business_name, //this.$route.params.name,
             delivery: this.buyerAddress,
-            merchant_email: this.userDetails.email,
+            merchant_email: this.userDetails.user_email,
             others: this.Options
                 },
                  status: "publish"
@@ -1063,7 +1063,7 @@ return JSON.parse(this.theProduct.delivery_locations)
             {
                 display_name: "Mobile Number",
                 variable_name: "mobile_number",
-                value: "+2348012345678"
+                value: this.buyerPhone
             },
             {
                 display_name: "Full Name",
