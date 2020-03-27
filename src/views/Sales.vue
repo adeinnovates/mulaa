@@ -270,8 +270,11 @@ methods: {
     status: "Status",
     product: "Product",
     fullname: "Full name",
-    delivery: "Delivery",
+    delivery: "Delivery".replace(/,/g, ''),
     date: "Date",
+    email: "Email",
+    phone: "Phone",
+
 };
 
 // format the data
@@ -286,6 +289,8 @@ this.userSales.forEach((item) => {
     fullname: item.acf.fullname,
     delivery: item.acf.location,
     date: item.date,
+    email: item.acf.customer_email,
+    phone: item.acf.customer_phone
     });
 });
 console.log(itemsFormatted)

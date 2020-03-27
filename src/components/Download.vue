@@ -10,7 +10,7 @@
     class="mx-auto extra-round pa-4"
     elevation=10
     light="light"
-    :loading="loading"
+    :loading="loading" 
   >
 <v-card-title class="000028--text font-weight-light text-center d-block display-1">
 Download page

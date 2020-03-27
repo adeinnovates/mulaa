@@ -673,7 +673,7 @@ export default {
     },
      methods: {
       confirmUpdate(){
-        if(this.userDetails.customer_code != ''){
+        if(!this.userDetails.customer_code){
           console.log('updated')
           this.banked = true
         }else{

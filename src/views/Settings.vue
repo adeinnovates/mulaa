@@ -187,6 +187,15 @@ dark
                 </v-flex>
                 <!-- right column-->
                 <v-flex flex xs12 md5 pa-5>
+               <v-btn color="teal"
+               dark large
+               tile
+          :disabled=disabled
+          :to="{ name: 'onboard'}"
+          >
+          <v-icon left>mdi-airplane</v-icon>
+          Account Onboarding
+          </v-btn>   
 <v-card
 style="border-top-left-radius:15px;border-top-right-radius:15px;"
  outlined
