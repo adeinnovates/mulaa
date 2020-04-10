@@ -690,8 +690,8 @@ export default {
 const headers2 = {
   'Content-Type': 'multipart/form-data'
 }
-    //axios.post(`//dev.mulaa.co/imgapi/files.php`, formData, {
-       axios.post(`//shop.mulaa.co/imgapi/files.php`, formData, {
+    axios.post(`//dev.mulaa.co/imgapi/files.php`, formData, {
+      // axios.post(`//shop.mulaa.co/imgapi/files.php`, formData, {
     headers: headers2,
     onUploadProgress: progressEvent => {
        this.progressValue = Math.round(progressEvent.loaded / progressEvent.total *100)

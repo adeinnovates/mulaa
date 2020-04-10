@@ -177,7 +177,7 @@ width="350"
       large 
       class="px-5 mb-5 ml-5 text teal--text" 
       color="#23d2aa" 
-      :disabled=disabled 
+      :disabled= "disabled"
         >
           Continue
         </v-btn>
@@ -243,10 +243,12 @@ width="350"
  </div>
 
  <div v-else>
+   <!--
     <p class="caption red--text text-capitalize">
    Already have a Paystack account? 
    <span @click="show2 = false" style="cursor: pointer;text-decoration:underline">click here to use Paystack key</span>
    </p>
+   -->
   <span class="overline teal--text">
           Setup Bank Details
         </span>
@@ -390,7 +392,7 @@ width="350"
         </v-btn>
 
        <v-btn
-          @click="createSubaccount()"
+          @click="e1 = 3"
           rounded 
       large 
       class="px-5 mb-5 text teal--text mr-3" 
@@ -497,9 +499,9 @@ dark
         >
           Back
         </v-btn>
-
+<!-- submit button-->
        <v-btn
-          @click="updateUser()"
+          @click="createSubaccount()" 
           rounded 
       large 
       class="px-5 mb-5 text teal--text mr-3" 
@@ -527,6 +529,7 @@ import { mapState, mapGetters } from 'vuex'
 import axios from 'axios'
 import banks from '@/data/banks.json'
 import liststates from '@/data/liststates.json'
+import countapi from 'countapi-js';
 
 const PaystackOptions = {
   headers: {'Authorization': 'Bearer sk_live_01952d79b3b14815af91d560256959358299e123'}
@@ -614,7 +617,7 @@ export default {
         errors: [],
         infoBar:'',
         color:'',
-        fname:'',
+        fname:null,
         lname:'',
         bankaccountNumb: '',
           valid:'',
@@ -674,11 +677,11 @@ export default {
      methods: {
       confirmUpdate(){
         if(!this.userDetails.customer_code){
-          console.log('updated')
+          console.log('no customer defined')
           this.banked = true
         }else{
-          console.log('undefined user')
-          this.banked = false
+          console.log('user/customer defined')
+          this.banked = true //false
         }
       },
       listOfBanks(){
@@ -860,9 +863,59 @@ countapi.create(metricOps).then((result) => {
          return
        },
        createSubaccount(){
-         if(this.fname != '' && this.businessName != '' && this.subaccount_code ==''){
+         //if(this.fname != '' && this.businessName != '' && this.subaccount_code ==''){ //this.fname
+           if(this.fname){
+          
             this.loading = true
 
+            //http://dev.mulaa.africa/admin/wp-json/mulaa-auth/v1/onboard
+            let onbaordOps = {
+              user: this.userDetails.id,
+              nibss: this.bank.nibss,
+                business_name: this.businessName,
+                settlement_bank: this.bank.text,
+                bank_code: this.bank.value,
+                account_number: this.bankaccountNumb,
+                percentage_charge: 1,
+                primary_contact_email:this.userEmail,
+                primary_contact_name: this.fname,
+                primary_contact_phone: this.phoneNumber, //this.userProfile.phone
+                referral: this.referral,
+                instagram: this.Instagram,
+                business_address: this.BusinessAddress,
+                business_description: this.businessDesc,
+                state:this.stateResidence,
+                country:this.Country[0],
+                facebook_pixel: this.facebookPixel,
+                brand_image: this.userProfile.profileImg,
+                referal: this.referral,
+                legalid:this.legalID,
+                subaccount: this.subaccount,
+                }
+
+            axios.get('https://shop.mulaa.co/imgapi/wp-json/mulaa-auth/v1/onboard/', { //http://dev.mulaa.africa/admin/wp-json/mulaa-auth/v1/onboard/ //https://shop.mulaa.co/imgapi/wp-json/mulaa-auth/v1/onboard/
+    params:onbaordOps})
+                .then(resp => {
+                  //this.loading = false;
+                  
+                  //
+                  const metricOps = {
+                  namespace: this.user+'.mulaa.store', //this.nname
+                  key: resp.data.user,
+                  enable_reset: 1,
+                  }
+                  countapi.create(metricOps).then((result) => { 
+                    console.log(result);
+                  });
+                  console.log("done: ",resp.data)
+                  this.loading = false;
+                  this.$router.push({name: 'dashboard', params: { sheet: false }})
+                }).catch((e) => {
+                console.error(e)
+                this.errors = "Something went wrong, try again"
+                this.loading = false;
+            })
+return;
             this.$http.post('https://api.paystack.co/subaccount', {
                 business_name: this.businessName,
                 settlement_bank: this.bank.text,
@@ -886,12 +939,13 @@ countapi.create(metricOps).then((result) => {
              })
 
          }else{
+           console.log('empty')
            this.loading = false
            this.bank = {
              text: '',
              value: ''
            }
-           return this.e1 = 3
+           return this.e1 = 2
          }
         
         

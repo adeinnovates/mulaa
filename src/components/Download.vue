@@ -29,7 +29,7 @@ import { mapState, mapGetters } from 'vuex'
 export default {
     data(){
         return{
-            loading: null,
+            //loading: null,
         }
     },
     computed: {
@@ -44,7 +44,7 @@ export default {
         fetchData(){
         //this.$store.dispatch('loadProduct', this.$route.params.id)
         //this.$store.dispatch('loadUserDetails', this.nname)
-        console.log("download key: "+this.$route.params.key)
+        console.log("download key: "+this.$route.params.id) // this.$route.query.key
     },
     },
     created() {

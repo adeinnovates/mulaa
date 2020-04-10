@@ -811,7 +811,7 @@ return this.currentUserProd
 }
   
  countapi.info(metricOps.namespace, metricOps.key).then((result) => { 
-   //console.log(result); //.value
+   console.log(result); //.value
    this.hitStat = result.value
   });
     },
