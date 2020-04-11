@@ -755,9 +755,15 @@ pageurl: 'https://shop.mulaa.co'+this.$route.path,
 
     },
      created() {
-        this.fetchData()
+
+      const host = window.location.host;
+      const parts = host.split('.');
+      const domain = 'mulaa'
+      const merchantName = parts[0]
+
+        this.fetchData(merchantName)
         this.updateData()
-        this.toUrlString(this.title)
+       // this.toUrlString(this.title)
 /*
         const script = document.createElement('script')
         script.src = 'https://api.ravepay.co/flwv3-pug/getpaidx/api/flwpbf-inline.js'
@@ -971,9 +977,9 @@ return JSON.parse(this.theProduct.delivery_locations)
     exceedHandler(file) {
       console.warn("onExceed -> file", file);
     },
-    fetchData(){
+    fetchData(merchantName){
         this.$store.dispatch('loadProduct', this.$route.params.id)
-        this.$store.dispatch('loadUserDetails', this.name)
+        this.$store.dispatch('loadUserDetails', merchantName)
         //console.log("product id: "+this.$route.params.id)
     },
   callback: function(response){

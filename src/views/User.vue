@@ -477,7 +477,7 @@ export default {
 const parts = host.split('.');
 const domain = 'mulaa'
 this.nname = parts[0]
-       //console.log('name created: '+parts[0])
+       console.log('name created: '+parts[0])
         this.fetchData(parts[0])
        // console.log('name: '+ this.name)
 
