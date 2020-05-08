@@ -10,6 +10,7 @@ import Sales from './views/Sales.vue'
 import User from './views/User.vue'
 import Settings from './views/Settings.vue'
 import ConfirmSub from './views/ConfirmSub.vue'
+import Download from './components/Download.vue'
 import store from './store'
 import { userInfo } from 'os';
 
@@ -144,6 +145,16 @@ export default new Router({
       path: '/',
       name: 'merchant',
       component: User,
+      props: true,
+      meta: { 
+        hideNavigation: true,
+        requiresAuth: false
+      }
+    },
+    {
+      path: '/:id/:key',
+      name: 'download',
+      component: Download,
       props: true,
       meta: { 
         hideNavigation: true,
