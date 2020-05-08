@@ -421,8 +421,8 @@ class="my-0 d-inline green lighten-5 font-weight-light ml-n2"
   </v-chip>
 </div>
         </v-list-item-subtitle>
-       <!-- <v-list-item-subtitle>
-          <v-btn
+       <v-list-item-subtitle>
+          <!--<v-btn
              @click="payWithPaystack"
              color="#23d2aa" 
              class="mt-3"
@@ -431,7 +431,8 @@ class="my-0 d-inline green lighten-5 font-weight-light ml-n2"
               <v-icon small left>mdi-cash</v-icon>
                 Checkout
              </v-btn>
-          </v-list-item-subtitle>-->
+             -->
+          </v-list-item-subtitle>
       </v-list-item-content>
 
       <v-list-item-avatar

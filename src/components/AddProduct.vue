@@ -222,7 +222,7 @@ ref="imgBox"
             >
             </v-switch>
             <v-sheet v-if="this.eproduct != ''" class="caption orange lighten-5 pa-2 rounded mb-2" style="color:#000028" elevation="0">
-Select from your list of files
+Select & attach a file from your list of files or go to <router-link to="digital" class="caption">Digital Assets</router-link> to upload a digital file to attach here
 </v-sheet>
 
 <v-select
@@ -496,7 +496,7 @@ dark
         sm="7"
          class="black lighten-5"
             >
-<youtube :video-id="videoId" ref="youtube" :width="300" :height="220" :fitParent="true" ></youtube>
+<youtube :video-id="videoId" ref="youtube" :width="290" :height="210" :fitParent="true" ></youtube>
             </v-col>
 
              <v-col
@@ -519,7 +519,7 @@ dark
           v-model="youtubetitle"
           outlined
           label="Video Title"
-          placeholder="Type or paste a link (URL)"
+          placeholder="Type your video title here"
         :hide-details=true
           color="teal lighten-3"
         ></v-textarea>
@@ -530,9 +530,9 @@ dark
              class="px-5 mb-5 text teal--text ml-5 mt-5" 
       color="#23d2aa" 
             id=""
-           @click="getId"
+           @click="postVideo"
           :loading="loading">
-          <span class="caption px-5">Save</span>
+          <span class="caption px-5">Save Video to Profile</span>
           </v-btn>
 
           </v-card-text>
@@ -729,7 +729,7 @@ export default {
       this.fetchData()
  },
     methods: {
-      getId () {
+      getId (val) {
         
         this.videoId = this.$youtube.getIdFromUrl(this.youtubeurl)
         console.log(this.videoId)
@@ -1154,6 +1154,8 @@ this.$refs.linkForm.reset()
                 content: this.youtubeurl,
                 fields : {
                   youtube_link: this.videoId,
+                  merchant_id: this.userId,
+                  video_title: this.youtubetitle
                 },
                  status: "publish"
                 })
@@ -1166,7 +1168,7 @@ this.$refs.linkForm.reset()
                 this.updated = !this.updated
                 this.color= 'green'
                 this.infoBar = true
-              this.infoMsg = 'Link successfully saved'
+              this.infoMsg = 'Video successfully saved'
             })
         .catch((e) => {
                 console.error(e)
@@ -1181,6 +1183,7 @@ this.$refs.linkForm.reset()
       registerMsg:'registerMsg',
       user:'user',
       userFiles: 'userFiles',
+      userId: 'userId'
       }),
     /* disabled() {
        //if (this.imageFile.length < 1 || this.title == ' '){
@@ -1201,6 +1204,9 @@ this.$refs.linkForm.reset()
     }*/
     },
      watch: {
+       youtubeurl(val){
+          this.getId(val);
+       },
        loading(val){
          console.log("loading...", val)
          return val
