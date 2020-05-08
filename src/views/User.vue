@@ -487,10 +487,10 @@ export default {
         this.fetchData()
        // console.log('name: '+ this.name)
        
-     /*  const metricOps = {
+       const metricOps = {
         namespace: this.name+'.mulaa.store', //this.nname
         key: this.userDetails.customer_code,
-} */
+} 
 /*
 countapi.create(metricOps).then((result) => { 
   console.log(result);
@@ -502,11 +502,11 @@ countapi.create(metricOps).then((result) => {
   });*/
   
 
-/*
+
       countapi.visits().then((result) => {
       console.log(result);
       });
-      */
+      
 /*
       countapi.get('http://localhost:8080/u/foodfashionplug').then((result) => { 
         console.log(result.value); 

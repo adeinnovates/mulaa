@@ -450,6 +450,7 @@ class="mx-10"
         </v-flex>
                        </v-layout>
                        <MoreBtn></MoreBtn>
+
                    </div>
                 </v-flex>
                 <!--
@@ -542,6 +543,7 @@ export default {
   },
     data(){
         return{
+          isLoaded: false,
           hitStat: '',
           showWidget: true,
           mounted:'',
@@ -811,7 +813,7 @@ return this.currentUserProd
 }
   
  countapi.info(metricOps.namespace, metricOps.key).then((result) => { 
-   console.log(result); //.value
+   //console.log(result); //.value
    this.hitStat = result.value
   });
     },

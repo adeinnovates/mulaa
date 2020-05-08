@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
+//import HelloWorld from './components/HelloWorld';
 import Navbar from '@/components/Navbar'
 
 export default {

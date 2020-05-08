@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
+//import Home from './views/Home.vue'
 import Dashboard from './views/Dashboard.vue'
 import Register from './views/Register.vue'
 import Onboard from './views/OnBoard.vue'
@@ -11,8 +11,9 @@ import User from './views/User.vue'
 import Settings from './views/Settings.vue'
 import ConfirmSub from './views/ConfirmSub.vue'
 import Download from './components/Download.vue'
+import Digital from './components/Digital.vue'
 import store from './store'
-import { userInfo } from 'os';
+//import { userInfo } from 'os';
 
 Vue.use(Router)
 
@@ -60,6 +61,15 @@ export default new Router({
       meta: { 
         hideNavigation: true,
         requiresAuth: false
+      }
+    },
+    {
+      path: '/digital',
+      name: 'digital',
+      component: Digital,
+      meta: { 
+        hideNavigation: false,
+        requiresAuth: true
       }
     },
     {
@@ -163,10 +173,10 @@ router.beforeEach((to, from, next) => {
     return next()
   }
 })
-
+/*
 router.afterEach((to, from) => {
   // ...
   //console.log('to: '+to.fullPath+store.state.userDetails.username)
-})
+})*/
 
 export default router

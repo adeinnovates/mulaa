@@ -221,9 +221,25 @@ ref="imgBox"
             :disabled=false
             >
             </v-switch>
+            <v-sheet v-if="this.eproduct != ''" class="caption orange lighten-5 pa-2 rounded mb-2" style="color:#000028" elevation="0">
+Select from your list of files
+</v-sheet>
 
+<v-select
+         v-model="eproductFile"
+          :items="userFiles"
+          item-text="title"
+          item-value="id"
+          filled
+          label="Digital assets"
+          background-color="#f4f8f7"
+          color="teal"
+         return-object
+         single-line
+         v-if="this.eproduct != ''"
+        ></v-select>
 
-
+<!--
 <v-file-input
 small-chips
 label="Upload Digital Product"
@@ -238,10 +254,7 @@ v-model="eproductFile"
 :rules="fileRule"
 v-if="this.eproduct != ''"
 >
-</v-file-input>
-<v-sheet v-if="this.eproduct != ''" class="caption orange lighten-5 pa-2 rounded mb-2" style="color:#000028" elevation="0">
-upload your digital product (pdf, doc, xls)
-</v-sheet>
+</v-file-input>-->
 
 <v-overlay
 :value="overlay"
@@ -474,7 +487,54 @@ dark
       >
         <v-card flat>
           <v-card-text>
-            Youtube video embed link, coming soon.
+             <p class="mb-5 mt-2 ml-3 overline">
+            At the moment you can only add one video to your profile
+            </p>
+            <v-row class="mx-5">
+            <v-col
+            cols="7"
+        sm="7"
+         class="black lighten-5"
+            >
+<youtube :video-id="videoId" ref="youtube" :width="300" :height="220" :fitParent="true" ></youtube>
+            </v-col>
+
+             <v-col
+            cols="5"
+        sm="5"
+            >
+ <v-text-field
+           class="teal--text form-field ma-2"
+            v-model="youtubeurl"
+            label="Youtube Link"
+            placeholder="Type or paste a link (URL)"
+            type="text"
+            outlined
+            color="teal lighten-3"
+            :rules="[nurules.required, nurules.url]"
+          ></v-text-field>
+           
+          <v-textarea
+          class="teal--text form-field my-2 mb-4"
+          v-model="youtubetitle"
+          outlined
+          label="Video Title"
+          placeholder="Type or paste a link (URL)"
+        :hide-details=true
+          color="teal lighten-3"
+        ></v-textarea>
+            </v-col>
+            </v-row>
+          <v-btn 
+             large ripple
+             class="px-5 mb-5 text teal--text ml-5 mt-5" 
+      color="#23d2aa" 
+            id=""
+           @click="getId"
+          :loading="loading">
+          <span class="caption px-5">Save</span>
+          </v-btn>
+
           </v-card-text>
         </v-card>
       </v-tab-item>
@@ -597,6 +657,9 @@ import VueUploadMultipleImage from 'vue-upload-multiple-image'
 export default {
     data(){
         return{
+          videoId: null,
+          youtubeurl: null,
+          youtubetitle: null,
           pageurl: null,
           progressValue:'',
           overlay: false,
@@ -662,7 +725,16 @@ export default {
   mounted(){
 
   },
+  created() {
+      this.fetchData()
+ },
     methods: {
+      getId () {
+        
+        this.videoId = this.$youtube.getIdFromUrl(this.youtubeurl)
+        console.log(this.videoId)
+      //return this.$youtube.getIdFromUrl(this.youtubeurl.url)
+    },
       formatBytes (a,b){if(0==a)return"0 Bytes";var c=1024,d=b||2,e=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],f=Math.floor(Math.log(a)/Math.log(c));return parseFloat((a/Math.pow(c,f)).toFixed(d))}, //+" "+e[f]},
        onFileChanged (event) {
     if(!event){
@@ -947,8 +1019,9 @@ axios
         },
         fetchData(){
           //this.$store.dispatch('loadUserProducts', this.user)
-          this.$store.dispatch('loadDashboardProducts', this.user)
-          this.$store.dispatch('loadAllProducts', 'top')
+         // this.$store.dispatch('loadDashboardProducts', this.user)
+         // this.$store.dispatch('loadAllProducts', 'top')
+           this.$store.dispatch('loadUserFiles', this.user) 
        // this.$store.dispatch('getUser', this.user)
     },
       resetForm () {
@@ -1000,7 +1073,7 @@ axios
                 madetoorder: this.madetoorder,
                 eproduct: this.eproduct,
                 eproductlink: this.eproductLink,
-                eproductfile: this.eproductFileName
+                eproductfile: this.eproductFile
                 },
                  status: "publish"
                 }).then((response) => {
@@ -1072,12 +1145,42 @@ this.$refs.linkForm.reset()
                 this.loading = false;
             })
                 
+  },
+  postVideo:  function() {
+    this.loading = true;
+              
+           this.$http.post('/video', {
+                title: this.user, // + '-' + this.user,
+                content: this.youtubeurl,
+                fields : {
+                  youtube_link: this.videoId,
+                },
+                 status: "publish"
+                })
+        .then(response => {
+                this.loading = false;
+                //this.clear()
+                //this.loadProducts()
+                //console.log(response.data.data)
+                //this.$router.push({name: 'dashboard', params: { sheet: false }})
+                this.updated = !this.updated
+                this.color= 'green'
+                this.infoBar = true
+              this.infoMsg = 'Link successfully saved'
+            })
+        .catch((e) => {
+                console.error(e)
+                this.errors = "Something went wrong, try again"
+                this.loading = false;
+            })
+                
   }
   },
   computed: {
       ...mapState({
       registerMsg:'registerMsg',
       user:'user',
+      userFiles: 'userFiles',
       }),
     /* disabled() {
        //if (this.imageFile.length < 1 || this.title == ' '){

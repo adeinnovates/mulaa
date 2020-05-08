@@ -8,10 +8,13 @@ import vuetify from './plugins/vuetify';
 import VueMeta from 'vue-meta'
 import VueFriendlyIframe from 'vue-friendly-iframe';
 import VueCurrencyFilter from 'vue-currency-filter'
+import VueYoutube from 'vue-youtube'
 
 import vueCustomElement from 'vue-custom-element'
 
 import VueLazyload from 'vue-lazyload'
+
+Vue.use(VueYoutube)
  
 Vue.use(VueLazyload)
 

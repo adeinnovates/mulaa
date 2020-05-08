@@ -63,7 +63,7 @@ dark
 <v-flex xs12 class="form-wrapper" v-show="!show2"><!-- :rules="nameRules" [nurules.required, nurules.min]-->
 
 <v-tooltip v-model="usertip" top>
-            <template v-slot:activator="{ on }">
+            <template> <!-- v-slot:activator="{ on }" -->
             <v-text-field
               filled
               full-width

@@ -12,11 +12,13 @@ const API_URL_USER_DATA = 'http://dev.mulaa.africa/admin/wp-json/mulaa-auth/v1/u
 const UPLOAD_API = 'http://dev.mulaa.africa/imgapi/prod.php'
 */
 
+
 const BASEURL = 'https://shop.mulaa.co/api/wp-json'
 const API_URL = 'https://shop.mulaa.co/api/wp-json/wp/v2/product'
 const API_URL_USER = 'https://shop.mulaa.co/api/wp-json/wp/v2/users'
 const API_URL_USER_DATA = 'https://shop.mulaa.co/api/wp-json/mulaa-auth/v1/users'
-const UPLOAD_API = 'https://shop.mulaa.co/imgapi/prod.php'
+//const UPLOAD_API = 'https://shop.mulaa.co/imgapi/prod.php'
+const FILE_URL = 'https://shop.mulaa.co/api/wp-json/mulaa-auth/v1/downloads'
 
 
 const MEDIAURL = '/wp/v2/media?parent='
@@ -54,6 +56,7 @@ const vuexLocalStorage = new VuexPersist({
     userEmail: state.userEmail,
     userAcctStatus: state.userAcctStatus,
     theProductId: state.theProductId,
+    //userFiles: state.userFiles,
     //pslides: state.pslides,
     // getRidOfThisModule: state.getRidOfThisModule (No one likes it.)
   })
@@ -99,7 +102,8 @@ export default new Vuex.Store({
     filteredLinks:'',
     userLinks: '',
     pslides: [],
-    downloadLink:''
+    downloadLink:[],
+    userFiles: ''
 
   },
   getters: {
@@ -111,8 +115,9 @@ export default new Vuex.Store({
     renderUser: state => state.user,
   },
   mutations: {
-    get_download(state, {data}){
+    get_download(state, data){
 state.downloadLink = data
+//console.log(data);
     },
     create_product(state, {data}){
 
@@ -179,6 +184,9 @@ state.downloadLink = data
     linksEmpty(state){
       state.emptyLinks = true;
       state.loading = false
+    },
+    user_files(state, value){
+      state.userFiles = value
     },
     set_products (state, products) {
         //state.allBooms = booms
@@ -790,14 +798,15 @@ const removeDuplicates = (array, key) => {
       console.log('User not found here')
     }
     },
-    loadDownload ({commit, state}, data){
+    loadDownload ({commit, state}, data){ //get download file for purchased customer
       state.loading = true
         //console.log(data)
-        if (data != ''){
+        if (data != ''){ 
+          const LOCAL = 'http://dev.mulaa.africa/admin/wp-json' //BASEURL 
           axios({ url: `${BASEURL}${Downloads_ENDPOINT}`+'?key='+data, method: 'GET' }) //`${BASEURL}${Products_ENDPOINT}`+'?author='+userdata
           .then(resp => { 
-            const all_products = resp.data
-            commit('get_download', all_products)
+            //const all_products = resp.data
+            commit('get_download', resp.data)
             //console.log(resp.data)
             //resolve(all_booms)
           })
@@ -807,6 +816,38 @@ const removeDuplicates = (array, key) => {
             //reject(err)
           })
         }else {console.log('logout and login, user object not found')}
+      },
+      loadUserFiles({ commit }, user){
+        if (user != ''){
+        return new Promise((resolve, reject) => {
+          //axios({ url: `${API_URL_USER}`+ '/?search='+ user, headers: {
+            axios({ url: `${FILE_URL}`+ '?author='+ user, headers: {
+            'Content-Type':  'application/json',
+          }, 
+          method: 'GET' 
+        })
+        .then(
+          resp => {
+            if(resp.data[0]){
+              //console.log(resp.data)//JSON.stringify(resp.data))
+              commit('user_files', resp.data)
+              //commit('user_detail', resp.data[0])
+              //commit('auth_success_login', {token, user, userEmail})
+  
+              resolve(resp.data.data)
+            }else{
+              //commit('user_detail_blank', 'Your store account is not activated yet')
+              commit('user_files', resp.data)
+              console.log('user downloads empty', resp.data)
+             resolve(resp)
+            }
+              
+          }
+        )
+        })
+      }else{
+        console.log('User not found here')
+      }
       },
     logout({ commit }) {
       return new Promise((resolve, reject) => {

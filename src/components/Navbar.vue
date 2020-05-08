@@ -131,7 +131,8 @@ export default {
                 {icon: 'mdi-view-dashboard-variant', text: 'Dashboard', route:'/'},
                 {icon: 'mdi-cart', text: 'Products', route:'/products'},
                 {icon: 'mdi-store', text: 'Sales', route:'/sales'},
-                {icon: 'mdi-settings', text: 'Settings', route:'/settings'},
+                {icon: 'mdi-download', text: 'Digital Assets', route:'/digital'},
+                {icon: 'mdi-cog-outline', text: 'Settings', route:'/settings'},
                 //{icon: 'mdi-account', text: 'Account Activation', route:'/onboard'}
             ],
             notice: false

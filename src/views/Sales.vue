@@ -109,7 +109,9 @@
       </v-card-text>
   </v-card>
     
-    </div>   
+    </div>  
+
+    <p class="title teal--text mt-7 pl-2">Below are records of all initiated sales, confirmed/completed payments are tagged <strong>"successful/success"</strong> </p> 
 
 <v-btn text color="#EF5350" 
 class="caption my-3"

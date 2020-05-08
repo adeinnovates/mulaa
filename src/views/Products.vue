@@ -147,7 +147,7 @@
     </div>
 </template>
 <script>
-import EmptyState from '@/components/EmptyProducts'
+//import EmptyState from '@/components/EmptyProducts'
 //import MoreBtn from '@/components/MoreBtn'
 import AddProduct from '@/components/AddProduct'
 import Editor from '@/components/Editor'

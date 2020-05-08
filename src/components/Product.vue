@@ -472,7 +472,7 @@ class="my-0 d-inline green lighten-5 font-weight-light ml-n2"
       class="extra-round extra white--text"
     >
 <v-card
-        max-width="454"
+        max-width="374"
         class="mx-auto"
             >
             <v-card-title class="teal lighten-2">
@@ -486,23 +486,23 @@ class="my-0 d-inline green lighten-5 font-weight-light ml-n2"
               <div style="display:block"
                v-show="!show2"
               > 
-                <v-chip
+                <!--<v-chip
       class="ma-2 text-center"
       x-small
     >
       1. Card Payment
-    </v-chip>
+    </v-chip>-->
     </div>
 
                 
                   <v-btn
              @click="payWithPaystack"
              color="green" 
-             class="mt-3 headline mb-5"
+             class="mt-3 subtitle-1 mb-5"
              :disabled=disabled :loading="loading"
              v-show="!show2"
              >
-Paystack
+Card Payment
                    </v-btn>
             </v-card-text>
 
@@ -511,7 +511,8 @@ Paystack
             <v-card-text class="pa-5 text-center">
 <div style="display:block;" class="mt-2"> 
 <v-chip
-class="ma-2 text-center"
+class="ma-2 text-center body-2"
+color="green"
 x-small
 >
 2. Bank Transfer
@@ -548,9 +549,20 @@ x-small
                             ></v-progress-linear> 
                             </div>
                   <div v-show="show2">
-                    <p class="subtitle-2">Make an Internet Transfer as payment for your transaction.</p>
-                    <h4 class="title green">Account Number: {{craaccount}} <br> Bank Name: Rubies MFB</h4>
-                    <p class="text--teal caption mt-1">transaction expires in 12hrs</p>
+                    <p class="subtitle-2">Please proceed to your mobile banking/internet banking app to complete your bank transfer payment for this transaction. </p>
+                    <h4 class="title pa-5 teal lighten-2" style="border-radius:6px">Account Number: <span style="color:#000028">{{craaccount}}</span> <br> Bank Name: <span style="color:#000028">Rubies</span> or <span style="color:#000028">Highstreet Microfinance Bank</span> </h4>
+                    <p class="text--teal caption mt-1">transaction expires in 3hrs</p>
+
+                    <v-btn color="green" dark
+                    class="mt-3"
+                    :active="loading"
+
+                    @click="mulaapaydialog = false; show2 = false"
+                    >Transfer Completed
+                    <v-icon class="white--text ml-5" small right>
+                                    mdi-chevron-right
+                                    </v-icon>  
+                    </v-btn>
                     </div>
             </v-card-text>
            
@@ -574,7 +586,7 @@ x-small
     </div>
 </template>
 <script>
-import MulaaPay from '@/components/MulaaPay'
+//import MulaaPay from '@/components/MulaaPay'
 import banks from '@/data/banks.json'
 
 import { Glide, GlideSlide } from 'vue-glide-js'
@@ -896,10 +908,10 @@ const salesData = {
                let amount2 = parseInt(amount) + parseInt(charge)
                
                 this.totalPrice = amount2
-                console.log('full price: '+amount2+" delivery: "+charge+" total "+this.totalPrice)
+                //console.log('full price: '+amount2+" delivery: "+charge+" total "+this.totalPrice)
                return amount2 * 100
               }
-              console.log('full price: '+this.price+" delivery: "+charge)
+              //console.log('full price: '+this.price+" delivery: "+charge)
               return amount * 100
           }
       },
