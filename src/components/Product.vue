@@ -244,6 +244,16 @@ This is a digital product, upon confirmation of payment an email will be sent to
 </v-sheet>
          </v-col>
          </v-row>
+         <v-row v-else>
+           <v-col v-if="this.eproduct == true || this.eproduct == 1">
+<v-chip small class="mb-2 mr-1 blue lighten-5">
+Digital Product
+           </v-chip>
+           <v-sheet class="caption blue lighten-5 pa-2 rounded mb-2" style="color:#000028" elevation="0">
+This is a digital product, upon confirmation of payment an email will be sent to you to access <strong>{{this.title}}</strong>
+</v-sheet>
+           </v-col>
+         </v-row>
             </div>
             </v-card-text>
 
@@ -856,9 +866,12 @@ const salesData = {
           })
         },
         updateData(){
-          //console.log(this.theProduct.price)
+          console.log('refreshed')
+         
+          //console.log('the products: =>',this.theproducts)
+          console.log('theProduct: ',this.theProduct)
             if(this.theproducts === undefined){
-                //console.log('refreshed')
+                console.log('refreshed')
                 //console.log(this.theProduct)
                 this.delivery_locations = this.theProduct.delivery_locations
                 this.productID = this.theProductId
@@ -989,7 +1002,11 @@ return JSON.parse(this.theProduct.delivery_locations)
       console.warn("onExceed -> file", file);
     },
     fetchData(merchantName){
-        this.$store.dispatch('loadProduct', this.$route.params.id)
+        this.$store.dispatch('loadProduct', this.$route.params.id).then(()=>{
+          //console.log('id=', this.theproducts)
+          this.updateData()
+          //console.log('eproduct ',this.eproduct)
+        })
         this.$store.dispatch('loadUserDetails', merchantName)
         //console.log("product id: "+this.$route.params.id)
     },
@@ -1154,6 +1171,9 @@ this.loading = false
           //this.amount2()
   },
   watch: {
+    theproducts(){
+      //this.updateData();
+    },
       loader () {
         const l = this.loader
         this[l] = !this[l]
