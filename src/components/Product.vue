@@ -60,7 +60,15 @@
 <div class="headline font-weight-light pt-12 otto">{{this.title}}</div>
 </v-card-text>
 </v-row>
-
+<template v-slot:placeholder>
+            <v-row
+            class="fill-height ma-0" 
+            align="center"
+            justify="center"
+            >
+            <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+            </v-row>
+            </template>
                     </v-img>
 
 <v-overlay 
@@ -150,6 +158,15 @@ style="border-radius:10px;"
               sold out
               </v-chip>
               </div><!-- hidden / out of stock-->
+              <template v-slot:placeholder>
+            <v-row
+            class="fill-height ma-0" 
+            align="center"
+            justify="center"
+            >
+            <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+            </v-row>
+            </template>
 </v-img>
 
   </div>
@@ -854,9 +871,9 @@ const salesData = {
           })
         },
         updateData(){
-          //console.log(this.theProduct.price)
+          //console.log('the Product',this.theProduct)
             if(this.theproducts === undefined){
-                //console.log('refreshed')
+                console.log('refreshed')
                 //console.log(this.theProduct)
                 this.delivery_locations = this.theProduct.delivery_locations
                 this.productID = this.theProductId
@@ -962,7 +979,7 @@ return JSON.parse(this.theProduct.delivery_locations)
     fetchData(){
         this.$store.dispatch('loadProduct', this.$route.params.id).then(()=>{
           this.updateData()
-          console.log('eproduct ',this.eproduct)
+          //console.log('eproduct ',this.theProduct)
         })
         this.$store.dispatch('loadUserDetails', this.name)
         //console.log("product id: "+this.$route.params.id)
@@ -1128,8 +1145,8 @@ this.loading = false
           //this.amount2()
   },
   watch: {
-    theproducts(){
-      updateData();
+    theProduct(){
+      this.updateData();
     },
       loader () {
         const l = this.loader
@@ -1144,12 +1161,13 @@ this.loading = false
         //this.$refs.slider.glide.go(">");
       },
       delivery_locations(val){
-        console.log('location value ',val)
-        if(this.delivery_locations == ''){
-        return
+        //console.log('location value ',val)
+        if(this.delivery_locations == '' || this.delivery_locations == undefined){
+        //return
       }else{
 console.log('not null', val)
         return this.delivery_locations_obj = JSON.parse(this.delivery_locations)
+        //console.log(JSON.parse(this.delivery_locations))
       }
       return
       },
