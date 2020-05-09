@@ -230,7 +230,7 @@ this.eproductFileName = resp.data.url
                 content: '',
                 fields : {
                 file_path: this.eproductFileName,
-                merchant: this.user,
+                merchant: this.user, 
                 email_content: this.content,
                 merchant_id: this.userId
                 },

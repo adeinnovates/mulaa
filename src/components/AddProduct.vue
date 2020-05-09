@@ -231,7 +231,7 @@ Select & attach a file from your list of files or go to <router-link to="digital
           item-text="title"
           item-value="id"
           filled
-          label="Digital assets"
+          label="Select Digital Asset"
           background-color="#f4f8f7"
           color="teal"
          return-object
@@ -1053,6 +1053,8 @@ axios
       console.warn("onExceed -> file", file);
     },
     postProduct:  function() {
+     // console.log('eproduct: ', this.eproductFile.id)
+      
       //console.log(JSON.stringify(this.options))
                 this.loading = true;
                 this.$http.put('/product/'+this.postid, {
@@ -1073,7 +1075,7 @@ axios
                 madetoorder: this.madetoorder,
                 eproduct: this.eproduct,
                 eproductlink: this.eproductLink,
-                eproductfile: this.eproductFile
+                eproductfile: this.eproductFile.id
                 },
                  status: "publish"
                 }).then((response) => {
