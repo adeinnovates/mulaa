@@ -15,6 +15,8 @@ const API_URL_USER_DATA = 'https://shop.mulaa.co/api/wp-json/mulaa-auth/v1/users
 //const UPLOAD_API = 'https://shop.mulaa.co/imgapi/prod.php'
 const FILE_URL = 'https://shop.mulaa.co/api/wp-json/mulaa-auth/v1/downloads'
 
+const MEDIAURL = '/wp/v2/media?parent='
+
 const Token_ENDPOINT = '/jwt-auth/v1/token'
 const Products_ENDPOINT = '/mulaa-auth/v1/products'
 const Downloads_ENDPOINT = '/mulaa-auth/v1/files'
@@ -203,7 +205,7 @@ export default new Vuex.Store({
       state.pslides = the_media 
       state.theProduct = theproduct.acf
       state.theProductId = theproduct.id
-      
+      //console.log('store: ', theproduct.acf)
       
       //Vue.set(state, 'items', [...items]);
       //console.log(product.id)

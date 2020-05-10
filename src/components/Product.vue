@@ -59,8 +59,17 @@
 <v-card-text class="white--text ml-5">
 <div class="headline font-weight-light pt-12 otto">{{this.title}}</div>
 </v-card-text>
-</v-row>
 
+</v-row>
+<template v-slot:placeholder>
+            <v-row
+            class="fill-height ma-0" 
+            align="center"
+            justify="center"
+            >
+            <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+            </v-row>
+            </template>
                     </v-img>
 
 <v-overlay 
@@ -150,6 +159,15 @@ style="border-radius:10px;"
               sold out
               </v-chip>
               </div><!-- hidden / out of stock-->
+              <template v-slot:placeholder>
+            <v-row
+            class="fill-height ma-0" 
+            align="center"
+            justify="center"
+            >
+            <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+            </v-row>
+            </template>
 </v-img>
 
   </div>
@@ -610,6 +628,29 @@ import axios from 'axios'
 import Callback from '@/components/Callback'
 const mulaa_key = 'pk_live_d2ea70959fc4383baf5844b947709e17db19b1d0'
 export default {
+  metaInfo() {
+    const host = window.location.host;
+      const parts = host.split('.');
+      //const domain = 'mulaa'
+      const merchantName = parts[0]
+    let pageTitle = merchantName
+    return {
+      title: pageTitle ? pageTitle : this.userBusiness,
+      titleTemplate: '%s - mulaa.co',
+      htmlAttrs: {
+        lang: 'en',
+        amp: true
+      },
+      
+      meta: [
+     {property: 'og:title', content: this.userBusiness },
+     {property: 'og:type', content: 'profile:'+window.location.host.split('.')[0]},
+     {property: 'og:url', content: 'https://'+window.location.host},
+     {property: 'og:image', content: 'https://mulaa.store/mulaa_pf.gif'}, //this.getMerchantInfo.brand_image
+     {property: 'og:description', content: this.description}, //this.userDetails.business_description
+      ]
+    }
+    },
     props: ['name','theproducts'],
      components: {
         //paystack
@@ -694,6 +735,7 @@ pageurl: 'https://shop.mulaa.co'+this.$route.path,
       theProduct:'theProduct',
       userDetails:'userDetails',
       theProductId: 'theProductId',
+      userBusiness:'userBusiness',
       //pslides: 'pslides'
       }),
       loading: {
@@ -783,7 +825,7 @@ pageurl: 'https://shop.mulaa.co'+this.$route.path,
       const merchantName = parts[0]
 
         this.fetchData(merchantName)
-        this.updateData()
+        //this.updateData()
        // this.toUrlString(this.title)
 /*
         const script = document.createElement('script')
@@ -866,11 +908,11 @@ const salesData = {
           })
         },
         updateData(){
-          console.log('refreshed')
-         
-          //console.log('the products: =>',this.theproducts)
-          console.log('theProduct: ',this.theProduct)
+         //console.log('the Product',this.theProduct)
+         //console.log('theproducts: ',this.theproducts)
+          
             if(this.theproducts === undefined){
+               
                 console.log('refreshed')
                 //console.log(this.theProduct)
                 this.delivery_locations = this.theProduct.delivery_locations
@@ -1171,8 +1213,8 @@ this.loading = false
           //this.amount2()
   },
   watch: {
-    theproducts(){
-      //this.updateData();
+    theProduct(){
+      this.updateData();
     },
       loader () {
         const l = this.loader
@@ -1187,12 +1229,13 @@ this.loading = false
         //this.$refs.slider.glide.go(">");
       },
       delivery_locations(val){
-        console.log('location value ',val)
-        if(this.delivery_locations == ''){
-        return
+        //console.log('location value ',val)
+        if(this.delivery_locations == '' || this.delivery_locations == undefined){
+        //return
       }else{
 console.log('not null', val)
         return this.delivery_locations_obj = JSON.parse(this.delivery_locations)
+        //console.log(JSON.parse(this.delivery_locations))
       }
       return
       },
