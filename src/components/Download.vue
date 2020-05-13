@@ -62,8 +62,8 @@ powered by <a href="https://mulaa.co/?utm_source=footer&utm_medium=download-page
 <script>
 import { mapState, mapGetters } from 'vuex'
 import axios from 'axios'
-import Downloader from 'js-file-downloader';
-import fileDownload from 'js-file-download'
+//import Downloader from 'js-file-downloader';
+//import fileDownload from 'js-file-download'
 export default {
     data(){
         return{
