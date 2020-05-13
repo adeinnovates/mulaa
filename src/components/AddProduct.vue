@@ -496,7 +496,9 @@ dark
         sm="7"
          class="black lighten-5"
             >
+            <div v-if="userVideo">
 <youtube :video-id="videoId" ref="youtube" :width="290" :height="210" :fitParent="true" ></youtube>
+            </div>
             </v-col>
 
              <v-col
@@ -531,7 +533,9 @@ dark
       color="#23d2aa" 
             id=""
            @click="postVideo"
-          :loading="loading">
+          :loading="loading"
+          v-if="!userVideo"
+          >
           <span class="caption px-5">Save Video to Profile</span>
           </v-btn>
 
@@ -1022,6 +1026,7 @@ axios
          // this.$store.dispatch('loadDashboardProducts', this.user)
          // this.$store.dispatch('loadAllProducts', 'top')
            this.$store.dispatch('loadUserFiles', this.user) 
+           this.$store.dispatch('loadVideos', this.name)
        // this.$store.dispatch('getUser', this.user)
     },
       resetForm () {
@@ -1182,6 +1187,8 @@ this.$refs.linkForm.reset()
   },
   computed: {
       ...mapState({
+        userVideoTitle:'userVideoTitle',
+        userVideo:'userVideo',
       registerMsg:'registerMsg',
       user:'user',
       userFiles: 'userFiles',

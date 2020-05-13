@@ -23,7 +23,7 @@ const FILE_URL = 'https://shop.mulaa.co/api/wp-json/mulaa-auth/v1/downloads'
 
 const MEDIAURL = '/wp/v2/media?parent='
 
-
+const Videos_ENDPOINT = '/wp/v2/video'
 const Token_ENDPOINT = '/jwt-auth/v1/token'
 const Products_ENDPOINT = '/mulaa-auth/v1/products'
 const Downloads_ENDPOINT = '/mulaa-auth/v1/files'
@@ -56,6 +56,7 @@ const vuexLocalStorage = new VuexPersist({
     userEmail: state.userEmail,
     userAcctStatus: state.userAcctStatus,
     theProductId: state.theProductId,
+    //userVideo: state.userVideo
     //userFiles: state.userFiles,
     //pslides: state.pslides,
     // getRidOfThisModule: state.getRidOfThisModule (No one likes it.)
@@ -103,7 +104,9 @@ export default new Vuex.Store({
     userLinks: '',
     pslides: [],
     downloadLink:[],
-    userFiles: ''
+    userFiles: '',
+    userVideo:'',
+    userVideoTitle:''
 
   },
   getters: {
@@ -115,6 +118,11 @@ export default new Vuex.Store({
     renderUser: state => state.user,
   },
   mutations: {
+    get_videos(state, data){
+      state.userVideo = data.youtube_link
+      state.userVideoTitle = data.video_title
+      //console.log(data.youtube_link)
+    },
     get_download(state, data){
 state.downloadLink = data
 //console.log(data);
@@ -817,6 +825,25 @@ const removeDuplicates = (array, key) => {
           })
         }else {console.log('logout and login, user object not found')}
       },
+      loadVideos ({commit, state}, data){ //get download file for purchased customer
+        state.loading = true
+          //console.log(data)
+          if (data != ''){ 
+            //const LOCAL = 'http://dev.mulaa.africa/admin/wp-json' //BASEURL 
+            axios({ url: `${BASEURL}${Videos_ENDPOINT}`+'?search='+data, method: 'GET' }) //`${BASEURL}${Products_ENDPOINT}`+'?author='+userdata
+            .then(resp => { 
+              //const all_products = resp.data
+              commit('get_videos', resp.data[0].acf)
+              //console.log(resp.data[0].acf)
+              //resolve(all_booms)
+            })
+            .catch(err => {
+              commit('load_error', err)
+              //console.log(err)
+              //reject(err)
+            })
+          }else {console.log('logout and login, user object not found')}
+        },
       loadUserFiles({ commit }, user){
         if (user != ''){
         return new Promise((resolve, reject) => {

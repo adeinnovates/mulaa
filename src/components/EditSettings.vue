@@ -109,6 +109,15 @@
             outlined
             color="teal lighten-3"
           ></v-text-field>
+
+           <v-switch 
+        v-model="showVideo" 
+        label="Show video" 
+        class="mt-0"
+        color="#23d2aa"
+        inset
+        >
+        </v-switch>
    
             </v-card-text>
            
@@ -135,6 +144,7 @@ export default {
      props: ['theuser','user','userImg'],
  data(){
         return{
+          showVideo: this.theuser.show_video,
         businessName : this.user,
         Instagram: this.theuser.instagram,
         phoneNumber: this.theuser.phone_number,

@@ -79,9 +79,9 @@
                   <div v-if="!emptyLinks" id="links" 
                           class="mb-3 mt-2 pa-3 mx-auto"
                           style="border:3px dotted rgba(178, 223, 219, 0.3);background-color:rgba(178, 223, 219, 0.2);
-                          border-radius:4px;max-width:854px;"
+                          border-radius:5px;max-width:854px;"
                           >
-                          <p class="overline mb-2"><v-icon small left>mdi-cursor-default-click-outline</v-icon> My links</p>
+                          <p class="overline mb-3"><v-icon small left>mdi-cursor-default-click-outline</v-icon> My links</p>
                          <!-- <v-progress-linear
                             :active=loadinglist
                             indeterminate
@@ -91,25 +91,39 @@
                           color="#000028"
                           dark
                           class="mb-3"
+                          ripple
                           
                           v-for="link in userLinks.slice(0, 4)" :key="link.linkID"
                           >
                               <a :href="link.short_link" target="_blank" class="white--text noline">
                           <v-card-title
-                          class="mt-0 subtitle-1 py-2"
+                          class="mt-0 subtitle-1 py-1"
                           
                           >
-                          <v-icon small left class="teal--text lighten-1">
-              mdi-vector-link
-              </v-icon>
-                          <span class="title text-center" style="width:80%;">
+                         
+                          <span class="body-2 text-left py-2" style="width:90%;">
                             {{link.link_title}}
                             </span>
+
                           <v-spacer></v-spacer>
+                           <v-icon small right class="white--text lighten-1">
+              mdi-chevron-right
+              </v-icon>
                          
                           </v-card-title>
                           </a>
                           </v-card>
+                  </div>
+
+<div class="my-10 pa-2" v-if="this.userDetails.show_video">
+ <p class="headline font-weight-light videotext" v-if="this.userVideo">{{userVideoTitle}}</p>
+                  <div 
+                  class="video-wrap"
+                  v-if="this.userVideo"
+                  >
+                    <youtube :video-id="userVideo" ref="youtube" :width="290" :height="210" :fitParent="true" ></youtube>
+                  </div>
+
                   </div>
                 <div class="layout-desktop mx-auto" style="max-width:854px;">
                 <v-layout row wrap mx-auto>
@@ -319,6 +333,7 @@ export default {
   metaInfo() {
     let pageTitle = this.name
     return {
+      videoId: null,
       title: pageTitle ? pageTitle : this.getMerchant,
       titleTemplate: '%s - mulaa.co',
       htmlAttrs: {
@@ -384,6 +399,8 @@ export default {
              'renderUser'
            ]),
       ...mapState({
+        userVideoTitle:'userVideoTitle',
+        userVideo:'userVideo',
         productListEnd: 'productListEnd',
           emptyStore: 'emptyStore',
       registerMsg:'registerMsg',
@@ -504,7 +521,7 @@ countapi.create(metricOps).then((result) => {
 
 
       countapi.visits().then((result) => {
-      console.log(result);
+      //console.log(result);
       });
       
 /*
@@ -673,6 +690,7 @@ return
         this.$store.dispatch('loadUserProducts', this.name)
         this.$store.dispatch('loadUserDetails', this.name)
         this.$store.dispatch('loadDashboardLinks', this.name)
+        this.$store.dispatch('loadVideos', this.name)
        // console.log('Name '+this.name)
     },
     getMerchant(){
@@ -718,6 +736,19 @@ this.bizPhone = 'https://api.whatsapp.com/send?phone=234'+this.userDetails.phone
 }
 </script>
 <style>
+.videotext{
+  /*text-align: center;*/
+  max-width:854px;
+  margin:0 auto;
+}
+.video-wrap{
+  max-width:854px;
+  margin: 10px auto;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #000;
+  
+}
 .x-small.outline{
   font-size: 9px;
   border:1px solid #ccc;
@@ -801,10 +832,21 @@ a.noline:hover{
 }
 
 @media (max-width: 360px) {
+  .videotext{
+    text-align: left;
+  }
 
   .v-application .pa-5.userpage{
     padding: 1px !important;
   }
+  .video-wrap{
+  max-width: 100%;
+  margin: 10px auto;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #000;
+  
+}
   
 }
 </style>
