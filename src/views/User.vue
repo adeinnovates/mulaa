@@ -306,6 +306,7 @@ powered by <a href="https://mulaa.co/?utm_source=footer&utm_medium=userpage" tar
     </div>
 </template>
 <script>
+import countapi from 'countapi-js';
 import { mapState, mapGetters } from 'vuex'
 import Buy from '@/components/BuyProduct'
 import Widget from '@/components/GetWidget'
@@ -499,6 +500,13 @@ this.nname = parts[0]
        window.addEventListener('scroll', () => {
       this.bottom = this.bottomVisible()
     })
+    const metricOps = {
+        namespace: parts[0]+'.mulaa.store', //this.nname
+        key: this.userDetails.customer_code,
+} 
+      countapi.hit(parts[0]+'.mulaa.store', this.userDetails.customer_code).then((result) => { 
+console.log(result);
+      });
     },
      watch: {
     // call again the method if the route changes
