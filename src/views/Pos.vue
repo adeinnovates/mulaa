@@ -108,7 +108,9 @@
                             indeterminate
                             color="green"
                             ></v-progress-linear>
-                            Make transfer of {{amount}} to {{mulaaCode}}
+                            Make transfer of {{costAmount}} to <strong class="headline">{{mulaaCode}}</strong><br>
+                            <p>Bank Name: Rubies</p>
+
                         </v-sheet>
       </div>
     </v-expand-transition>
@@ -144,7 +146,7 @@
                                      outlined
                                      placeholder="Total Amount"
                                      class="my-2"
-                                     v-model="amount"
+                                     v-model="costAmount"
                                      :rules="[nurules.required, nurules.numbs]"
             color="teal lighten-3"
                                     prepend-inner-icon="mdi-cash"
@@ -211,6 +213,7 @@ VOffline
   },
      data(){
         return{
+            costAmount: '',
             mulaaCode: '',
             search: '',
             errors:[],
@@ -282,15 +285,17 @@ console.log('current prod')
               user: this.userId,
               posnumber: this.posnumber,
                 phone: this.customerPhone,
+                amount: this.costAmount,
                 }
 
-         axios.get('http://shop.mulaa.co/api/wp-json/mulaa-auth/v1/pos', { //http://dev.mulaa.africa/admin/wp-json/mulaa-auth/v1/pos
+         axios.get('//shop.mulaa.co/api/wp-json/mulaa-auth/v1/pos', { //http://dev.mulaa.africa/admin/wp-json/mulaa-auth/v1/pos
     params:posData})
                 .then(resp => {
                     console.log(resp.data)
                     this.show = true
                     this.mulaaCode = resp.data
                     this.loading = false
+                    this.$store.dispatch('loadUserSales', this.user)
                 }).catch((e) => {
                 console.error(e)
                 this.loading = false
