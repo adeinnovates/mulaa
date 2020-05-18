@@ -91,7 +91,21 @@
 <v-list
         nav
         dense
+        v-if="userDetails.pos_mode"
       >
+      <v-list-item v-for="link in merchantLinks" :key="link.text" router :to="link.route">
+          <v-list-item-icon>
+            <v-icon class="mr-2 teal--text text--lighten-2">{{link.icon}}</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title class="teal--text text--lighten-2">{{link.text}}</v-list-item-title>
+        </v-list-item>
+</v-list>
+<v-list
+        nav
+        dense
+        v-else
+      >
+
         <v-list-item v-for="link in links" :key="link.text" router :to="link.route">
           <v-list-item-icon>
             <v-icon class="mr-2 teal--text text--lighten-4">{{link.icon}}</v-icon>
@@ -106,7 +120,7 @@
             © Mulaa.co, <br>Mulaa Analytics 2019 - {{new Date().getFullYear()}}
           </p>
           <span class="caption">
-            A mobile-first sales-enablement for creators, thought leaders and solopreneurs - enabling you monetise your audience and build your leads list with one link - no middleman or website needed 😎👌🏼.
+            A mobile-first sales-enablement for SMEs & thought-leaders - empowers you to earn productively with technology without expensive consultants. 😎👌🏼.
           </span>
         </div>
       </template>
@@ -132,7 +146,14 @@ export default {
                 {icon: 'mdi-cart', text: 'Products', route:'/products'},
                 {icon: 'mdi-store', text: 'Sales', route:'/sales'},
                 {icon: 'mdi-download', text: 'Digital Assets', route:'/digital'},
-                {icon: 'mdi-cog-outline', text: 'Settings', route:'/settings'},
+                {icon: 'mdi-cog-outline', text: 'Settings', route:'/settings'}, 
+                //{icon: 'mdi-account', text: 'Account Activation', route:'/onboard'}
+            ],
+            merchantLinks: [
+              {icon: 'mdi-cash-register', text: 'POS', route:'/pos'},
+              {icon: 'mdi-view-dashboard-variant', text: 'Dashboard', route:'/'},
+              {icon: 'mdi-cog-outline', text: 'Settings', route:'/settings'}, 
+                
                 //{icon: 'mdi-account', text: 'Account Activation', route:'/onboard'}
             ],
             notice: false

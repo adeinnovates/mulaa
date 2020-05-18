@@ -210,6 +210,7 @@ export default {
                 brand_image: this.userImg,
                 business_description: this.businessDesc,
                 delivery_fee: this.deliveryfee,
+                show_video: this.showVideo,
                // last_login: ''//dateFunction() //JSON.stringify({ user })
                 },
                  status: "publish"

@@ -12,6 +12,8 @@ import Settings from './views/Settings.vue'
 import ConfirmSub from './views/ConfirmSub.vue'
 import Download from './components/Download.vue'
 import Digital from './components/Digital.vue'
+
+import Pos from './views/Pos.vue'
 import store from './store'
 //import { userInfo } from 'os';
 
@@ -97,6 +99,16 @@ export default new Router({
       meta: { 
         hideNavigation: false,
         requiresAuth: true
+      }
+    },
+    {
+      path: '/pos',
+      name: 'pos',
+      component: Pos,
+      meta: { 
+        hideNavigation: false,
+        requiresAuth: true,
+        merchant: true
       }
     },
     {
