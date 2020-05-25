@@ -487,6 +487,12 @@ export default {
         this.getUserPhone()
         this.isPageOwner()
         //this.fetchLinks(this.name)
+
+        let FBScript = document.createElement('script')
+    FBScript.setAttribute('type', 'text/javascript')
+    FBScript.innerHTML = "fbq('init', "+this.$store.state.userDetails.facebook_pixel+");fbq('track', 'PageView');"
+    //FBScript.innerHTML = "fbq('track', 'PageView');"
+    document.head.appendChild(FBScript)
     },
      created() {
        const host = window.location.host;
