@@ -14,6 +14,11 @@ import vueCustomElement from 'vue-custom-element'
 
 import VueLazyload from 'vue-lazyload'
 
+
+//import VueFacebookPixel from 'vue-analytics-facebook-pixel'
+//Vue.use(VueFacebookPixel) // 519307132200769
+
+
 Vue.use(VueYoutube)
  
 Vue.use(VueLazyload)

@@ -542,7 +542,7 @@ export default {
       if(this.$store.getters.isLoggedIn=== true){
        // this.$router.push('/') //this.$store.getters.isLoggedIn
       }
-      console.log('email: '+this.user)
+      console.log('this user: '+this.user)
       
     },
     mounted() {
@@ -677,11 +677,11 @@ export default {
      methods: {
       confirmUpdate(){
         if(!this.userDetails.customer_code){
-          console.log('no customer defined')
+          //console.log('no customer defined')
           this.banked = true
         }else{
           console.log('user/customer defined')
-          this.banked = true //false
+          this.banked = false //false
         }
       },
       listOfBanks(){
@@ -893,7 +893,7 @@ countapi.create(metricOps).then((result) => {
                 subaccount: this.subaccount,
                 }
 
-            axios.get('https://shop.mulaa.co/imgapi/wp-json/mulaa-auth/v1/onboard/', { //http://dev.mulaa.africa/admin/wp-json/mulaa-auth/v1/onboard/ //https://shop.mulaa.co/imgapi/wp-json/mulaa-auth/v1/onboard/
+            axios.get('https://shop.mulaa.co/api/wp-json/mulaa-auth/v1/onboard/', { //http://dev.mulaa.africa/admin/wp-json/mulaa-auth/v1/onboard/ //https://shop.mulaa.co/imgapi/wp-json/mulaa-auth/v1/onboard/
     params:onbaordOps})
                 .then(resp => {
                   //this.loading = false;

@@ -1143,6 +1143,11 @@ this.loading = false
          // this.showPopup()   
           //console.log('userdetails: '+JSON.stringify(this.userDetails))  
           //this.amount2()
+           let FBScript = document.createElement('script')
+    FBScript.setAttribute('type', 'text/javascript')
+    FBScript.innerHTML = "fbq('track', 'PageView');"
+   
+    document.head.appendChild(FBScript)
   },
   watch: {
     theProduct(){

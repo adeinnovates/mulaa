@@ -327,6 +327,7 @@ import Buy from '@/components/BuyProduct'
 import Widget from '@/components/GetWidget'
 import Avatar from 'vue-avatar'
 
+
 import axios from 'axios'
 
 export default {
@@ -498,6 +499,11 @@ export default {
         this.getUserPhone()
         this.isPageOwner()
         
+        let FBScript = document.createElement('script')
+    FBScript.setAttribute('type', 'text/javascript')
+    FBScript.innerHTML = "fbq('init', '519307132200769');fbq('track', 'PageView');"
+    //FBScript.innerHTML = "fbq('track', 'PageView');"
+    document.head.appendChild(FBScript)
         //this.fetchLinks(this.name)
     },
      created() {
@@ -508,6 +514,16 @@ export default {
         namespace: this.name+'.mulaa.store', //this.nname
         key: this.userDetails.customer_code,
 } 
+/*
+this.$analytics.fbq.init('519307132200769', {
+  em: 'mulaa.store@gmail.com'
+})
+*/
+/*
+Vue.analytics.fbq.init('519307132200769', {
+  em: 'mulaa.store@gmail.com'
+})
+*/
 /*
 countapi.create(metricOps).then((result) => { 
   console.log(result);
@@ -691,6 +707,11 @@ return
         this.$store.dispatch('loadUserDetails', this.name)
         this.$store.dispatch('loadDashboardLinks', this.name)
         this.$store.dispatch('loadVideos', this.name)
+
+       /* this.$analytics.fbq.event('ViewContent', {
+  content_name: 'Foodfashionplug by mulaa'
+})
+*/
        // console.log('Name '+this.name)
     },
     getMerchant(){

@@ -422,17 +422,18 @@ const removeDuplicates = (array, key) => {
        state.loading = false
    },
     user_sales (state, allSales) {
-       
+       console.log(state.user)
       /*const filtered = products.filter(function(item){
         //console.log(item.authorName)
         return item.authorName == state.user; 
       });*/
       const userSale = allSales.filter(function(item){
-        return item.merchant == state.user; 
+        return item.merchant == state.user;//"AUDACITY BY IPHIE" // 
       });
       //console.log('user sales: ' + JSON.stringify(userSale[0]))
-      //console.log(userSale)
+      console.log(userSale)
       state.userSales = userSale
+      //console.log('usersale', userSale)
       //state.userProducts = products
 /*
       state.Discounted = Discounted
@@ -865,7 +866,7 @@ const removeDuplicates = (array, key) => {
             }else{
               //commit('user_detail_blank', 'Your store account is not activated yet')
               commit('user_files', resp.data)
-              console.log('user downloads empty', resp.data)
+              //console.log('user downloads empty', resp.data)
              resolve(resp)
             }
               

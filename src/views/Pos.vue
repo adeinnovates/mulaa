@@ -99,7 +99,13 @@
                                     </v-icon>  
                    Generate Payment Code
                     </div>
-
+<v-expand-transition>
+<div v-if="showConfirm">
+    <v-sheet color="caption green lighten-5 pa-4 rounded ma-5 text-center" style="color:#000028" elevation="0">
+{{confirmData}}
+    </v-sheet>
+</div>
+</v-expand-transition>
                      <v-expand-transition>
       <div v-show="show">
         <v-sheet color="caption blue lighten-5 pa-4 rounded ma-5 text-center" style="color:#000028" elevation="0">
@@ -108,9 +114,19 @@
                             indeterminate
                             color="green"
                             ></v-progress-linear>
-                            Make transfer of {{costAmount}} to <strong class="headline">{{mulaaCode}}</strong><br>
+                            Make transfer of {{costAmount}} to <br><strong class="headline">{{mulaaCode}}</strong><br>
                             <p>Bank Name: Rubies</p>
+<v-btn block color="green" dark
+                                 class=""
+                                :loading="loading"
+                                @click="confirmTranx"
+                                >Confirm this payment</v-btn>
 
+                                <v-btn block color="red" dark
+                                 class="mt-4"
+                                :loading="loading"
+                                @click="show = false;showConfirm = false;"
+                                >Close</v-btn>
                         </v-sheet>
       </div>
     </v-expand-transition>
@@ -207,12 +223,19 @@ import { mapState, mapGetters } from 'vuex'
 import axios from 'axios'
 import VOffline from 'v-offline';
 
+const calculateSalesTax = (amount, taxPercent) => {
+  // Whatever math is involved to calculate your sales tax here
+  return amount + (taxPercent * amount);
+};
+
 export default {
   components: {
 VOffline
   },
      data(){
         return{
+            showConfirm:false,
+            confirmData: '',
             costAmount: '',
             mulaaCode: '',
             search: '',
@@ -278,6 +301,29 @@ console.log('current prod')
 //return this.currentUserProd
          }
          )*/
+     },
+     confirmTranx: function(){
+         let checkPOS = {
+              user: this.userId,
+              posnumber: this.posnumber,
+                phone: this.customerPhone,
+                amount: this.costAmount,
+                acctno: this.mulaaCode,
+                }
+          axios.get('//shop.mulaa.co/api/wp-json/mulaa-auth/v1/confirmpos', { //http://dev.mulaa.africa/admin/wp-json/mulaa-auth/v1/pos
+    params:checkPOS})
+                .then(resp => {
+                    console.log(resp.data)
+                    //this.show = false
+                    this.showConfirm = true
+                    this.confirmData = resp.data
+                    this.$store.dispatch('loadUserSales', this.user)
+                }).catch((e) => {
+                console.error(e)
+                this.loading = false
+                this.errors = "Something went wrong, try again"
+                //this.loading = false;
+            })
      },
      getMulaaCode:  function() {
          this.loading = true
