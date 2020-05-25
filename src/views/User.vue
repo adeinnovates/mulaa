@@ -501,9 +501,11 @@ export default {
         
         let FBScript = document.createElement('script')
     FBScript.setAttribute('type', 'text/javascript')
-    FBScript.innerHTML = "fbq('init', '519307132200769');fbq('track', 'PageView');"
-    //FBScript.innerHTML = "fbq('track', 'PageView');"
-    document.head.appendChild(FBScript)
+    FBScript.innerHTML = "fbq('init', '"+this.$store.state.userDetails.facebook_pixel+"');fbq('track', 'PageView');"
+    if(this.$store.state.userDetails.facebook_pixel){
+document.head.appendChild(FBScript)
+    }
+    
         //this.fetchLinks(this.name)
     },
      created() {
